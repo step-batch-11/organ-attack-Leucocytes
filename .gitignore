@@ -1,0 +1,7 @@
+.vscode
+**/.DS_Store
+coverage
+plans
+temp-folder
+.env
+.github/ISSUE_TEMPLATE/*.md
