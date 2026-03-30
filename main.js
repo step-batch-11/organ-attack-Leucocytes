@@ -3,7 +3,7 @@ import { Game } from "./src/models/game.js";
 import { Player } from "./src/models/player.js";
 import { counter } from "./src/utils.js";
 import { logger } from "hono/logger";
-import { shuffle } from "jsr:@std/random";
+import { shuffle } from "@std/random";
 
 const main = () => {
   const session = {};

@@ -9,7 +9,6 @@ import {
 import { shuffle } from "@std/random";
 import { gameSetup } from "./game_setup.js";
 
-
 export const createApp = ({
   session,
   idGenerator,
