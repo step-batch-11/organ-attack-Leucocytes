@@ -3,13 +3,13 @@ import { describe, it } from "@std/testing/bdd";
 import { Player } from "../src/models/player.js";
 
 describe("Testing Player Class", () => {
-  it("Should Initiate player and return his details", () => {
+  it("Should Initiate player and return their details", () => {
     const player = new Player("Vivek", 1);
     const { name, id } = player.getPlayerDetails();
     assertEquals({ name, id }, { name: "Vivek", id: 1 });
   });
 
-  it("Should Initiate one more player and return his details", () => {
+  it("Should Initiate one more player and return their details", () => {
     const player = new Player("Nikhil", 2);
     const { name, id } = player.getPlayerDetails();
     assertEquals({ name, id }, { name: "Nikhil", id: 2 });

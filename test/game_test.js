@@ -25,9 +25,14 @@ describe("Game model test", () => {
       const attackCards = Array.from({ length: 10 }, (_, i) => `a${i + 1}`);
       const organCards = Array.from({ length: 8 }, (_, i) => `o${i + 1}`);
 
-      const game = new Game([player1, player2], attackCards, organCards);
+      const game = new Game(
+        [player1, player2],
+        attackCards,
+        organCards,
+        (deck) => deck,
+      );
 
-      game.distributeCards((deck) => deck);
+      game.distributeCards();
 
       const { attackCards: player1Attacks, organCards: player1Organs } = player1
         .getPlayerDetails();
@@ -48,8 +53,13 @@ describe("Game model test", () => {
       const attackCardsDeck = Array.from({ length: 40 }, (_, i) => `a${i}`);
       const organCardsDeck = Array.from({ length: 24 }, (_, i) => `o${i}`);
 
-      const game = new Game(players, [...attackCardsDeck], [...organCardsDeck]);
-      game.distributeCards((deck) => deck);
+      const game = new Game(
+        players,
+        [...attackCardsDeck],
+        [...organCardsDeck],
+        (deck) => deck,
+      );
+      game.distributeCards();
 
       players.forEach((player) => {
         const { attackCards, organCards } = player.getPlayerDetails();

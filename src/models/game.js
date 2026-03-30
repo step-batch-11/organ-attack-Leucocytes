@@ -3,31 +3,30 @@ export class Game {
   #attackCards;
   #discardPile;
   #organCards;
+  #cardShuffler;
 
-  constructor(players, attackCards, organCards) {
+  constructor(players, attackCards, organCards, cardShuffler) {
     this.#players = players;
     this.#attackCards = attackCards;
     this.#organCards = organCards;
     this.#discardPile = [];
+    this.#cardShuffler = cardShuffler;
   }
 
-  #shuffleCards(cardSuffler) {
-    this.#attackCards = cardSuffler(this.#attackCards);
-    this.#organCards = cardSuffler(this.#organCards);
-  }
-
-  distributeCards(cardSuffler) {
-    this.#shuffleCards(cardSuffler);
+  distributeCards() {
+    this.#attackCards = this.#cardShuffler(this.#attackCards);
+    this.#organCards = this.#cardShuffler(this.#organCards);
 
     const organCardsLimit = Math.floor(
       this.#organCards.length / this.#players.length,
     );
+
     const attackCardsLimit = 5;
 
     this.#players.forEach((player) => {
-      const playerAttackCards = this.#attackCards.splice(0, attackCardsLimit);
-      const playerOrganCards = this.#organCards.splice(0, organCardsLimit);
-      player.fillHand(playerAttackCards, playerOrganCards);
+      const attackCards = this.#attackCards.splice(0, attackCardsLimit);
+      const organCards = this.#organCards.splice(0, organCardsLimit);
+      player.fillHand(attackCards, organCards);
     });
   }
 
