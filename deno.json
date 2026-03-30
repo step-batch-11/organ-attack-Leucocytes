@@ -1,7 +1,8 @@
 {
   "tasks": {
     "dev": "deno run -A --watch --env-file=.env main.js",
-    "test": "deno test --allow-all --watch",
+    "test:watch": "deno test -A --watch",
+    "test": "deno test -A",
     "test:coverage": "deno test -A --coverage ",
     "coverage:detailed": {
       "command": "deno coverage --detailed",

@@ -1,6 +1,7 @@
 import { getCookie, setCookie } from "hono/cookie";
 
 export const loginHandler = async (c) => {
+  const maxAge = 60 * 60 * 2;
   const session = c.get("session");
   const idGenerator = c.get("idGenerator");
   const payload = await c.req.formData();
@@ -13,20 +14,29 @@ export const loginHandler = async (c) => {
   session[sessionId] = username;
 
   setCookie(c, "sessionId", sessionId, {
-    maxAge: 60 * 60 * 2,
+    maxAge,
   });
 
   return c.redirect("/");
 };
 
-export const redirectIfAlreadyLoggedIn = async (c, next) => {
+export const restrictLoginHtml = async (c, next) => {
   const session = c.get("session");
 
   const sessionId = getCookie(c, "sessionId");
-  const username = session[sessionId];
+  if (sessionId in session) {
+    return c.redirect("/");
+  }
+  await next();
+};
 
-  if (!username) {
-    return c.redirect("pages/login.html");
+export const allowLoggenInUsers = async (c, next) => {
+  const session = c.get("session");
+
+  const sessionId = getCookie(c, "sessionId");
+
+  if (!(sessionId in session)) {
+    return c.redirect("/pages/login.html");
   }
 
   await next();

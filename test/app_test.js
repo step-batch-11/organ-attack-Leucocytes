@@ -1,11 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { createApp } from "../src/app.js";
-
-export const counter = () => {
-  let i = 0;
-  return () => ++i;
-};
+import { counter } from "../src/utils.js";
 
 describe("tests for app", () => {
   describe("/login", () => {
@@ -13,20 +9,20 @@ describe("tests for app", () => {
       const session = {};
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator });
+      const app = createApp({ session, idGenerator }, true);
 
       const response = await app.request("/");
       const location = response.headers.get("location");
 
       assertEquals(response.status, 302);
-      assertEquals(location, "pages/login.html");
+      assertEquals(location, "/pages/login.html");
     });
 
     it(" => it should set a cookie when i login", async () => {
       const session = {};
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator });
+      const app = createApp({ session, idGenerator }, true);
       const formData = new FormData();
       formData.append("username", "user1");
       const response = await app.request("/login", {
@@ -45,7 +41,7 @@ describe("tests for app", () => {
       const session = {};
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator });
+      const app = createApp({ session, idGenerator }, true);
       const formData1 = new FormData();
       formData1.append("username", "user1");
       await app.request("/login", {
@@ -72,7 +68,7 @@ describe("tests for app", () => {
       const session = {};
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator });
+      const app = createApp({ session, idGenerator }, true);
       const formData = new FormData();
       formData.append("username", "");
       const response = await app.request("/login", {
@@ -92,7 +88,7 @@ describe("tests for app", () => {
       const session = { 1: "chiru" };
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator });
+      const app = createApp({ session, idGenerator }, true);
 
       const response = await app.request("/", {
         headers: new Headers({
@@ -103,6 +99,34 @@ describe("tests for app", () => {
       response.text();
       assertEquals(contentType, "text/html; charset=utf-8");
       assertEquals(response.status, 200);
+    });
+
+    it("=> should restrict when i try to access login.html when i already logged in ", async () => {
+      const session = { 1: "chiru" };
+      const idGenerator = counter();
+
+      const app = createApp({ session, idGenerator }, true);
+
+      const response = await app.request("/pages/login.html", {
+        headers: new Headers({
+          "Cookie": "sessionId=1",
+        }),
+      });
+      const location = response.headers.get("location");
+      assertEquals(location, "/");
+      assertEquals(response.status, 302);
+    });
+
+    it("=> app shouldn't restrict when i try to access login.html when i am not logged in ", async () => {
+      const session = { 1: "chiru" };
+      const idGenerator = counter();
+      const app = createApp({ session, idGenerator }, true);
+      const response = await app.request("/pages/login.html");
+      const contentType = response.headers.get("content-type");
+      await response.text();
+
+      assertEquals(response.status, 200);
+      assertEquals(contentType, "text/html; charset=utf-8");
     });
   });
 });
