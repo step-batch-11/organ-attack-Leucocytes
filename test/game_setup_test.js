@@ -2,6 +2,7 @@ import { gameSetup } from "../src/game_setup.js";
 import { describe, it } from "@std/testing/bdd";
 import { assert, assertEquals, assertInstanceOf } from "@std/assert";
 import { Game } from "../src/models/game.js";
+import { shuffle } from "jsr:@std/random/shuffle";
 
 describe("Game setup tests", () => {
   it("Game setup should return given players", async () => {
@@ -22,6 +23,9 @@ describe("Game setup tests", () => {
       },
       json(json) {
         return json;
+      },
+      shuffle() {
+        return [];
       },
     };
 

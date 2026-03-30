@@ -1,11 +1,11 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
-
 import {
   allowLoggedInUser,
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers.js";
+import { shuffle } from "jsr:@std/random";
 import { gameSetup } from "./game_setup.js";
 
 export const createApp = ({
@@ -20,6 +20,7 @@ export const createApp = ({
     c.set("session", session);
     c.set("idGenerator", idGenerator);
     c.set("games", games);
+    c.set("shuffle", shuffle);
     await next();
   });
 
