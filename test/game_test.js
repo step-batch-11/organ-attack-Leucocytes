@@ -6,14 +6,38 @@ import { Player } from "../src/models/player.js";
 describe("Game model test", () => {
   describe("* GetPlayers test", () => {
     it("Should return the players' details", () => {
-      const players = [{
-        getPlayerDetails: () => ({ name: "Alpha", id: 1, organCards: [] }),
-      }];
+      const players = [
+        new Player("Shivang", 1),
+        new Player("Samiran", 1),
+      ];
+
       const game = new Game(players);
       const playerDetails = game.getPlayers();
 
       assertInstanceOf(game, Game);
-      assertEquals(playerDetails, [{ name: "Alpha", id: 1, organCards: [] }]);
+      assertEquals(playerDetails, [{
+        id: 1,
+        name: "Shivang",
+        organCards: [],
+      }, {
+        id: 1,
+        name: "Samiran",
+        organCards: [],
+      }]);
+    });
+
+    it("Should return the index of firstPlayer", () => {
+      const players = [
+        new Player("Shivang", 1),
+        new Player("Samiran", 1),
+      ];
+
+      const game = new Game(players);
+
+      players[0].fillHand([], [{ isWild: false }]);
+      players[1].fillHand([], [{ isWild: true }]);
+
+      assertEquals(game.getFirstPlayer(), 1);
     });
   });
 

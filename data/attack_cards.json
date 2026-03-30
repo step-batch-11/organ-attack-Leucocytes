@@ -1,0 +1,568 @@
+[
+  {
+    "id": 1,
+    "name": "Heart Attack",
+    "isInstant": false,
+    "afflictableOrgans": [
+      1
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Severe damage to the heart muscle",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 2,
+    "name": "Arrhythmia",
+    "isInstant": false,
+    "afflictableOrgans": [
+      1
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Irregular heartbeat",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 3,
+    "name": "Stroke",
+    "isInstant": false,
+    "afflictableOrgans": [
+      2
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Loss of brain function due to blood flow disruption",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 4,
+    "name": "Concussion",
+    "isInstant": false,
+    "afflictableOrgans": [
+      2
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Brain injury caused by sudden impact",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 5,
+    "name": "Asthma",
+    "isInstant": false,
+    "afflictableOrgans": [
+      3
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Airway inflammation causing breathing difficulty",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 6,
+    "name": "Pneumonia",
+    "isInstant": false,
+    "afflictableOrgans": [
+      3
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Lung infection filling air sacs with fluid",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 7,
+    "name": "Cirrhosis",
+    "isInstant": false,
+    "afflictableOrgans": [
+      4
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Severe scarring of the liver",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 8,
+    "name": "Fatty Liver",
+    "isInstant": false,
+    "afflictableOrgans": [
+      4
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Fat accumulation in liver cells",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 9,
+    "name": "Fracture",
+    "isInstant": false,
+    "afflictableOrgans": [
+      5
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Broken bone",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 10,
+    "name": "Osteoporosis",
+    "isInstant": false,
+    "afflictableOrgans": [
+      5
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Weak and brittle bones",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 11,
+    "name": "Ulcer",
+    "isInstant": false,
+    "afflictableOrgans": [
+      6
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Painful sore in stomach lining",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 12,
+    "name": "Food Poisoning",
+    "isInstant": false,
+    "afflictableOrgans": [
+      6,
+      15
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Contaminated food causing stomach distress",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 13,
+    "name": "Kidney Stones",
+    "isInstant": false,
+    "afflictableOrgans": [
+      7
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Hard deposits forming in kidneys",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 14,
+    "name": "Kidney Failure",
+    "isInstant": false,
+    "afflictableOrgans": [
+      7
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Kidneys lose filtering ability",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 15,
+    "name": "Cataracts",
+    "isInstant": false,
+    "afflictableOrgans": [
+      8
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Clouding of the eye lens",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 16,
+    "name": "Pink Eye",
+    "isInstant": false,
+    "afflictableOrgans": [
+      8
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Eye infection causing redness",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 17,
+    "name": "Burned Tongue",
+    "isInstant": false,
+    "afflictableOrgans": [
+      9
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Damage from hot food",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 18,
+    "name": "Loss of Taste",
+    "isInstant": false,
+    "afflictableOrgans": [
+      9
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Taste sensation disappears",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 19,
+    "name": "Hypothyroidism",
+    "isInstant": false,
+    "afflictableOrgans": [
+      10
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Underactive thyroid gland",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 20,
+    "name": "Hyperthyroidism",
+    "isInstant": false,
+    "afflictableOrgans": [
+      10
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Overactive thyroid gland",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 21,
+    "name": "Pancreatitis",
+    "isInstant": false,
+    "afflictableOrgans": [
+      11
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Inflammation of the pancreas",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 22,
+    "name": "Diabetes",
+    "isInstant": false,
+    "afflictableOrgans": [
+      11
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Impaired insulin production",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 23,
+    "name": "Splenomegaly",
+    "isInstant": false,
+    "afflictableOrgans": [
+      12
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Enlarged spleen",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 24,
+    "name": "Gallstones",
+    "isInstant": false,
+    "afflictableOrgans": [
+      13
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Stone formation in gallbladder",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 25,
+    "name": "Appendicitis",
+    "isInstant": false,
+    "afflictableOrgans": [
+      14
+    ],
+    "removableOrgans": [
+      14
+    ],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Inflamed appendix requiring removal",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 26,
+    "name": "Diarrhea",
+    "isInstant": false,
+    "afflictableOrgans": [
+      15
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Rapid bowel evacuation",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 27,
+    "name": "Anemia",
+    "isInstant": false,
+    "afflictableOrgans": [
+      16
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Low red blood cell count",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 28,
+    "name": "Leukemia",
+    "isInstant": false,
+    "afflictableOrgans": [
+      16
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Cancer affecting blood cells",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 29,
+    "name": "Uterine Infection",
+    "isInstant": false,
+    "afflictableOrgans": [
+      17
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Bacterial infection of uterus",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 30,
+    "name": "Acid Reflux",
+    "isInstant": false,
+    "afflictableOrgans": [
+      18
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Stomach acid damaging esophagus",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 31,
+    "name": "Skin Rash",
+    "isInstant": false,
+    "afflictableOrgans": [
+      19
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Inflammatory skin condition",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 32,
+    "name": "Melanoma",
+    "isInstant": false,
+    "afflictableOrgans": [
+      19
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Skin cancer",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 33,
+    "name": "Ear Infection",
+    "isInstant": false,
+    "afflictableOrgans": [
+      20
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Inflammation of inner ear",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 34,
+    "name": "Hearing Loss",
+    "isInstant": false,
+    "afflictableOrgans": [
+      20
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Loss of hearing ability",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 35,
+    "name": "Sinus Infection",
+    "isInstant": false,
+    "afflictableOrgans": [
+      21
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Inflammation of nasal sinuses",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 36,
+    "name": "Nosebleed",
+    "isInstant": false,
+    "afflictableOrgans": [
+      21
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Bleeding from nasal cavity",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 37,
+    "name": "Obesity",
+    "isInstant": false,
+    "afflictableOrgans": [
+      22
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Excessive fat accumulation",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 38,
+    "name": "Diaphragm Spasm",
+    "isInstant": false,
+    "afflictableOrgans": [
+      23
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Uncontrolled diaphragm contraction",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 39,
+    "name": "Mesenteric Ischemia",
+    "isInstant": false,
+    "afflictableOrgans": [
+      24
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 2,
+    "Desc": "Reduced blood supply to mesentery",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 40,
+    "name": "Love",
+    "isInstant": false,
+    "afflictableOrgans": [
+      1,
+      6
+    ],
+    "removableOrgans": [
+      2
+    ],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Crazy feelings cause physiological reactions",
+    "type": "affliction",
+    "isBlockable": true
+  }
+]

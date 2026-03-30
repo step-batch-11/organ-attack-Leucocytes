@@ -15,6 +15,10 @@ export class Player {
     this.#organCards = organCards;
   }
 
+  getId() {
+    return this.#id;
+  }
+
   getPlayerDetails() {
     return {
       name: this.#name,

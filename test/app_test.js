@@ -2,6 +2,10 @@ import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { createApp } from "../src/app.js";
 import { counter } from "../src/utils.js";
+import { Game } from "../src/models/game.js";
+import * as attacks from "../data/attack_cards.json" with { type: "json" };
+import * as organs from "../data/organ_cards.json" with { type: "json" };
+import { Player } from "../src/models/player.js";
 
 describe("tests for app", () => {
   const logger = () => (_, next) => {
@@ -130,6 +134,35 @@ describe("tests for app", () => {
 
       assertEquals(response.status, 200);
       assertEquals(contentType, "text/html; charset=utf-8");
+    });
+
+    it("=> app should send players data ", async () => {
+      const session = { 1: "chiru" };
+      const idGenerator = counter();
+
+      const games = {};
+
+      const players = Array.from(
+        { length: 6 },
+        (_, i) => new Player(`p${i}`, i),
+      );
+      const attackCards = attacks.default;
+      const organCards = organs.default;
+      const game = new Game(players, attackCards, organCards, (x) => x);
+      game.distributeCards();
+
+      games[0] = game;
+
+      const app = createApp({ session, idGenerator, games }, logger);
+
+      const response = await app.request("/players-data", {
+        method: "GET",
+        headers: { cookie: "sessionID=1" },
+      });
+      const contentType = response.headers.get("content-type");
+
+      assertEquals(response.status, 200);
+      assertEquals(contentType, "application/json");
     });
   });
 });
