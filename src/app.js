@@ -2,9 +2,9 @@ import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
 import { logger } from "hono/logger";
 import {
-  allowLoggenInUsers,
+  allowLoggedInUser,
   loginHandler,
-  restrictLoginHtml,
+  redirectLoggedInUser,
 } from "./handlers.js";
 
 export const createApp = ({ session, idGenerator }, testFlag = false) => {
@@ -18,8 +18,8 @@ export const createApp = ({ session, idGenerator }, testFlag = false) => {
   });
 
   app.post("/login", loginHandler);
-  app.get("/", allowLoggenInUsers);
-  app.get("/pages/login.html", restrictLoginHtml);
+  app.get("/", allowLoggedInUser);
+  app.get("/pages/login.html", redirectLoggedInUser);
   app.get("*", serveStatic({ root: "public" }));
 
   return app;

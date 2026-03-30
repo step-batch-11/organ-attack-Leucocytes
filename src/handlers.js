@@ -6,38 +6,31 @@ export const loginHandler = async (c) => {
   const idGenerator = c.get("idGenerator");
   const payload = await c.req.formData();
   const username = payload.get("username");
-  if (username === undefined || username.trim() === "") {
+  if (username === null || username.trim() === "") {
     return c.json({ message: "invalid username" }, 401);
   }
 
-  const sessionId = idGenerator();
-  session[sessionId] = username;
+  const sessionID = idGenerator();
+  session[sessionID] = username;
 
-  setCookie(c, "sessionId", sessionId, {
+  setCookie(c, "sessionID", sessionID, {
     maxAge,
   });
 
   return c.redirect("/");
 };
 
-export const restrictLoginHtml = async (c, next) => {
+export const redirectLoggedInUser = (c, next) => {
   const session = c.get("session");
 
-  const sessionId = getCookie(c, "sessionId");
-  if (sessionId in session) {
-    return c.redirect("/");
-  }
-  await next();
+  const sessionID = getCookie(c, "sessionID");
+  return (sessionID in session) ? c.redirect("/") : next();
 };
 
-export const allowLoggenInUsers = async (c, next) => {
+export const allowLoggedInUser = (c, next) => {
   const session = c.get("session");
 
-  const sessionId = getCookie(c, "sessionId");
+  const sessionID = getCookie(c, "sessionID");
 
-  if (!(sessionId in session)) {
-    return c.redirect("/pages/login.html");
-  }
-
-  await next();
+  return !(sessionID in session) ? c.redirect("/pages/login.html") : next();
 };

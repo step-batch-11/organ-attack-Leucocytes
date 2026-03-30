@@ -34,7 +34,7 @@ describe("tests for app", () => {
 
       assertEquals(response.status, 302);
       assertEquals(location, "/");
-      assertEquals(cookie, "sessionId=1; Max-Age=7200; Path=/");
+      assertEquals(cookie, "sessionID=1; Max-Age=7200; Path=/");
     });
 
     it(" => it should set a cookie unique cookies when different users login ", async () => {
@@ -61,7 +61,7 @@ describe("tests for app", () => {
 
       assertEquals(response.status, 302);
       assertEquals(location, "/");
-      assertEquals(cookie, "sessionId=2; Max-Age=7200; Path=/");
+      assertEquals(cookie, "sessionID=2; Max-Age=7200; Path=/");
     });
 
     it(" => it shouldn't set a cookie when i login with an invalid username", async () => {
@@ -92,7 +92,7 @@ describe("tests for app", () => {
 
       const response = await app.request("/", {
         headers: new Headers({
-          "Cookie": "sessionId=1",
+          "Cookie": "sessionID=1",
         }),
       });
       const contentType = response.headers.get("content-type");
@@ -109,7 +109,7 @@ describe("tests for app", () => {
 
       const response = await app.request("/pages/login.html", {
         headers: new Headers({
-          "Cookie": "sessionId=1",
+          "Cookie": "sessionID=1",
         }),
       });
       const location = response.headers.get("location");
