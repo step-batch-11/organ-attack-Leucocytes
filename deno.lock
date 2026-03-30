@@ -12,6 +12,7 @@
     "jsr:@std/fs@^1.0.22": "1.0.22",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@^1.1.4": "1.1.4",
+    "jsr:@std/random@*": "0.1.5",
     "jsr:@std/testing@^1.0.17": "1.0.17",
     "npm:@types/node@*": "24.2.0"
   },
@@ -58,6 +59,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/random@0.1.5": {
+      "integrity": "d26614c4f6c441afc22397a1c5b8f27d02ab8f5572f1d29e7b0cd57f3d548235"
     },
     "@std/testing@1.0.17": {
       "integrity": "87bdc2700fa98249d48a17cd72413352d3d3680dcfbdb64947fd0982d6bbf681",
