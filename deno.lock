@@ -13,6 +13,7 @@
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@^1.1.4": "1.1.4",
     "jsr:@std/random@*": "0.1.5",
+    "jsr:@std/random@~0.1.5": "0.1.5",
     "jsr:@std/testing@^1.0.17": "1.0.17",
     "npm:@types/node@*": "24.2.0"
   },
@@ -91,6 +92,7 @@
       "jsr:@ashishkujoy/deno-coverage-checker@^0.0.9",
       "jsr:@hono/hono@*",
       "jsr:@std/assert@1",
+      "jsr:@std/random@~0.1.5",
       "jsr:@std/testing@^1.0.17"
     ]
   }

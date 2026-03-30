@@ -5,7 +5,7 @@ import {
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers.js";
-import { shuffle } from "jsr:@std/random";
+import { shuffle } from "@std/random";
 import { gameSetup } from "./game_setup.js";
 
 export const createApp = ({
