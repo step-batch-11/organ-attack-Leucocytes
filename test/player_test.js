@@ -17,11 +17,11 @@ describe("Testing Player Class", () => {
 
   it("Should fill Hand with given attack and organ cards", () => {
     const player = new Player("Vivek", 1);
-    const attackCards = ["a1", "a2", "a3", "a4", "a5"];
-    const organCards = ["o1", "o2", "o3", "o4"];
-    player.fillHand(attackCards, organCards);
-    const { attackCards: ac, organCards: oc } = player.getPlayerDetails();
-    assertEquals(attackCards, ac);
-    assertEquals(organCards, oc);
+    const attackCardsExp = Array.from({ length: 5 }, (_, i) => `a${i + 1}`);
+    const organCardsExp = Array.from({ length: 4 }, (_, i) => `o${i + 1}`);
+    player.fillHand(attackCardsExp, organCardsExp);
+    const { attackCards, organCards } = player.getPlayerDetails();
+    assertEquals(attackCards, attackCardsExp);
+    assertEquals(organCards, organCardsExp);
   });
 });
