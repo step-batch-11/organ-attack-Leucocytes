@@ -4,12 +4,15 @@ import { createApp } from "../src/app.js";
 import { counter } from "../src/utils.js";
 
 describe("tests for app", () => {
+  const logger = () => (_, next) => {
+    return next();
+  };
   describe("/login", () => {
     it("=> should return login.html when i dont have a cookie", async () => {
       const session = {};
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator }, true);
+      const app = createApp({ session, idGenerator }, logger);
 
       const response = await app.request("/");
       const location = response.headers.get("location");
@@ -22,7 +25,7 @@ describe("tests for app", () => {
       const session = {};
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator }, true);
+      const app = createApp({ session, idGenerator }, logger);
       const formData = new FormData();
       formData.append("username", "user1");
       const response = await app.request("/login", {
@@ -41,7 +44,7 @@ describe("tests for app", () => {
       const session = {};
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator }, true);
+      const app = createApp({ session, idGenerator }, logger);
       const formData1 = new FormData();
       formData1.append("username", "user1");
       await app.request("/login", {
@@ -68,7 +71,7 @@ describe("tests for app", () => {
       const session = {};
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator }, true);
+      const app = createApp({ session, idGenerator }, logger);
       const formData = new FormData();
       formData.append("username", "");
       const response = await app.request("/login", {
@@ -88,7 +91,7 @@ describe("tests for app", () => {
       const session = { 1: "chiru" };
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator }, true);
+      const app = createApp({ session, idGenerator }, logger);
 
       const response = await app.request("/", {
         headers: new Headers({
@@ -105,7 +108,7 @@ describe("tests for app", () => {
       const session = { 1: "chiru" };
       const idGenerator = counter();
 
-      const app = createApp({ session, idGenerator }, true);
+      const app = createApp({ session, idGenerator }, logger);
 
       const response = await app.request("/pages/login.html", {
         headers: new Headers({
@@ -120,7 +123,7 @@ describe("tests for app", () => {
     it("=> app shouldn't restrict when i try to access login.html when i am not logged in ", async () => {
       const session = { 1: "chiru" };
       const idGenerator = counter();
-      const app = createApp({ session, idGenerator }, true);
+      const app = createApp({ session, idGenerator }, logger);
       const response = await app.request("/pages/login.html");
       const contentType = response.headers.get("content-type");
       await response.text();

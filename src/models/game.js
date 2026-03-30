@@ -31,6 +31,9 @@ export class Game {
   }
 
   getPlayers() {
-    return this.#players.map((player) => player.getPlayerDetails());
+    return this.#players.map((player) => {
+      const { name, id, organCards } = player.getPlayerDetails();
+      return { name, id, organCards };
+    });
   }
 }

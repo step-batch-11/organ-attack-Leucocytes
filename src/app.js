@@ -1,22 +1,30 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { logger } from "hono/logger";
+
 import {
   allowLoggedInUser,
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers.js";
+import { gameSetup } from "./game_setup.js";
 
-export const createApp = ({ session, idGenerator }, testFlag = false) => {
+export const createApp = ({
+  session,
+  idGenerator,
+  games,
+}, logger) => {
   const app = new Hono();
-  testFlag && app.use(logger());
+  app.use(logger());
 
   app.use(async (c, next) => {
     c.set("session", session);
     c.set("idGenerator", idGenerator);
+    c.set("games", games);
     await next();
   });
 
+  app.post("/setup-game", gameSetup);
+  // app.get("/players", getPlayers);
   app.post("/login", loginHandler);
   app.get("/", allowLoggedInUser);
   app.get("/pages/login.html", redirectLoggedInUser);

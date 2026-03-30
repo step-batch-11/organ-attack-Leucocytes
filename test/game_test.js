@@ -6,12 +6,14 @@ import { Player } from "../src/models/player.js";
 describe("Game model test", () => {
   describe("* GetPlayers test", () => {
     it("Should return the players' details", () => {
-      const players = [{ getPlayerDetails: () => "Player" }];
+      const players = [{
+        getPlayerDetails: () => ({ name: "Alpha", id: 1, organCards: [] }),
+      }];
       const game = new Game(players);
       const playerDetails = game.getPlayers();
 
       assertInstanceOf(game, Game);
-      assertEquals(playerDetails, ["Player"]);
+      assertEquals(playerDetails, [{ name: "Alpha", id: 1, organCards: [] }]);
     });
   });
 
