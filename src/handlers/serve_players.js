@@ -7,24 +7,19 @@ export const getPlayers = (c) => {
   const session = c.get("session");
   const sessionID = getCookie(c, "sessionID");
   const myId = players.find((player) => player.name === session[sessionID]).id;
+  const props = { players, myId, roomID, status: 200 };
 
   if (players.length === 2) {
-    return c.json({
-      redirectPath: "/game-page",
-      players,
-      myId,
-      roomID,
-      status: 302,
-    });
+    props.status = 302;
+    props.redirectPath = "/game-page";
   }
 
-  return c.json({ players, myId, roomID, status: 200 });
+  return c.json(props);
 };
 
 const getPlayerId = (c) => {
   const sessionID = getCookie(c, "sessionID");
   if (sessionID === undefined) return -1;
-
   const session = c.get("session");
   const playerName = session[sessionID];
   const roomID = getCookie(c, "roomID");

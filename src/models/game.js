@@ -23,20 +23,39 @@ export class Game {
     return this.#currentPlayer;
   }
 
-  distributeCards() {
+  #discardPlayersAttackCards() {
+    this.#players.forEach((player) => {
+      const attackCards = player.discardAttackCards();
+      this.#attacksDiscardPile.push(...attackCards);
+    });
+  }
+
+  distributeAttackCards() {
     this.#attackCards = this.#cardShuffler(this.#attackCards);
+    const attackCardsLimit = 5;
+
+    this.#players.forEach((player) => {
+      const attackCards = this.#attackCards.splice(0, attackCardsLimit);
+      player.fillHandWithAttacks(attackCards);
+    });
+  }
+
+  chartMixup() {
+    this.#discardPlayersAttackCards();
+    this.#attackCards.push(...this.#attacksDiscardPile.splice(0));
+    this.distributeAttackCards();
+  }
+
+  distributeOrganCards() {
     this.#organCards = this.#cardShuffler(this.#organCards);
 
     const organCardsLimit = Math.floor(
       this.#organCards.length / this.#players.length,
     );
 
-    const attackCardsLimit = 5;
-
     this.#players.forEach((player) => {
-      const attackCards = this.#attackCards.splice(0, attackCardsLimit);
       const organCards = this.#organCards.splice(0, organCardsLimit);
-      player.fillHand(attackCards, organCards);
+      player.fillHandWithOrgans(organCards);
     });
   }
 
@@ -59,6 +78,11 @@ export class Game {
     const newAttackCard = this.#attackCards.pop();
     attacker.refillHand(newAttackCard);
     return attackCard;
+  }
+
+  distributeCards() {
+    this.distributeAttackCards();
+    this.distributeOrganCards();
   }
 
   getPlayers() {

@@ -1,5 +1,6 @@
 import { describe, it } from "@std/testing/bdd";
-import { assertEquals, assertInstanceOf } from "@std/assert";
+import { assertEquals, assertInstanceOf, assertNotEquals } from "@std/assert";
+import { shuffle } from "@std/random";
 import { Game } from "../src/models/game.js";
 import { Player } from "../src/models/player.js";
 
@@ -36,14 +37,69 @@ describe("Game model test", () => {
 
       const game = new Game(players);
 
-      players[0].fillHand([], [{ isWild: false }]);
-      players[1].fillHand([], [{ isWild: true }]);
+      players[0].fillHandWithOrgans([{ isWild: false }]);
+      players[0].fillHandWithAttacks([]);
+      players[1].fillHandWithOrgans([{ isWild: true }]);
+      players[1].fillHandWithAttacks([]);
 
       assertEquals(game.setFirstPlayer(), 1);
     });
   });
 
   describe("Testing Cards Distributor", () => {
+    it("Should distribute 5 attack cards to each players", () => {
+      const [player1, player2] = [
+        new Player("Shivang", 1),
+        new Player("Samiran", 1),
+      ];
+
+      const attackCards = Array.from({ length: 10 }, (_, i) => `a${i + 1}`);
+      const organCards = [];
+
+      const game = new Game(
+        [player1, player2],
+        attackCards,
+        organCards,
+        (deck) => deck,
+      );
+
+      game.distributeAttackCards();
+
+      const { attackCards: player1Attacks } = player1.getPlayerDetails();
+      assertEquals(player1Attacks, ["a1", "a2", "a3", "a4", "a5"]);
+
+      const { attackCards: player2Attacks } = player2.getPlayerDetails();
+      assertEquals(player2Attacks, ["a6", "a7", "a8", "a9", "a10"]);
+    });
+
+    it("Should distribute 4 attack cards to each players", () => {
+      const [player1, player2] = [
+        new Player("Shivang", 1),
+        new Player("Samiran", 1),
+      ];
+
+      const attackCards = [];
+      const organCards = Array.from({ length: 8 }, (_, i) => `o${i + 1}`);
+
+      const game = new Game(
+        [player1, player2],
+        attackCards,
+        organCards,
+        (deck) => deck,
+      );
+
+      game.distributeOrganCards();
+      const { organCards: player1Organs } = player1
+        .getPlayerDetails();
+
+      assertEquals(player1Organs, ["o1", "o2", "o3", "o4"]);
+
+      const { organCards: player2Organs } = player2
+        .getPlayerDetails();
+
+      assertEquals(player2Organs, ["o5", "o6", "o7", "o8"]);
+    });
+
     it("Should distribute 5 attack cards and 4 organ cards for 2 players", () => {
       const [player1, player2] = [
         new Player("Shivang", 1),
@@ -94,6 +150,36 @@ describe("Game model test", () => {
         assertEquals(attackCards, attackCardsDeck.splice(0, 5));
         assertEquals(organCards, organCardsDeck.splice(0, 4));
       });
+    });
+
+    it("Should distribute 5 attack cards to each players", () => {
+      const [player1, player2] = [
+        new Player("Shivang", 1),
+        new Player("Samiran", 2),
+      ];
+
+      const attackCards = Array.from({ length: 20 }, (_, i) => `a${i + 1}`);
+      const organCards = [];
+
+      const game = new Game(
+        [player1, player2],
+        attackCards,
+        organCards,
+        shuffle,
+      );
+
+      game.distributeAttackCards();
+
+      const { attackCards: player1PreAttacks } = player1.getPlayerDetails();
+      const { attackCards: player2PreAttacks } = player2.getPlayerDetails();
+
+      game.chartMixup();
+
+      const { attackCards: player1Attacks } = player1.getPlayerDetails();
+      const { attackCards: player2Attacks } = player2.getPlayerDetails();
+
+      assertNotEquals(player1Attacks, player1PreAttacks);
+      assertNotEquals(player2Attacks, player2PreAttacks);
     });
   });
 });

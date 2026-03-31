@@ -12,8 +12,7 @@ export class Player {
     this.#type = type;
   }
 
-  fillHand(attackCards, organCards) {
-    this.#attackCards = attackCards;
+  fillHandWithOrgans(organCards) {
     this.#organCards = organCards;
   }
 
@@ -42,12 +41,20 @@ export class Player {
     this.#attackCards.push(attackCard);
   }
 
+  fillHandWithAttacks(attackCards) {
+    this.#attackCards = attackCards;
+  }
+
   getId() {
     return this.#id;
   }
 
   holdsWild() {
     return this.#organCards.some((organ) => organ.isWild);
+  }
+
+  discardAttackCards() {
+    return this.#attackCards.splice(0);
   }
 
   getPlayerDetails() {
