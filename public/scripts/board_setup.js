@@ -10,6 +10,7 @@ const renderCards = (cardFragments, cards, idCategory) => {
   cardFragments.forEach((cardFragment, i) => {
     const { name, id } = cards[i];
     cardFragment.textContent = name;
+    cardFragment.setAttribute("data-type", `${idCategory}-${id}`);
     cardFragment.setAttribute("id", `${idCategory}-${id}`);
   });
 };
@@ -47,10 +48,8 @@ const renderOpponents = (opponents) => {
   opponentArea.append(...fragments);
 };
 
-const main = async () => {
+export const setupGame = async () => {
   const { player, opponents } = await fetchPlayersData();
   renderOpponents(opponents);
   renderMyCards(player);
 };
-
-window.onload = main;

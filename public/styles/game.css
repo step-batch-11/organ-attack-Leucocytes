@@ -5,6 +5,8 @@
 :root {
   --bg-color: #1f1f1f;
   --fg-color: #fdfdfd;
+  --card-height: 8em;
+  --organ-size: 50px;
 }
 
 body {
@@ -13,32 +15,56 @@ body {
   height: 100vh;
 }
 main {
-  height: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .opponent-area {
+  flex: 1;
   width: 100%;
   /* height: 100%; */
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-areas:
+    "opp-2 . opp-1 . opp-3"
+    ".     .   .   .     ."
+    "opp-4 .   .   . opp-5";
   justify-content: space-between;
-  gap: 25em 0;
 }
 
-.opponent:last-child {
-  grid-column: 3;
+.opponent:nth-child(1) {
+  grid-area: opp-1;
+}
+.opponent:nth-child(2) {
+  grid-area: opp-2;
+}
+.opponent:nth-child(3) {
+  grid-area: opp-3;
+}
+.opponent:nth-child(4) {
+  grid-area: opp-4;
+}
+.opponent:nth-child(5) {
+  grid-area: opp-5;
+}
+
+.opponent {
+  display: flex;
+  gap: 1em;
+  align-items: flex-start;
 }
 
 .organ {
-  background-color: aliceblue;
+  background-color: rgba(240, 248, 255, 1);
   color: crimson;
   font-size: larger;
-  width: 50px;
-  height: 50px;
+  width: var(--organ-size);
+  height: var(--organ-size);
   border-radius: 100vw;
 }
 
 .player-area {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -53,7 +79,7 @@ main {
 
 .attack-card {
   width: 6em;
-  height: 8em;
+  height: var(--card-height);
   color: crimson;
   background-color: aliceblue;
 }
@@ -69,8 +95,5 @@ main {
 
 .popup {
   position: absolute;
-  background-color: #fff;
-  /* width :80%;
-  height :80% */
-  inset: 15em 15em 20em 15em;
+  bottom: calc(var(--card-height) + var(--organ-size) + 4em);
 }

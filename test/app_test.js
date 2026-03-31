@@ -212,7 +212,7 @@ describe("tests for app", () => {
       assertEquals(body.players.length, 1);
     });
 
-    it("app should redirect to game page when it get max players (ex :6)", async () => {
+    it("app should redirect to game page when it get max players (ex :2)", async () => {
       const formData1 = new FormData();
       formData1.append("username", "user1");
       await app.request("/login", {
