@@ -37,7 +37,7 @@ describe("Game model test", () => {
       players[0].fillHand([], [{ isWild: false }]);
       players[1].fillHand([], [{ isWild: true }]);
 
-      assertEquals(game.getFirstPlayer(), 1);
+      assertEquals(game.setFirstPlayer(), 1);
     });
   });
 

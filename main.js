@@ -1,5 +1,4 @@
 import { createApp } from "./src/app.js";
-import { mockGame } from "./src/mock_game_state.js";
 import { counter } from "./src/utils.js";
 import { logger } from "hono/logger";
 import { shuffle } from "@std/random";
@@ -11,7 +10,6 @@ const main = () => {
   const playerIdGenerator = counter();
   const rooms = { 101: [] };
 
-  games[0] = mockGame();
 
   const app = createApp({
     session,

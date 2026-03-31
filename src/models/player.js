@@ -3,11 +3,13 @@ export class Player {
   #id;
   #attackCards;
   #organCards;
-  constructor(name, id) {
+  #type;
+  constructor(name, id, type) {
     this.#name = name;
     this.#id = id;
     this.#attackCards = [];
     this.#organCards = [];
+    this.#type = type;
   }
 
   fillHand(attackCards, organCards) {

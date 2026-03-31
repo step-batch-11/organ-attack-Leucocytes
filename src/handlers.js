@@ -75,7 +75,13 @@ export const allowLoggedInUser = (c, next) => {
 
 const getPlayerId = (c) => {
   const sessionID = getCookie(c, "sessionID");
-  return (sessionID === undefined) ? -1 : Number(sessionID) - 1;
+  if (sessionID === undefined) return -1;
+
+  const session = c.get("session");
+  const playerName = session[sessionID];
+  const roomID = getCookie(c, "roomID");
+  const rooms = c.get("rooms");
+  return rooms[roomID].find(({ name }) => name === playerName).id;
 };
 
 export const servePlayersData = (c) => {
@@ -84,8 +90,9 @@ export const servePlayersData = (c) => {
   if (playerId === -1) {
     return c.text("BAD REQUEST", 400);
   }
+  const roomID = getCookie(c, "roomID");
+  const game = c.get("games")[roomID];
 
-  const game = c.get("games")["0"];
   const opponents = game.getOpponents(playerId);
   const player = game.getPlayer(playerId);
 

@@ -38,7 +38,7 @@ const main = async () => {
   const { players, myId, roomID } = body;
   if (body.status === 302) {
     if (amIHost(players, myId)) {
-      await fetch("/setup-room", {
+      await fetch("/setup-game", {
         method: "POST",
         body: JSON.stringify({ roomID }),
       });

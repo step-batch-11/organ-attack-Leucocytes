@@ -1,6 +1,9 @@
-import { attackCards, organCards } from "./constants.js";
+// import { attackCards, organCards } from "./constants.js";
 import { Game } from "./models/game.js";
 import { Player } from "./models/player.js";
+
+import * as attackCards from "../data/attack_cards.json" with { type: "json" };
+import * as organCards from "../data/organ_cards.json" with { type: "json" };
 
 export const gameSetup = async (ctx) => {
   const games = ctx.get("games");
@@ -12,7 +15,13 @@ export const gameSetup = async (ctx) => {
 
   const players = rooms[roomID].map(({ name, id }) => new Player(name, id));
 
-  const game = new Game(players, attackCards, organCards, shuffle);
+
+  const game = new Game(
+    players,
+    attackCards.default,
+    organCards.default,
+    shuffle,
+  );
   game.distributeCards();
   games[roomID] = game;
 

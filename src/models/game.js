@@ -12,15 +12,14 @@ export class Game {
     this.#organCards = organCards;
     this.#discardPile = [];
     this.#cardShuffler = cardShuffler;
-    this.#currentPlayer = this.getFirstPlayer();
   }
 
-  getFirstPlayer() {
-    const index = this.#players.findIndex((player) => {
+  setFirstPlayer() {
+    this.#currentPlayer = this.#players.findIndex((player) => {
       const { organCards } = player.getPlayerDetails();
       return organCards.some((organ) => organ.isWild);
     });
-    return index;
+    return this.#currentPlayer;
   }
 
   distributeCards() {

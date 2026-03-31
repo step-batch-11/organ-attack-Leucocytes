@@ -2,8 +2,8 @@ import { assertEquals } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "../src/app.js";
 import { counter } from "../src/utils.js";
-
-import { mockGame } from "../src/mock_game_state.js";
+import { Game } from "../src/models/game.js";
+import { Player } from "../src/models/player.js";
 
 describe("tests for app", () => {
   const logger = () => (_, next) => {
@@ -137,7 +137,31 @@ describe("tests for app", () => {
     });
 
     it("=> app should send players data ", async () => {
-      games[0] = mockGame();
+      const session = { "1": "chiru" };
+      const idGenerator = counter();
+      const playerIdGenerator = counter();
+      const roomIdGenerator = counter();
+      const rooms = { 101: [{ name: "chiru", id: 1 }] };
+      const games = {};
+      const players = rooms[101].map(({ name, id }) => new Player(name, id));
+
+      const game = new Game(
+        players,
+        [],
+        [],
+        shuffle,
+      );
+      game.distributeCards();
+      games[101] = game;
+      const app = createApp({
+        session,
+        idGenerator,
+        playerIdGenerator,
+        roomIdGenerator,
+        rooms,
+        shuffle,
+        games,
+      }, logger);
 
       const response = await app.request("/players-data", {
         method: "GET",
