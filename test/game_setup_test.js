@@ -4,13 +4,13 @@ import { assert, assertEquals, assertInstanceOf } from "@std/assert";
 import { Game } from "../src/models/game.js";
 
 describe("Game setup tests", () => {
-  let roomId;
+  let roomID;
   let rooms;
   let games;
   let ctx;
   beforeEach(() => {
-    roomId = 1;
-    rooms = { [roomId]: [{ name: "qwerty", id: 1 }] };
+    roomID = 1;
+    rooms = { [roomID]: [{ name: "qwerty", id: 1 }] };
     games = {};
     ctx = {
       games,
@@ -20,7 +20,7 @@ describe("Game setup tests", () => {
       },
       req: {
         json() {
-          return { roomId };
+          return { roomID };
         },
       },
       json(json, status) {
@@ -43,7 +43,7 @@ describe("Game setup tests", () => {
   });
 
   it("Game setup with invalid room id should return 'bad request' response", async () => {
-    roomId = 2;
+    roomID = 2;
     const playerDetails = await gameSetup(ctx);
     assertEquals(playerDetails.status, 400);
     assertEquals(playerDetails.body, { message: "Invalid roomId" });

@@ -20,13 +20,9 @@
   },
 
   "fmt": {
-    "exclude": [
-      "public/**/*.html",
-      "public/**/*.css",
-      "deno.*"
-    ]
+    "exclude": ["public/**/*.html", "public/**/*.css", "deno.*"]
   },
-  "lint":{
+  "lint": {
     "exclude": ["public/"]
   }
 }
