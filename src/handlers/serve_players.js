@@ -8,7 +8,7 @@ export const getPlayers = (c) => {
   const sessionID = getCookie(c, "sessionID");
   const myId = players.find((player) => player.name === session[sessionID]).id;
 
-  if (players.length === 6) {
+  if (players.length === 2) {
     return c.json({
       redirectPath: "/game-page",
       players,

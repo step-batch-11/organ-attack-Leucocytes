@@ -1,7 +1,8 @@
 export class Game {
   #players;
   #attackCards;
-  #discardPile;
+  #attacksDiscardPile;
+  #organsDiscardPile;
   #organCards;
   #cardShuffler;
   #currentPlayer;
@@ -10,7 +11,8 @@ export class Game {
     this.#players = players;
     this.#attackCards = attackCards;
     this.#organCards = organCards;
-    this.#discardPile = [];
+    this.#attacksDiscardPile = [];
+    this.#organsDiscardPile = [];
     this.#cardShuffler = cardShuffler;
   }
 
@@ -38,6 +40,27 @@ export class Game {
     });
   }
 
+  #findPlayer(id) {
+    return this.#players.find((player) => player.getId() === id);
+  }
+
+  afflictOrganOfOpponent(opponentID, organCardID) {
+    const opponent = this.#findPlayer(opponentID);
+    const organ = opponent.afflictOrgan(organCardID);
+    if (organ !== undefined) {
+      this.#organsDiscardPile.push(organ);
+    }
+  }
+
+  removeAttackFromAttacker(attackerID, attackCardID) {
+    const attacker = this.#findPlayer(attackerID);
+    const attackCard = attacker.removeAttackCard(attackCardID);
+    this.#attacksDiscardPile.push(attackCard);
+    const newAttackCard = this.#attackCards.pop();
+    attacker.refillHand(newAttackCard);
+    return attackCard;
+  }
+
   getPlayers() {
     return this.#players.map((player) => {
       const { name, id, organCards, hasWild } = player.getPlayerDetails();
@@ -50,7 +73,7 @@ export class Game {
   }
 
   getPlayer(id) {
-    const player = this.#players.find((player) => player.getId() === id);
+    const player = this.#findPlayer(id);
     return player.getPlayerDetails();
   }
 }

@@ -24,4 +24,32 @@ describe("Testing Player Class", () => {
     assertEquals(attackCards, attackCardsExp);
     assertEquals(organCards, organCardsExp);
   });
+
+  it("Should remove an attack card from hand", () => {
+    const player = new Player("Chiru", 1);
+    const attackCardsExp = Array.from(
+      { length: 5 },
+      (_, i) => ({ id: i, name: `a${i + 1}` }),
+    );
+    const organCardsExp = Array.from(
+      { length: 4 },
+      (_, i) => ({ id: i, name: `o${i + 1}` }),
+    );
+    player.fillHand(attackCardsExp, organCardsExp);
+    assertEquals(player.removeAttackCard(1), { id: 1, name: "a2" });
+  });
+
+  it("Should remove an organ card of player since its current health is 1", () => {
+    const player = new Player("Chiru", 1);
+    const attackCardsExp = Array.from(
+      { length: 5 },
+      (_, i) => ({ id: i, name: `a${i + 1}` }),
+    );
+    const organCardsExp = Array.from(
+      { length: 4 },
+      (_, i) => ({ id: i, name: `o${i + 1}`, health: 1 }),
+    );
+    player.fillHand(attackCardsExp, organCardsExp);
+    assertEquals(player.afflictOrgan(1), { id: 1, name: "o2", health: 0 });
+  });
 });

@@ -1,12 +1,13 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { getPlayers, servePlayersData } from "./handlers.js";
+import { getPlayers, servePlayersData } from "./handlers/serve_players.js";
 import {
   allowLoggedInUser,
   loginHandler,
   redirectLoggedInUser,
-} from "./login_handler.js";
+} from "./handlers/login_handler.js";
 import { gameSetup } from "./game_setup.js";
+import { handleAttack } from "./handlers/attack_handler.js";
 
 export const createApp = ({
   session,
@@ -31,6 +32,7 @@ export const createApp = ({
 
   app.post("/setup-game", gameSetup);
   app.post("/login", loginHandler);
+  app.post("/attack", handleAttack);
 
   app.get("/players-data", servePlayersData);
   app.get(

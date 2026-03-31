@@ -17,6 +17,31 @@ export class Player {
     this.#organCards = organCards;
   }
 
+  #isOrganDead(organ) {
+    return organ.health <= 0;
+  }
+
+  afflictOrgan(organCardID) {
+    const organIndex = this.#organCards
+      .findIndex(({ id }) => id === organCardID);
+    const organ = this.#organCards[organIndex];
+    organ.health -= 1;
+    if (this.#isOrganDead(organ)) {
+      this.#organCards.splice(organIndex, 1);
+      return organ;
+    }
+  }
+
+  removeAttackCard(attackCardID) {
+    const attackIndex = this.#attackCards
+      .findIndex(({ id }) => id === attackCardID);
+    return (this.#attackCards.splice(attackIndex, 1))[0];
+  }
+
+  refillHand(attackCard) {
+    this.#attackCards.push(attackCard);
+  }
+
   getId() {
     return this.#id;
   }
