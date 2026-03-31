@@ -11,7 +11,6 @@
     "jsr:@std/fs@^1.0.22": "1.0.22",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@^1.1.4": "1.1.4",
-    "jsr:@std/random@*": "0.1.5",
     "jsr:@std/random@~0.1.5": "0.1.5",
     "jsr:@std/testing@^1.0.17": "1.0.17",
     "npm:@types/node@*": "24.2.0",
