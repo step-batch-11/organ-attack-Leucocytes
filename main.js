@@ -10,7 +10,6 @@ const main = () => {
   const playerIdGenerator = counter();
   const rooms = { 101: [] };
 
-
   const app = createApp({
     session,
     idGenerator,

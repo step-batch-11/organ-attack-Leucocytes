@@ -1,12 +1,10 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
+import { getPlayers, servePlayersData } from "./handlers.js";
 import {
-  getPlayers,
-  servePlayersData,
-} from "./handlers.js";
-import {
-  allowLoggedInUser, loginHandler,
-  redirectLoggedInUser
+  allowLoggedInUser,
+  loginHandler,
+  redirectLoggedInUser,
 } from "./login_handler.js";
 import { gameSetup } from "./game_setup.js";
 

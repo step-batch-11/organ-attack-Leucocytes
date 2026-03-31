@@ -1,5 +1,4 @@
-import { getCookie, setCookie } from "hono/cookie";
-
+import { getCookie } from "hono/cookie";
 
 export const getPlayers = (c) => {
   const rooms = c.get("rooms");
@@ -21,7 +20,6 @@ export const getPlayers = (c) => {
 
   return c.json({ players, myId, roomID, status: 200 });
 };
-
 
 const getPlayerId = (c) => {
   const sessionID = getCookie(c, "sessionID");
