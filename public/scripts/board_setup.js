@@ -1,35 +1,51 @@
-globalThis.onload = async () => {
-  const { currentPlayerData, otherPlayersData, playerId } = await fetch(
-    "/players-data",
-  ).then((x) => x.json());
+const fetchPlayersData = () => {
+  const mockData = { player: [], opponents: [], playerId: null };
 
-  const opponentTemplate = document.querySelector(".opponent-template");
-  const opponentArea = document.querySelector(".opponent-area");
-  let id = playerId;
+  return fetch("/players-data")
+    .then((res) => res.json())
+    .catch(() => mockData);
+};
 
-  otherPlayersData.forEach((player) => {
-    const clone = opponentTemplate.content.cloneNode(true);
-    clone.id = `player-${id}`;
-    id = ++id % 6;
-    const organs = [...clone.querySelectorAll(".organ")];
-    organs.forEach((organ, i) => {
-      console.log(player.organCards);
-      organ.textContent = player.organCards[i].name;
-    });
-    opponentArea.append(clone);
-  });
-
-  const currentPlayerOrgans = [
-    ...document.querySelectorAll(".player-area .organ"),
-  ];
-  currentPlayerOrgans.forEach((organ, i) => {
-    organ.textContent = currentPlayerData.organCards[i].name;
-  });
-
-  const currentPlayerAttacks = [
-    ...document.querySelectorAll(".player-area .attack-card"),
-  ];
-  currentPlayerAttacks.forEach((attackCard, i) => {
-    attackCard.textContent = currentPlayerData.attackCards[i].name;
+const renderCards = (cardFragments, cards, idCategory) => {
+  cardFragments.forEach((cardFragment, i) => {
+    const { name, id } = cards[i];
+    cardFragment.textContent = name;
+    cardFragment.setAttribute("id", `${idCategory}-${id}`);
   });
 };
+
+const renderMyCards = ({ attackCards, organCards }) => {
+  const playerOrgans = document.querySelectorAll(".player-area .organ");
+  const playerAttacks = document.querySelectorAll(".player-area .attack-card");
+
+  renderCards(playerOrgans, organCards, "organ");
+  renderCards(playerAttacks, attackCards, "attack");
+};
+
+const createOpponentFragment = (template, { organCards, id }) => {
+  const clone = template.content.cloneNode(true);
+  const element = clone.querySelector(".opponent");
+  element.setAttribute("id", `player-${id}`);
+
+  const organs = element.querySelectorAll(".organ");
+  renderCards(organs, organCards, "organ");
+  return element;
+};
+
+const renderOpponents = (opponents) => {
+  const template = document.querySelector(".opponent-template");
+  const opponentArea = document.querySelector(".opponent-area");
+
+  const fragments = opponents.map((organs) =>
+    createOpponentFragment(template, organs)
+  );
+  opponentArea.append(...fragments);
+};
+
+const main = async () => {
+  const { player, opponents } = await fetchPlayersData();
+  renderOpponents(opponents);
+  renderMyCards(player);
+};
+
+window.onload = main;

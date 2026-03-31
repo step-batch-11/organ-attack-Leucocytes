@@ -47,6 +47,10 @@ export class Game {
     });
   }
 
+  getOpponents(id) {
+    return this.getPlayers().filter((player) => player.id !== id);
+  }
+
   getPlayer(id) {
     const player = this.#players.find((player) => player.getId() === id);
     return player.getPlayerDetails();

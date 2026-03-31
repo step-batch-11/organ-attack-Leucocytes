@@ -1,19 +1,14 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { getCookie } from "hono/cookie";
 import {
   allowLoggedInUser,
   loginHandler,
   redirectLoggedInUser,
+  servePlayersData,
 } from "./handlers.js";
-import { shuffle } from "@std/random";
 import { gameSetup } from "./game_setup.js";
 
-export const createApp = ({
-  session,
-  idGenerator,
-  games,
-}, logger) => {
+export const createApp = ({ session, idGenerator, games, shuffle }, logger) => {
   const app = new Hono();
   app.use(logger());
 
@@ -27,17 +22,7 @@ export const createApp = ({
 
   app.post("/setup-game", gameSetup);
 
-  app.get("/players-data", (c) => {
-    const playerId = Number(getCookie(c, "sessionID")) - 1;
-
-    const game = c.get("games")[0];
-    const otherPlayersData = game.getPlayers().filter(({ id }) =>
-      id !== playerId
-    );
-    const currentPlayerData = game.getPlayer(playerId);
-
-    return c.json({ otherPlayersData, currentPlayerData, playerId });
-  });
+  app.get("/players-data", servePlayersData);
 
   app.post("/login", loginHandler);
   app.get("/", allowLoggedInUser);

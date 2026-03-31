@@ -1,139 +1,139 @@
 [
   {
     "id": 1,
-    "name": "Heart",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 2,
-    "name": "Brain",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 3,
-    "name": "Lungs",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 4,
-    "name": "Liver",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 5,
-    "name": "Bones",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 6,
-    "name": "Stomach",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 7,
-    "name": "Kidneys",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 8,
-    "name": "Eyes",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 9,
-    "name": "Tongue",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 10,
-    "name": "Thyroid",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 11,
-    "name": "Pancreas",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 12,
-    "name": "Spleen",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 13,
-    "name": "Gallbladder",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 14,
     "name": "Appendix",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 15,
+    "id": 2,
+    "name": "Bladder",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 3,
+    "name": "Bones",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 4,
     "name": "Bowels",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 16,
-    "name": "Blood Cells",
+    "id": 5,
+    "name": "Brain",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 17,
-    "name": "Uterus",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 18,
+    "id": 6,
     "name": "Esophagus",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 19,
-    "name": "Skin",
+    "id": 7,
+    "name": "Eyes",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 20,
-    "name": "Ear",
+    "id": 8,
+    "name": "Gallbladder",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 21,
+    "id": 9,
+    "name": "Heart",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 10,
+    "name": "Kidneys",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 11,
+    "name": "Liver",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 12,
+    "name": "Lungs",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 13,
     "name": "Nose",
     "health": 2,
     "isWild": false
   },
   {
+    "id": 14,
+    "name": "Pancreas",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 15,
+    "name": "Skeletal",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 16,
+    "name": "Skin Cells",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 17,
+    "name": "Spleen",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 18,
+    "name": "Stomach",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 19,
+    "name": "Teeth",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 20,
+    "name": "Thyroid",
+    "health": 2,
+    "isWild": false
+  },
+  {
+    "id": 21,
+    "name": "Tongue",
+    "health": 2,
+    "isWild": false
+  },
+  {
     "id": 22,
-    "name": "Fat",
+    "name": "Tonsils",
     "health": 2,
     "isWild": false
   },
   {
     "id": 23,
-    "name": "Diaphragm",
+    "name": "Trachea",
     "health": 2,
     "isWild": false
   },

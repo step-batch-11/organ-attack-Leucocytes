@@ -34,3 +34,21 @@ export const allowLoggedInUser = (c, next) => {
 
   return !(sessionID in session) ? c.redirect("/pages/login.html") : next();
 };
+
+const getPlayerId = (c) => {
+  const sessionID = getCookie(c, "sessionID");
+  return (sessionID === undefined) ? -1 : Number(sessionID) - 1; // mocks the playerId
+};
+
+export const servePlayersData = (c) => {
+  const playerId = getPlayerId(c);
+
+  if (playerId === -1) {
+    return c.text("BAD REQUEST", 400);
+  }
+  const game = c.get("games")["0"];
+  const opponents = game.getOpponents(playerId);
+  const player = game.getPlayer(playerId);
+
+  return c.json({ opponents, player, playerId });
+};
