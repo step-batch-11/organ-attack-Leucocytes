@@ -3,6 +3,7 @@ const makeGETReq = (url) => {
 };
 
 const renderPlayers = (players, myId, roomId) => {
+  console.log(players);
   const playersLength = document.querySelector("#players-count #number");
   const template = document.querySelector("#player-row");
   const list = document.querySelector("#waiting-members ul");
@@ -25,6 +26,7 @@ const renderPlayers = (players, myId, roomId) => {
 
     return li;
   });
+  console.log(elements);
   list.replaceChildren(...elements);
 };
 const amIHost = (players, myId) => {
@@ -51,5 +53,5 @@ const main = async () => {
 globalThis.onload = () => {
   setInterval(() => {
     main();
-  }, 300);
+  }, 1000);
 };

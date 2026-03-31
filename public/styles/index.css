@@ -1,0 +1,108 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+body,
+#waiting-header,
+#waiting-table,
+#table-footer,
+ul {
+  display: flex;
+  align-items: center;
+}
+
+body {
+  height: 100vh;
+  background: radial-gradient(rgb(48, 47, 47), rgb(0, 0, 0));
+  background-repeat: no-repeat;
+  justify-content: center;
+ }
+
+ #waiting-table {
+  width: 800px;
+  height: 600px;
+  background-color: rgba(101, 101, 101, 0.5);
+  flex-direction: column;
+  row-gap: 15px;
+  border-radius: 10px;
+  justify-content: none;
+}
+
+ #waiting-header {
+  width: 100%;
+  height: 70px;
+  box-sizing: border-box;
+  background-color: rgb(130, 25, 25);
+  justify-content: space-between;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 0px -2px 8px 1px rgba(255, 255, 255, 0.8);
+}
+
+#waiting-header h2 {
+  color: rgb(247, 184, 59);
+}
+
+#waiting-members {
+  width: 88%;
+}
+
+ul {
+  flex-direction: column;
+}
+
+ li {
+  list-style: none;
+  width: 100%;
+  color: rgb(194, 194, 194);
+  padding: 15px;
+  font-size: 22px;
+  border-bottom: 1px solid black;
+  display: flex;
+  align-items: center;
+  column-gap: 18px;
+}
+
+ li:last-child {
+  border-bottom: none
+}
+
+ .player-profile {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: black;
+  border: 1px solid white;
+}
+
+ .loader {
+  border: 4px solid #1e293b;
+  border-top: 4px solid #38bdf8;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+ #table-footer {
+  margin: 10px;
+  justify-content: center;
+  gap: 10px;
+}
+
+ #waiting-msg {
+  color: rgb(116, 116, 116);
+  font-size: 15px;
+}
+
+#players-count{
+  color: white
+}

@@ -1,5 +1,6 @@
 import { getCookie, setCookie } from "hono/cookie";
 
+const TWO_HOURS = 60 * 60 * 2;
 export const getPlayers = (c) => {
   const rooms = c.get("rooms");
   const roomID = getCookie(c, "roomID");
@@ -8,7 +9,7 @@ export const getPlayers = (c) => {
   const sessionID = getCookie(c, "sessionID");
   const myId = players.find((player) => player.name === session[sessionID]).id;
 
-  if (players.length === 2) {
+  if (players.length === 6) {
     return c.json({
       redirectPath: "/game-page",
       players,
@@ -31,8 +32,7 @@ const setCookies = (c, maxAge, sessionID, roomID) => {
 };
 
 export const loginHandler = async (c) => {
-  const maxAge = 60 * 60 * 2;
-  const session = c.get("session");
+  const maxAge = TWO_HOURS;
   const playerIdGenerator = c.get("playerIdGenerator");
   const idGenerator = c.get("idGenerator");
   const payload = await c.req.formData();
@@ -44,7 +44,9 @@ export const loginHandler = async (c) => {
   if (username === null || username.trim() === "") {
     return c.json({ message: "invalid username" }, 401);
   }
+
   const sessionID = idGenerator();
+  const session = c.get("session");
   session[sessionID] = username;
   setCookies(c, maxAge, sessionID, roomID);
 
@@ -73,7 +75,7 @@ export const allowLoggedInUser = (c, next) => {
 
 const getPlayerId = (c) => {
   const sessionID = getCookie(c, "sessionID");
-  return (sessionID === undefined) ? -1 : Number(sessionID) - 1; // mocks the playerId
+  return (sessionID === undefined) ? -1 : Number(sessionID) - 1;
 };
 
 export const servePlayersData = (c) => {
@@ -82,6 +84,7 @@ export const servePlayersData = (c) => {
   if (playerId === -1) {
     return c.text("BAD REQUEST", 400);
   }
+
   const game = c.get("games")["0"];
   const opponents = game.getOpponents(playerId);
   const player = game.getPlayer(playerId);

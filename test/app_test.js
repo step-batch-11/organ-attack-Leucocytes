@@ -188,7 +188,7 @@ describe("tests for app", () => {
       assertEquals(body.players.length, 1);
     });
 
-    it("app should redirect to game page when it get max players (ex :2)", async () => {
+    it("app should redirect to game page when it get max players (ex :6)", async () => {
       const formData1 = new FormData();
       formData1.append("username", "user1");
       await app.request("/login", {
@@ -197,10 +197,34 @@ describe("tests for app", () => {
       });
 
       const formData2 = new FormData();
-      formData2.append("username", "user1");
+      formData2.append("username", "user2");
       await app.request("/login", {
         method: "POST",
         body: formData2,
+      });
+      const formData3 = new FormData();
+      formData3.append("username", "user3");
+      await app.request("/login", {
+        method: "POST",
+        body: formData3,
+      });
+      const formData4 = new FormData();
+      formData4.append("username", "user4");
+      await app.request("/login", {
+        method: "POST",
+        body: formData4,
+      });
+      const formData5 = new FormData();
+      formData5.append("username", "user5");
+      await app.request("/login", {
+        method: "POST",
+        body: formData5,
+      });
+      const formData6 = new FormData();
+      formData6.append("username", "user6");
+      await app.request("/login", {
+        method: "POST",
+        body: formData6,
       });
 
       const response = await app.request("/get-players", {
@@ -210,7 +234,7 @@ describe("tests for app", () => {
       const body = await response.json();
       assertEquals(body.status, 302);
       assertEquals(body.redirectPath, "/game-page");
-      assertEquals(body.players.length, 2);
+      assertEquals(body.players.length, 6);
       assertEquals(body.myId, 1);
     });
   });

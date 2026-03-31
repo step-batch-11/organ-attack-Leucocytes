@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>lobby page</title>
   <script type="module" src="./scripts/index.js"></script>
+  <link rel="stylesheet" href="./styles/index.css">
 </head>
+
 <body>
   <main>
     <section id="waiting-table">
       <section id="waiting-header">
-        <div>
-          Room Id : <span id="room-number"></span>
-        </div>
-        <div id="players-count">
-          players : <span id="number"></span>
-
-        </div>
+        <h2>
+          Room Id : <span id="room-number">0001</span>
+        </h2>
+        <h3 id="players-count">
+          players : <span id="number"></span> / 6
+        </h3>
       </section>
       <section id="waiting-members">
         <ul>
@@ -25,9 +27,22 @@
 
       </section>
     </section>
+
+    <section id="table-footer">
+
+      <div class="loader"></div>
+      <span id="waiting-msg">
+        waiting for other players to join
+      </span>
+    </section>
   </main>
-          <template id="player-row">
-            <li><span class="player-name"></span> <span id="indication"></span></li>
-          </template>
+  <template id="player-row">
+    <li>
+      <div class="player-profile">
+
+      </div><span class="player-name"></span> <span id="indication"></span>
+    </li>
+  </template>
 </body>
+
 </html>
