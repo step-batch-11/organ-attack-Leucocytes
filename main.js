@@ -8,10 +8,19 @@ const main = () => {
   const session = {};
   const idGenerator = counter();
   const games = {};
+  const playerIdGenerator = counter();
+  const rooms = { 101: [] };
 
   games[0] = mockGame();
 
-  const app = createApp({ session, idGenerator, games, shuffle }, logger);
+  const app = createApp({
+    session,
+    idGenerator,
+    playerIdGenerator,
+    games,
+    rooms,
+    shuffle,
+  }, logger);
 
   const port = Deno.env.get("PORT") || 8000;
 

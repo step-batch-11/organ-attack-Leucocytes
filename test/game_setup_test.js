@@ -46,6 +46,6 @@ describe("Game setup tests", () => {
     roomId = 2;
     const playerDetails = await gameSetup(ctx);
     assertEquals(playerDetails.status, 400);
-    assertEquals(playerDetails.body, {message:"Invalid roomId"});
+    assertEquals(playerDetails.body, { message: "Invalid roomId" });
   });
 });

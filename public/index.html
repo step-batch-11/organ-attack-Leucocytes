@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <title>Under Construction</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link rel="stylesheet" href="/styles/style.css">
-  <link rel="shortcut icon" href="/assets/favicon/favicon.png" type="image/x-icon">
-
+  <title>lobby page</title>
+  <script type="module" src="./scripts/index.js"></script>
 </head>
-
 <body>
-  <div class="container">
-    <h1>🚧 Under Construction</h1>
-    <p>We're working hard to launch something amazing. Stay tuned!</p>
-    <div class="loader"></div>
-  </div>
-</body>
+  <main>
+    <section id="waiting-table">
+      <section id="waiting-header">
+        <div>
+          Room Id : <span id="room-number"></span>
+        </div>
+        <div id="players-count">
+          players : <span id="number"></span>
 
+        </div>
+      </section>
+      <section id="waiting-members">
+        <ul>
+
+        </ul>
+
+      </section>
+    </section>
+  </main>
+          <template id="player-row">
+            <li><span class="player-name"></span> <span id="indication"></span></li>
+          </template>
+</body>
 </html>
