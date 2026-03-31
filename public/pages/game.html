@@ -1,50 +1,48 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/game.css" />
+    <title>Game</title>
+    <script type="module" src="/scripts/game.js"></script>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/styles/game.css" />
-  <title>Game</title>
-  <script type="module" src="/scripts/game.js"></script>
+    <template class="opponent-template">
+      <div class="opponent">
+        <div class="avatar">
+          <p class="name">aaa</p>
+        </div>
 
-  <!-- edit later -->
-</head>
-  <main>
-    <div class="opponent-area">
-    </div>
-    <div class="player-area">
-      <div class="attack-cards">
-        <div class="attack-card"></div>
-        <div class="attack-card"></div>
-        <div class="attack-card"></div>
-        <div class="attack-card"></div>
-        <div class="attack-card"></div>
-      </div>
-      <div class="organs">
         <div class="organ"></div>
         <div class="organ"></div>
         <div class="organ"></div>
         <div class="organ"></div>
       </div>
-      <div class="popup">
-        
+    </template>
+  </head>
+  <body>
+    <main>
+      <div class="opponent-area"></div>
+      <div class="player-area">
+        <div class="attack-cards">
+          <div class="attack-card"></div>
+          <div class="attack-card"></div>
+          <div class="attack-card"></div>
+          <div class="attack-card"></div>
+          <div class="attack-card"></div>
+        </div>
+        <div class="organs">
+          <div class="organ"></div>
+          <div class="organ"></div>
+          <div class="organ"></div>
+          <div class="organ"></div>
+        </div>
+        <div class="player">
+          <div class="avatar"></div>
+          <p class="name">asdfgfhgfjgk</p>
+        </div>
+        <div class="popup"></div>
       </div>
-    </div>
-  </main>
-
-  <template class="opponent-template">
-    <div class="opponent">
-      <div class="avatar">AQ</div>
-      
-        <div class="organ"></div>
-        <div class="organ"></div>
-        <div class="organ"></div>
-        <div class="organ"></div>
-      
-    </div>
-  </template>
-
-</body>
-
+    </main>
+  </body>
 </html>

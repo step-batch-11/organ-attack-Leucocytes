@@ -20,6 +20,60 @@ main {
   flex-direction: column;
 }
 
+.organ {
+  background-color: rgba(240, 248, 255, 1);
+  color: crimson;
+  font-size: larger;
+  width: var(--organ-size);
+  height: var(--organ-size);
+  border-radius: 100vw;
+}
+
+/* Player */
+.player-area {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+.attack-cards {
+  display: flex;
+  gap: 1em;
+}
+
+.attack-card {
+  width: 6em;
+  height: var(--card-height);
+  color: crimson;
+  background-color: aliceblue;
+}
+
+.organs {
+  gap: 1em;
+  display: flex;
+}
+.player-area .player {
+  position: relative;
+  right: -40em;
+  bottom: 4em;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  border: 1px solid white;
+  padding: 0.4em;
+  padding-right: 1em;
+  border-radius: 100vw;
+}
+.popup {
+  position: absolute;
+  bottom: calc(var(--card-height) + var(--organ-size) + 4em);
+}
+
+/* opponent */
+
 .opponent-area {
   flex: 1;
   width: 100%;
@@ -53,47 +107,27 @@ main {
   gap: 1em;
   align-items: flex-start;
 }
-
-.organ {
-  background-color: rgba(240, 248, 255, 1);
-  color: crimson;
-  font-size: larger;
-  width: var(--organ-size);
-  height: var(--organ-size);
-  border-radius: 100vw;
-}
-
-.player-area {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1em;
-}
-.attack-cards {
-  display: flex;
-  gap: 1em;
-}
-
-.attack-card {
-  width: 6em;
-  height: var(--card-height);
-  color: crimson;
-  background-color: aliceblue;
-}
-
-.organs {
-  gap: 1em;
-  display: flex;
-}
-
 .highlight-avatar {
-  box-shadow: 5px 5px 5px 5px gold;
+  box-shadow: 0px 0px 10px 5px rgb(191, 255, 136);
 }
 
-.popup {
+.avatar {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 100vw;
+  background-image:
+    radial-gradient(circle at 50% 30%, rgb(72, 72, 72) 30%, transparent 30%),
+    radial-gradient(circle at 50% 100%, rgb(72, 72, 72) 50%, transparent 50%),
+    linear-gradient(#fff, #fff);
+}
+.opponent .name {
   position: absolute;
-  bottom: calc(var(--card-height) + var(--organ-size) + 4em);
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  background-color: #848484;
+  border-radius: 5px;
 }

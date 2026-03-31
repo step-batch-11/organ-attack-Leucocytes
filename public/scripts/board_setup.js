@@ -3,7 +3,10 @@ const fetchPlayersData = () => {
 
   return fetch("/players-data")
     .then((res) => res.json())
-    .catch(() => mockData);
+    .catch((err) => {
+      console.err(err);
+      return mockData;
+    });
 };
 
 const renderCards = (cardFragments, cards, idCategory) => {
@@ -15,18 +18,25 @@ const renderCards = (cardFragments, cards, idCategory) => {
   });
 };
 
-const renderMyCards = ({ attackCards, organCards }) => {
+const renderMyCards = ({ name, attackCards, organCards }) => {
   const playerOrgans = document.querySelectorAll(".player-area .organ");
   const playerAttacks = document.querySelectorAll(".player-area .attack-card");
+  const playerName = document.querySelector(".player-area .name");
+  playerName.textContent = name;
 
   renderCards(playerOrgans, organCards, "organ");
   renderCards(playerAttacks, attackCards, "attack");
 };
 
-const createOpponentFragment = (template, { organCards, id, hasWild }) => {
+const createOpponentFragment = (
+  template,
+  { name, organCards, id, hasWild },
+) => {
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
   element.setAttribute("id", `player-${id}`);
+  const nameElement = element.querySelector(".name");
+  nameElement.textContent = name;
 
   const organs = element.querySelectorAll(".organ");
   renderCards(organs, organCards, "organ");
@@ -42,8 +52,8 @@ const renderOpponents = (opponents) => {
   const template = document.querySelector(".opponent-template");
   const opponentArea = document.querySelector(".opponent-area");
 
-  const fragments = opponents.map((organs) =>
-    createOpponentFragment(template, organs)
+  const fragments = opponents.map((opponent) =>
+    createOpponentFragment(template, opponent)
   );
   opponentArea.append(...fragments);
 };
