@@ -15,7 +15,6 @@ export const gameSetup = async (ctx) => {
 
   const players = rooms[roomID].map(({ name, id }) => new Player(name, id));
 
-
   const game = new Game(
     players,
     attackCards.default,
@@ -23,6 +22,7 @@ export const gameSetup = async (ctx) => {
     shuffle,
   );
   game.distributeCards();
+  game.setFirstPlayer();
   games[roomID] = game;
 
   return ctx.json(game.getPlayers(), 201);

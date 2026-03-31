@@ -33,7 +33,12 @@ describe("Game setup tests", () => {
   });
 
   it("Game setup should return given players", async () => {
-    const expectedPlayerDetails = [{ name: "qwerty", id: 1, organCards: [] }];
+    const expectedPlayerDetails = [{
+      name: "qwerty",
+      id: 1,
+      organCards: [],
+      hasWild: false,
+    }];
     const playerDetails = await gameSetup(ctx);
 
     assertEquals(playerDetails.body, expectedPlayerDetails);

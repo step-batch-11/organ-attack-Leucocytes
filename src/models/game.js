@@ -15,10 +15,9 @@ export class Game {
   }
 
   setFirstPlayer() {
-    this.#currentPlayer = this.#players.findIndex((player) => {
-      const { organCards } = player.getPlayerDetails();
-      return organCards.some((organ) => organ.isWild);
-    });
+    this.#currentPlayer = this.#players.findIndex((player) =>
+      player.holdsWild()
+    );
     return this.#currentPlayer;
   }
 
@@ -41,8 +40,8 @@ export class Game {
 
   getPlayers() {
     return this.#players.map((player) => {
-      const { name, id, organCards } = player.getPlayerDetails();
-      return { name, id, organCards };
+      const { name, id, organCards, hasWild } = player.getPlayerDetails();
+      return { name, id, organCards, hasWild };
     });
   }
 

@@ -22,13 +22,18 @@ const renderMyCards = ({ attackCards, organCards }) => {
   renderCards(playerAttacks, attackCards, "attack");
 };
 
-const createOpponentFragment = (template, { organCards, id }) => {
+const createOpponentFragment = (template, { organCards, id, hasWild }) => {
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
   element.setAttribute("id", `player-${id}`);
 
   const organs = element.querySelectorAll(".organ");
   renderCards(organs, organCards, "organ");
+
+  if (hasWild) {
+    const avatar = clone.querySelector(".avatar");
+    avatar.classList.add("highlight-avatar");
+  }
   return element;
 };
 

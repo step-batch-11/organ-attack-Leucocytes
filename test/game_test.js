@@ -16,10 +16,12 @@ describe("Game model test", () => {
 
       assertInstanceOf(game, Game);
       assertEquals(playerDetails, [{
+        hasWild: false,
         id: 1,
         name: "Shivang",
         organCards: [],
       }, {
+        hasWild: false,
         id: 1,
         name: "Samiran",
         organCards: [],

@@ -50,15 +50,21 @@ main {
   display: flex;
   gap: 1em;
 }
+
 .attack-card {
   width: 6em;
   height: 8em;
   color: crimson;
   background-color: aliceblue;
 }
+
 .organs {
   gap: 1em;
   display: flex;
+}
+
+.highlight-avatar {
+  box-shadow: 5px 5px 5px 5px gold;
 }
 
 .popup {
