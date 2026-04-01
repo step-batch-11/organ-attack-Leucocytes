@@ -14,7 +14,7 @@ const renderAttackCards = (attackCardNodes, attackCards) => {
     const { name, id } = attackCards[i];
     const attackCardName = attackCard.querySelector("h1");
     attackCardName.textContent = name;
-    attackCard.setAttribute("data-type", `attack-${id}`);
+    attackCard.setAttribute("data-id", id);
     attackCard.setAttribute("id", `attack-${id}`);
   });
 };
@@ -26,7 +26,8 @@ const renderOrgans = (organNodes, organCards) => {
       const image = organ.querySelector("img");
       image.setAttribute("src", `/assets/organs/${name.toLowerCase()}.png`);
       image.setAttribute("alt", name);
-      organ.setAttribute("data-organ", id);
+      image.setAttribute("title", name);
+      organ.setAttribute("data-id", id);
       organ.setAttribute("id", `organ-${id}`);
     } else organ.remove();
   });
