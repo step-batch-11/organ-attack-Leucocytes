@@ -136,6 +136,55 @@ describe("tests for app", () => {
       assertEquals(contentType, "text/html; charset=utf-8");
     });
 
+    it("=> app should send players data ", async () => {
+      const session = { "1": "chiru" };
+      const idGenerator = counter();
+      const playerIdGenerator = counter();
+      const roomIdGenerator = counter();
+      const rooms = { 101: [{ name: "chiru", id: 1 }] };
+      const games = {};
+      const players = rooms[101].map(({ name, id }) => new Player(name, id));
+
+      const game = new Game(
+        players,
+        [],
+        [],
+        shuffle,
+      );
+      game.distributeCards();
+      games[101] = game;
+      const app = createApp({
+        session,
+        idGenerator,
+        playerIdGenerator,
+        roomIdGenerator,
+        rooms,
+        shuffle,
+        games,
+      }, logger);
+
+      const response = await app.request("/players-data", {
+        method: "GET",
+        headers: { cookie: "sessionID=1;roomID=101" },
+      });
+      const contentType = response.headers.get("content-type");
+
+      assertEquals(response.status, 200);
+      assertEquals(contentType, "application/json");
+    });
+
+    it(" app should not send player data if there is no sessionId", async () => {
+      const response = await app.request("/players-data", {
+        method: "GET",
+      });
+      const contentType = response.headers.get("content-type");
+      const { msg } = await response.json();
+      assertEquals(response.status, 400);
+
+      assertEquals(contentType, "application/json");
+      assertEquals(msg, "BAD REQUEST");
+    });
+
     it("=> app should send players data and roomId", async () => {
       const formData = new FormData();
       formData.append("username", "user1");
@@ -276,9 +325,12 @@ describe("tests for app", () => {
         method: "GET",
       });
       const contentType = response.headers.get("content-type");
-
       assertEquals(response.status, 400);
-      assertEquals(contentType, "text/plain; charset=UTF-8");
+
+      const { msg } = await response.json();
+
+      assertEquals(contentType, "application/json");
+      assertEquals(msg, "BAD REQUEST");
     });
 
     it("Should wait until someone attacks", async () => {

@@ -1,11 +1,9 @@
 import { fetchPlayersData, renderOpponents, setupGame } from "./board_setup.js";
 
-const getCardId = (e) =>
-  Number(e.target.closest(".attack-card").id.split("-").at(-1));
+const getCardId = (attackCard) => Number(attackCard.dataset.id);
 
 const getAfflictableOrgans = (player, opponents, attackCardId) => {
-  const attackCard = player.attackCards
-    .find(({ id }) => id === attackCardId);
+  const attackCard = player.attackCards.find(({ id }) => id === attackCardId);
   const afflictableOrgansIds = attackCard.afflictableOrgans;
   const allOrganCards = opponents.reduce((allCards, { organCards, id }) => {
     organCards.forEach((card) => card.playerId = id);
@@ -38,10 +36,7 @@ const removePopup = () => {
 };
 
 const displayAfflictableOrgans = (
-  e,
-  player,
-  opponents,
-  attackCardID,
+  { e, player, opponents, attackCardID },
 ) => {
   removePopup();
   const container = document.createElement("div");
@@ -84,14 +79,39 @@ const afflictOrgan = async (e, attackCardID, player) => {
   removePopup();
 };
 
+const performChartMixup = async ({ player, attackCardID }) => {
+  const res = await fetch("/attack", {
+    method: "post",
+    body: JSON.stringify({
+      attackCardID,
+      attackerID: player.id,
+    }),
+  });
+};
+
+const ACTION_HANDLERS = {
+  "chart-mixup": performChartMixup,
+  "affliction": displayAfflictableOrgans,
+};
+
 const initGame = async () => {
   const { player, opponents } = await setupGame();
   const attackCards = document.querySelector(".player-area .attack-cards");
 
+  console.log(player, opponents);
   if (player.isMyTurn) {
     attackCards.onclick = (e) => {
-      const attackCardID = getCardId(e);
-      displayAfflictableOrgans(e, player, opponents, attackCardID);
+      const attackCardElement = e.target.closest(".attack-card");
+      const attackCardID = getCardId(attackCardElement);
+      const attackCard = player.attackCards.find(({ id }) =>
+        id === attackCardID
+      );
+      ACTION_HANDLERS[attackCard.action]({
+        e,
+        player,
+        opponents,
+        attackCardID,
+      });
     };
   } else {
     attackCards.onclick = () => "";

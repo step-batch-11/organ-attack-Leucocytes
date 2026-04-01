@@ -22,7 +22,7 @@ export const servePlayersData = (c) => {
   const playerId = getPlayerId(c);
 
   if (playerId === -1) {
-    return c.text("BAD REQUEST", 400);
+    return c.json({ msg: "BAD REQUEST" }, 400);
   }
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];

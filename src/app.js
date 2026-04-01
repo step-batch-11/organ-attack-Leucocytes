@@ -35,14 +35,14 @@ export const createApp = ({
   app.post("/setup-game", gameSetup);
   app.post("/login", loginHandler);
   app.post("/attack", (c) => {
-    clients.forEach((resolve) => resolve());
+    clients.forEach((resolve) => resolve(c.json({ success: true })));
     clients.length = 0;
     return handleAttack(c);
   });
 
   app.get("/wait-for-affliction", () => {
-    return new Promise((reslove) => {
-      clients.push(reslove);
+    return new Promise((resolve) => {
+      clients.push(resolve);
     });
   });
 

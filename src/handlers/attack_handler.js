@@ -5,9 +5,15 @@ const handleNormalAffliction = ({ opponentID, organCardID, game }) => {
   return ({ success: true });
 };
 
+const handleChartMixup = ({ game }) => {
+  game.chartMixup();
+  return ({ success: true });
+};
+
 const ACTIONS = {
   transplant: "",
-  affliction: handleNormalAffliction,
+  "affliction": handleNormalAffliction,
+  "chart-mixup": handleChartMixup,
 };
 
 export const handleAttack = async (c) => {
@@ -17,8 +23,11 @@ export const handleAttack = async (c) => {
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
   const attackCard = game.discardAttackCard(attackerID, attackCardID);
-
   const attackAction = attackCard.action;
+
+  if (!(attackAction in ACTIONS)) {
+    return c.json({ msg: "Invalid action" });
+  }
   const handler = ACTIONS[attackAction];
   const res = handler({ opponentID, organCardID, game });
   return c.json(res);
