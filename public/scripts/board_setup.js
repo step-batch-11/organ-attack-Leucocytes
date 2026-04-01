@@ -1,3 +1,5 @@
+import { getAfflictableOrgans } from "./utils.js";
+
 export const fetchPlayersData = () => {
   const mockData = { player: [], opponents: [], playerId: null };
 
@@ -9,7 +11,7 @@ export const fetchPlayersData = () => {
     });
 };
 
-const renderAttackCards = (attackCardNodes, attackCards) => {
+const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
   attackCardNodes.forEach((attackCard, i) => {
     const { name, id, type } = attackCards[i];
     const attackCardName = attackCard.querySelector("h1");
@@ -17,6 +19,14 @@ const renderAttackCards = (attackCardNodes, attackCards) => {
     attackCard.setAttribute("data-id", id);
     attackCard.setAttribute("data-type", type);
     attackCard.setAttribute("id", `attack-${id}`);
+    const afflictableOrgans = getAfflictableOrgans(
+      { attackCards },
+      opponents,
+      id,
+    );
+    if (afflictableOrgans.length === 0 && type !== "bureaucracy") {
+      attackCard.classList.add("disabled-card");
+    }
   });
 };
 
@@ -37,7 +47,10 @@ const renderOrgans = (organNodes, organCards) => {
   });
 };
 
-const renderMyCards = ({ name, attackCards, organCards, isMyTurn }) => {
+const renderMyCards = (
+  { name, attackCards, organCards, isMyTurn },
+  opponents,
+) => {
   const playerOrgans = document.querySelectorAll(".player-area .organ");
   const playerAttacks = document.querySelectorAll(".player-area .attack-card");
 
@@ -47,13 +60,17 @@ const renderMyCards = ({ name, attackCards, organCards, isMyTurn }) => {
 
   const avatar = document.querySelector(".player-area .player");
   if (isMyTurn) {
+    document.querySelector("body").style.background =
+      "radial-gradient( gray, black )";
     avatar.classList.add("highlight-avatar");
   } else {
+    document.querySelector("body").style.background =
+      "radial-gradient(var(--bg-color), black)";
     avatar.classList.remove("highlight-avatar");
   }
 
   renderOrgans(playerOrgans, organCards);
-  renderAttackCards(playerAttacks, attackCards);
+  renderAttackCards(playerAttacks, attackCards, opponents);
 };
 
 const createOpponentFragment = (
@@ -93,6 +110,6 @@ export const renderOpponents = (opponents) => {
 export const setupGame = async () => {
   const { player, opponents } = await fetchPlayersData();
   renderOpponents(opponents);
-  renderMyCards(player);
+  renderMyCards(player, opponents);
   return { player, opponents };
 };

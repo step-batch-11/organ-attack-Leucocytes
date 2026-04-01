@@ -96,6 +96,11 @@ main {
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
+[data-type="dummy"] {
+  background-image: radial-gradient(yellowgreen, var(--clr-gray));
+  color: var(--fg-color);
+  border: 0.3em solid var(--clr-light-gray);
+}
 .attack-card {
   width: var(--card-width);
   height: var(--card-height);
@@ -106,6 +111,14 @@ main {
   transition: 200ms;
   cursor: pointer;
 }
+
+.disabled-card {
+  background:rgb(72, 72, 72);
+  border: 0.3em solid rgb(72, 72, 72);
+  color: var(--clr-light-gray);
+  text-decoration: line-through 4px;
+}
+
 .attack-card:hover {
   box-shadow: 0 0 10px 1px hsl(0, 0%, 0%);
   scale: 1.03;
@@ -212,13 +225,17 @@ h1,
 /* popups */
 .popup-afflicatble-organs {
   background-color: var(--clr-gray);
-  padding: 0.8em;
   border-radius: 0.4em;
+  /* padding: 0.8em; */
   display: flex;
   gap: 1em;
 }
 
-.popup-afflicatble-organs img {
+.popup-afflicatble-organs > div {
+  margin: 0.8em;
+}
+
+.popup-afflicatble-organs img{
   cursor: pointer;
   transition: 200ms;
 }

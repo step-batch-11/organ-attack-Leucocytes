@@ -1,20 +1,7 @@
 import { fetchPlayersData, renderOpponents, setupGame } from "./board_setup.js";
+import { getAfflictableOrgans } from "./utils.js";
 
 const getCardId = (attackCard) => Number(attackCard.dataset.id);
-
-const getAfflictableOrgans = (player, opponents, attackCardId) => {
-  const attackCard = player.attackCards.find(({ id }) => id === attackCardId);
-  const afflictableOrgansIds = attackCard.afflictableOrgans;
-  const allOrganCards = opponents.reduce((allCards, { organCards, id }) => {
-    organCards.forEach((card) => card.playerId = id);
-    return allCards.concat(organCards);
-  }, []);
-  if (attackCard.type === "dummy") return allOrganCards;
-
-  return allOrganCards.filter(({ id }) =>
-    afflictableOrgansIds.includes(id) || id === 100
-  );
-};
 
 const createPopupOrgans = (afflictableOrgans) => {
   return afflictableOrgans.map((afflictableOrgan) => {
@@ -121,8 +108,6 @@ const initGame = async () => {
 };
 
 window.onload = initGame;
-
-/////
 
 const poll = async () => {
   await fetch("/wait-for-affliction");

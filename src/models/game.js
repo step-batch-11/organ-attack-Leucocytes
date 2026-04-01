@@ -85,8 +85,13 @@ export class Game {
   }
 
   refillAttackCard(attacker) {
-    if (this.#attackCards.length === 0) {
-      const attackCard = {
+    const { organCards } = attacker.getPlayerDetails();
+    const attackCard = this.#attackCards[this.#attackCards.length - 1];
+    if (
+      this.#attackCards.length === 0 ||
+      this.#doesEffectAnyOwnOrgan(attackCard, organCards)
+    ) {
+      const dummyCard = {
         "id": 100,
         "name": "Dummy",
         "isInstant": false,
@@ -101,10 +106,10 @@ export class Game {
         "action": "affliction",
         "isBlockable": true,
       };
-      this.#attackCards.push(attackCard);
+      attacker.refillHand(dummyCard);
+    } else {
+      attacker.refillHand(this.#attackCards.pop());
     }
-    const attackCard = this.#attackCards.pop();
-    attacker.refillHand(attackCard);
   }
 
   discardAttackCard(attackerID, attackCardID) {

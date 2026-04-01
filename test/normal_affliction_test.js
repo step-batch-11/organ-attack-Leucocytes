@@ -32,15 +32,6 @@ describe("Testing Normal Affliction", () => {
     games = {};
     players = rooms[101].map(({ name, id }) => new Player(name, id));
 
-    game = new Game(
-      players,
-      [{ id: 1, type: "affliction" }],
-      [{ id: 1, health: 2 }],
-      shuffle,
-    );
-    // game.distributeCards();
-    games[101] = game;
-
     app = createApp({
       session,
       idGenerator,
@@ -55,14 +46,26 @@ describe("Testing Normal Affliction", () => {
   it("Should afflict an organ of player with given IDs", async () => {
     players.map((player) => {
       player.fillHandWithOrgans([{ id: 1, health: 2 }]);
-      player.fillHandWithAttacks([{ id: 1, action: "affliction" }]);
+      player.fillHandWithAttacks([{
+        id: 1,
+        action: "affliction",
+        afflictableOrgans: [],
+      }]);
     });
 
+    game = new Game(
+      players,
+      [],
+      [],
+      shuffle,
+    );
+    // game.distributeCards();
+    games[101] = game;
     const response = await app.request("/attack", {
       method: "post",
       body: JSON.stringify({
         attackerID: 1,
-        opponentID: 2,
+        opponentID: 1,
         attackCardID: 1,
         organCardID: 1,
       }),
@@ -71,11 +74,24 @@ describe("Testing Normal Affliction", () => {
     assertEquals(await response.json(), { success: true });
   });
 
-  it("Should afflict an organ of player with given IDs", async () => {
+  it("Should remove an organ of player with given IDs", async () => {
     players.map((player) => {
       player.fillHandWithOrgans([{ id: 1, health: 1 }]);
-      player.fillHandWithAttacks([{ id: 1, action: "affliction" }]);
+      player.fillHandWithAttacks([{
+        id: 1,
+        action: "affliction",
+        afflictableOrgans: [],
+      }]);
     });
+
+    game = new Game(
+      players,
+      [],
+      [],
+      shuffle,
+    );
+    // game.distributeCards();
+    games[101] = game;
 
     const response = await app.request("/attack", {
       method: "post",
