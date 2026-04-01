@@ -102,10 +102,20 @@ li:last-child {
   gap: 10px;
 }
 
+.timer{
+  color: rgb(253, 208, 23) !important;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7),
+               0 0 20px rgba(255, 215, 0, 0.5); 
+  
+  font-weight: bold;
+    font-size: 20px; 
+}
+
 #waiting-msg {
   color: rgb(116, 116, 116);
   font-size: 15px;
 }
+
 
 #players-count {
   color: white;
