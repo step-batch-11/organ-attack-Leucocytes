@@ -284,7 +284,7 @@ describe("tests for app", () => {
     it("Should wait until someone attacks", async () => {
       players.map((player) => {
         player.fillHandWithOrgans([{ id: 1, health: 1, isWild: true }]);
-        player.fillHandWithAttacks([{ id: 1, type: "affliction" }]);
+        player.fillHandWithAttacks([{ id: 1, action: "affliction" }]);
       });
       game = new Game(
         players,
@@ -293,10 +293,10 @@ describe("tests for app", () => {
         shuffle,
       );
       games[101] = game;
-      const response = app.request("/wait-for-affliction", {
+      app.request("/wait-for-affliction", {
         method: "GET",
       });
-      app.request("/attack", {
+      const response = app.request("/attack", {
         method: "post",
         headers: { cookie: "sessionID=1;roomID=101" },
         body: JSON.stringify({

@@ -1,6 +1,7 @@
 import { fetchPlayersData, renderOpponents, setupGame } from "./board_setup.js";
 
-const getCardId = (e) => Number(e.target.id.split("-").at(-1));
+const getCardId = (e) =>
+  Number(e.target.closest(".attack-card").id.split("-").at(-1));
 
 const getAfflictableOrgans = (player, opponents, attackCardId) => {
   const attackCard = player.attackCards
@@ -10,7 +11,11 @@ const getAfflictableOrgans = (player, opponents, attackCardId) => {
     organCards.forEach((card) => card.playerId = id);
     return allCards.concat(organCards);
   }, []);
-  return allOrganCards.filter(({ id }) => afflictableOrgansIds.includes(id));
+  if (attackCard.type === "dummy") return allOrganCards;
+
+  return allOrganCards.filter(({ id }) =>
+    afflictableOrgansIds.includes(id) || id === 100
+  );
 };
 
 const createPopupOrgans = (afflictableOrgans) => {
@@ -19,7 +24,10 @@ const createPopupOrgans = (afflictableOrgans) => {
     organ.setAttribute("class", "organ");
     organ.setAttribute("organ-id", `${afflictableOrgan.id}`);
     organ.setAttribute("player-id", `${afflictableOrgan.playerId}`);
-    organ.textContent = afflictableOrgan.name;
+    const organName = afflictableOrgan.name;
+    const image = document.createElement("img");
+    image.setAttribute("src", `/assets/organs/${organName.toLowerCase()}.png`);
+    organ.append(image);
     return organ;
   });
 };
@@ -29,7 +37,7 @@ const removePopup = () => {
   if (popup !== null) popup.remove();
 };
 
-const displayAfflicatbleOrgans = (
+const displayAfflictableOrgans = (
   e,
   player,
   opponents,
@@ -52,9 +60,11 @@ const displayAfflicatbleOrgans = (
 };
 
 const afflictOrgan = async (e, attackCardID, player) => {
-  const organ = e.target;
+  const organ = e.target.closest(".organ");
   const organCardID = Number(organ.getAttribute("organ-id"));
   const opponentID = Number(organ.getAttribute("player-id"));
+  console.log({ opponentID, organCardID });
+
   const res = await fetch("/attack", {
     method: "post",
     body: JSON.stringify({
@@ -78,11 +88,10 @@ const initGame = async () => {
   const { player, opponents } = await setupGame();
   const attackCards = document.querySelector(".player-area .attack-cards");
 
-  console.log(player.isMyTurn);
   if (player.isMyTurn) {
     attackCards.onclick = (e) => {
       const attackCardID = getCardId(e);
-      displayAfflicatbleOrgans(e, player, opponents, attackCardID);
+      displayAfflictableOrgans(e, player, opponents, attackCardID);
     };
   } else {
     attackCards.onclick = () => "";

@@ -39,6 +39,7 @@ const renderMyCards = ({ name, attackCards, organCards, isMyTurn }) => {
 
   const playerName = document.querySelector(".player-area .name");
   playerName.textContent = name;
+  console.log("Mee", isMyTurn);
 
   const avatar = document.querySelector(".player-area .player");
   if (isMyTurn) {
@@ -63,6 +64,7 @@ const createOpponentFragment = (
 
   const organs = element.querySelectorAll(".organ");
   renderOrgans(organs, organCards);
+  console.log("Opponent", isMyTurn);
 
   const avatar = clone.querySelector(".avatar");
   if (isMyTurn) {

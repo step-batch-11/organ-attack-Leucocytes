@@ -84,12 +84,34 @@ export class Game {
     }
   }
 
-  removeAttackFromAttacker(attackerID, attackCardID) {
+  refillAttackCard(attacker) {
+    if (this.#attackCards.length === 0) {
+      const attackCard = {
+        "id": 100,
+        "name": "Dummy",
+        "isInstant": false,
+        "afflictableOrgans": [
+          1000,
+        ],
+        "removableOrgans": [],
+        "isWild": false,
+        "afflictPoints": 1,
+        "Desc": "A Dummy Attack Card",
+        "type": "dummy",
+        "action": "affliction",
+        "isBlockable": true,
+      };
+      this.#attackCards.push(attackCard);
+    }
+    const attackCard = this.#attackCards.pop();
+    attacker.refillHand(attackCard);
+  }
+
+  discardAttackCard(attackerID, attackCardID) {
     const attacker = this.#findPlayer(attackerID);
     const attackCard = attacker.removeAttackCard(attackCardID);
     this.#attacksDiscardPile.push(attackCard);
-    const newAttackCard = this.#attackCards.pop();
-    attacker.refillHand(newAttackCard);
+    this.refillAttackCard(attacker);
     this.#currentPlayer = ++this.#currentPlayer % this.#players.length;
     return attackCard;
   }

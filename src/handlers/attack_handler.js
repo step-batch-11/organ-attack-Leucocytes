@@ -16,10 +16,10 @@ export const handleAttack = async (c) => {
 
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
-  const attackCard = game.removeAttackFromAttacker(attackerID, attackCardID);
+  const attackCard = game.discardAttackCard(attackerID, attackCardID);
 
-  const attackType = attackCard.type;
-  const handler = ACTIONS[attackType];
+  const attackAction = attackCard.action;
+  const handler = ACTIONS[attackAction];
   const res = handler({ opponentID, organCardID, game });
   return c.json(res);
 };

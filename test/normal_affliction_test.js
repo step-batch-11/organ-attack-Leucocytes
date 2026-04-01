@@ -55,7 +55,7 @@ describe("Testing Normal Affliction", () => {
   it("Should afflict an organ of player with given IDs", async () => {
     players.map((player) => {
       player.fillHandWithOrgans([{ id: 1, health: 2 }]);
-      player.fillHandWithAttacks([{ id: 1, type: "affliction" }]);
+      player.fillHandWithAttacks([{ id: 1, action: "affliction" }]);
     });
 
     const response = await app.request("/attack", {
@@ -74,7 +74,7 @@ describe("Testing Normal Affliction", () => {
   it("Should afflict an organ of player with given IDs", async () => {
     players.map((player) => {
       player.fillHandWithOrgans([{ id: 1, health: 1 }]);
-      player.fillHandWithAttacks([{ id: 1, type: "affliction" }]);
+      player.fillHandWithAttacks([{ id: 1, action: "affliction" }]);
     });
 
     const response = await app.request("/attack", {
