@@ -23,11 +23,14 @@ const renderAttackCards = (attackCardNodes, attackCards) => {
 const renderOrgans = (organNodes, organCards) => {
   organNodes.forEach((organ, i) => {
     if (organCards[i] !== undefined) {
-      const { name, id } = organCards[i];
+      const { name, id, isWild, health } = organCards[i];
       const image = organ.querySelector("img");
       image.setAttribute("src", `/assets/organs/${name.toLowerCase()}.png`);
       image.setAttribute("alt", name);
       image.setAttribute("title", name);
+
+      const maxHealth = isWild ? 4 : 2;
+      organ.setAttribute("data-affliction", maxHealth - health);
       organ.setAttribute("data-id", id);
       organ.setAttribute("id", `organ-${id}`);
     } else organ.remove();

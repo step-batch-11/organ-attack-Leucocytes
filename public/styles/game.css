@@ -39,6 +39,22 @@ main {
   position: relative;
 }
 
+.organ[data-affliction="1"]::before {
+  content: "";
+
+  position: absolute;
+  /* display: block; */
+  right: -8px;
+  z-index: 3;
+  width: 18px;
+  height: 18px;
+
+  background-image:
+    url("/assets/icons/blood_drop.svg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
 .organ img {
   font-size: 14px;
   color: crimson;
@@ -202,7 +218,7 @@ h1,
   gap: 1em;
 }
 
-.popup-afflicatble-organs img{
+.popup-afflicatble-organs img {
   cursor: pointer;
   transition: 200ms;
 }

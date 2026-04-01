@@ -74,7 +74,7 @@ describe("Testing ChartMixup", () => {
     assertNotEquals(player2Attacks, player2PreAttacks);
   });
 
-    it("Should return error msg when player play invalid action card", async () => {
+  it("Should return error msg when player play invalid action card", async () => {
     const [player1] = players;
     player1.refillHand({ id: 12, action: "invalid-action" });
 
@@ -88,6 +88,6 @@ describe("Testing ChartMixup", () => {
     });
 
     assertEquals(response.status, 200);
-    assertEquals(await response.json(), { msg:'Invalid action' });
+    assertEquals(await response.json(), { msg: "Invalid action" });
   });
 });

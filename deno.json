@@ -20,7 +20,7 @@
   },
 
   "fmt": {
-    "exclude": ["public/**/*.html", "public/**/*.css", "deno.*"]
+    "exclude": ["public/**/*.html", "public/**/*.css", "deno.*","public/assets/icons/*"]
   },
   "lint": {
     "exclude": ["public/"]
