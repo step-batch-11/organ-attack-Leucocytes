@@ -13,13 +13,14 @@ ul {
 }
 
 body {
+  font-family: Schoolbell, fantasy;
   height: 100vh;
   background: radial-gradient(rgb(48, 47, 47), rgb(0, 0, 0));
   background-repeat: no-repeat;
   justify-content: center;
- }
+}
 
- #waiting-table {
+#waiting-table {
   width: 800px;
   height: 600px;
   background-color: rgba(101, 101, 101, 0.5);
@@ -29,7 +30,7 @@ body {
   justify-content: none;
 }
 
- #waiting-header {
+#waiting-header {
   width: 100%;
   height: 70px;
   box-sizing: border-box;
@@ -41,6 +42,8 @@ body {
 }
 
 #waiting-header h2 {
+  font-family: "Nerko One";
+  letter-spacing: 1px;
   color: rgb(247, 184, 59);
 }
 
@@ -52,7 +55,7 @@ ul {
   flex-direction: column;
 }
 
- li {
+li {
   list-style: none;
   width: 100%;
   color: rgb(194, 194, 194);
@@ -64,11 +67,11 @@ ul {
   column-gap: 18px;
 }
 
- li:last-child {
-  border-bottom: none
+li:last-child {
+  border-bottom: none;
 }
 
- .player-profile {
+.player-profile {
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -76,15 +79,16 @@ ul {
   border: 1px solid white;
 }
 
- .loader {
-  border: 4px solid #1e293b;
-  border-top: 4px solid #38bdf8;
+.loader {
+  /* border: 4px solid #1e293b; */
+  border: 4px solid hsla(51, 100%, 50%, 0.2);
+  /* border-top: 4px solid #38bdf8; */
+  border-top: 4px solid gold;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
 }
-
 
 @keyframes spin {
   to {
@@ -92,17 +96,17 @@ ul {
   }
 }
 
- #table-footer {
+#table-footer {
   margin: 10px;
   justify-content: center;
   gap: 10px;
 }
 
- #waiting-msg {
+#waiting-msg {
   color: rgb(116, 116, 116);
   font-size: 15px;
 }
 
-#players-count{
-  color: white
+#players-count {
+  color: white;
 }

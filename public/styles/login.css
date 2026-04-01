@@ -1,47 +1,77 @@
-*{
+* {
   padding: 0px;
   margin: 0px;
 }
-
-body{
-  background-color: rgb(232, 232, 232);
+:root {
+  --bg-color: #1f1f1f;
+  --fg-color: #fdfdfd;
+  --organ-size: 44px;
+  --clr-red: crimson;
+  --bg-gradient: radial-gradient(var(--bg-color), black);
+  --clr-dark-red: hsl(355, 85%, 30%);
+  --clr-gold: gold;
 }
 
-main , #login-form, header{
+body {
+  background-image: var(--bg-gradient);
+  color: var(--fg-color);
+  font-family: Schoolbell, fantasy;
+}
+main,
+#login-form,
+header {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
 }
 
-header h1{
+header h1 {
+  padding-top: 1em;
+  font-family: "serif";
   font-size: 80px;
 }
 
-main{
+main {
   height: 80vh;
   width: 100vw;
 }
 
-#login-form{
-  height: 30%;
-  width: 25%;
-  gap: 15px;
-  background-color: rgb(173, 173, 173);
+#login-form {
+  /* height: 30%;
+  width: 25%; */
+  flex-direction: row;
+  gap: 1em;
+  padding: 2em;
+  background-color: var(--bg-color);
+  box-shadow: 0 0 5px black;
+  border-radius: 0.4em;
 }
 
 #login-form input {
-  width: 50%
+  width: 200px;
 }
 
 input {
+  color: var(--fg-color);
+  border: none;
+  border-radius: 0.2em;
   font-size: 18px;
-  padding:4px;
+  padding: 0.4em 0.8em;
+  background-color: hsla(51, 100%, 50%, 0.1);
+  /* outline-style: dashed; */
+}
+input:focus {
+  outline-color: hsla(51, 100%, 50%, 0.5);
 }
 
-button{
-  width: 50px;
-  padding: 4px;
+button {
+  font-family: "Nerko one", fantasy;
+  font-size: 18px;
+  border: none;
+  border-radius: 0.2em;
+  /* background-color: hsla(51, 100%, 50%, 0.9); */
+  background-color: hsla(51, 100%, 50%, 0.9);
+  box-shadow: 0 0 5px var(--clr-red);
+  padding: 0.4em 0.8em;
 }
-

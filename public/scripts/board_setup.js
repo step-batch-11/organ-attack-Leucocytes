@@ -9,21 +9,33 @@ export const fetchPlayersData = () => {
     });
 };
 
-const renderCards = (cardFragments, cards, idCategory) => {
-  console.log(cards);
-  cardFragments.forEach((cardFragment, i) => {
-    if (cards[i] !== undefined) {
-      const { name, id } = cards[i];
-      cardFragment.textContent = name;
-      cardFragment.setAttribute("data-type", `${idCategory}-${id}`);
-      cardFragment.setAttribute("id", `${idCategory}-${id}`);
-    } else cardFragment.remove();
+const renderAttackCards = (attackCardNodes, attackCards) => {
+  attackCardNodes.forEach((attackCard, i) => {
+    const { name, id } = attackCards[i];
+    const attackCardName = attackCard.querySelector("h1");
+    attackCardName.textContent = name;
+    attackCard.setAttribute("data-type", `attack-${id}`);
+    attackCard.setAttribute("id", `attack-${id}`);
+  });
+};
+
+const renderOrgans = (organNodes, organCards) => {
+  organNodes.forEach((organ, i) => {
+    if (organCards[i] !== undefined) {
+      const { name, id } = organCards[i];
+      const image = organ.querySelector("img");
+      image.setAttribute("src", `/assets/organs/${name.toLowerCase()}.png`);
+      image.setAttribute("alt", name);
+      organ.setAttribute("data-organ", id);
+      organ.setAttribute("id", `organ-${id}`);
+    } else organ.remove();
   });
 };
 
 const renderMyCards = ({ name, attackCards, organCards, isMyTurn }) => {
   const playerOrgans = document.querySelectorAll(".player-area .organ");
   const playerAttacks = document.querySelectorAll(".player-area .attack-card");
+
   const playerName = document.querySelector(".player-area .name");
   playerName.textContent = name;
 
@@ -34,8 +46,8 @@ const renderMyCards = ({ name, attackCards, organCards, isMyTurn }) => {
     avatar.classList.remove("highlight-avatar");
   }
 
-  renderCards(playerOrgans, organCards, "organ");
-  renderCards(playerAttacks, attackCards, "attack");
+  renderOrgans(playerOrgans, organCards);
+  renderAttackCards(playerAttacks, attackCards);
 };
 
 const createOpponentFragment = (
@@ -49,7 +61,7 @@ const createOpponentFragment = (
   nameElement.textContent = name;
 
   const organs = element.querySelectorAll(".organ");
-  renderCards(organs, organCards, "organ");
+  renderOrgans(organs, organCards);
 
   const avatar = clone.querySelector(".avatar");
   if (isMyTurn) {

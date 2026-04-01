@@ -4,13 +4,20 @@
 }
 :root {
   --bg-color: #1f1f1f;
+  --bg-gradient: radial-gradient(var(--bg-color), black);
   --fg-color: #fdfdfd;
-  --card-height: 8em;
-  --organ-size: 50px;
+  --card-height: 9em;
+  --card-width: 7em;
+  --organ-size: 44px;
+  --clr-red: crimson;
+  --clr-dark-red: hsl(355, 85%, 30%);
+  --clr-gold: gold;
 }
 
 body {
-  background-color: var(--bg-color);
+  font-family: Schoolbell, fantasy;
+  line-height: 1.2;
+  background-image: var(--bg-gradient);
   color: var(--fg-color);
   height: 100vh;
 }
@@ -21,12 +28,24 @@ main {
 }
 
 .organ {
-  background-color: rgba(240, 248, 255, 1);
-  color: crimson;
+  background-color: hsl(208, 100%, 97%);
   font-size: larger;
   width: var(--organ-size);
   height: var(--organ-size);
   border-radius: 100vw;
+  position: relative;
+}
+
+.organ img {
+  font-size: 14px;
+  color: crimson;
+  width: 150%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
 }
 
 /* Player */
@@ -45,19 +64,28 @@ main {
 }
 
 .attack-card {
-  width: 6em;
+  width: var(--card-width);
   height: var(--card-height);
-  color: crimson;
-  background-color: aliceblue;
+  background-image: radial-gradient(var(--clr-red), var(--clr-dark-red));
+  color: var(--clr-gold);
+  border-radius: 0.3em;
+  box-sizing: border-box;
+  border: 0.3em solid var(--clr-red);
+  padding: 0.2em;
+  transition: 200ms;
+  cursor: pointer;
 }
-
+.attack-card:hover {
+  box-shadow: 0 0 10px 1px hsl(0, 0%, 0%);
+  scale: 1.03;
+}
 .organs {
   gap: 1em;
   display: flex;
 }
 .player-area .player {
   position: relative;
-  right: -40em;
+  right: -30em;
   bottom: 4em;
   display: flex;
   align-items: center;
@@ -68,6 +96,9 @@ main {
   border-radius: 100vw;
 }
 
+.player-area .player .name {
+  text-transform: capitalize;
+}
 .popup {
   position: absolute;
   bottom: calc(var(--card-height) + var(--organ-size) + 10em);
@@ -79,7 +110,16 @@ main {
 .popup div {
   margin: 1em;
 }
-
+h1 {
+  font-size: 18px;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+h1,
+.name {
+  font-family: "Nerko One";
+  letter-spacing: 1px;
+}
 /* opponent */
 
 .opponent-area {
@@ -114,10 +154,13 @@ main {
   display: flex;
   gap: 1em;
   align-items: flex-start;
+  padding: 1em;
 }
 
 .highlight-avatar {
-  box-shadow: 0px 0px 10px 5px rgb(191, 255, 136);
+  /* box-shadow: 0px 0px 10px 5px rgb(191, 255, 136); */
+  /* box-shadow: 0px 0px 10px 5px gold; */
+  box-shadow: 0px 0px 0px 5px var(--clr-gold);
 }
 
 .avatar {
@@ -131,12 +174,13 @@ main {
     linear-gradient(#fff, #fff);
 }
 .opponent .name {
+  text-transform: capitalize;
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   overflow: hidden;
   text-align: center;
-  background-color: #848484;
+  background-color: #272727;
   border-radius: 5px;
 }
