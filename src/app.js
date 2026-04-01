@@ -9,6 +9,8 @@ import {
 import { gameSetup } from "./game_setup.js";
 import { handleAttack } from "./handlers/attack_handler.js";
 
+const clients = [];
+
 export const createApp = ({
   session,
   idGenerator,
@@ -32,7 +34,16 @@ export const createApp = ({
 
   app.post("/setup-game", gameSetup);
   app.post("/login", loginHandler);
-  app.post("/attack", handleAttack);
+  app.post("/attack", (c) => {
+    clients.forEach((resolve) => resolve(c.json({ success: true })));
+    return handleAttack(c);
+  });
+
+  app.get("/wait-for-affliction", () => {
+    return new Promise((reslove) => {
+      clients.push(reslove);
+    });
+  });
 
   app.get("/players-data", servePlayersData);
   app.get(

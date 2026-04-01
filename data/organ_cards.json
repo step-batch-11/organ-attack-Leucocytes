@@ -1,144 +1,48 @@
 [
   {
     "id": 1,
-    "name": "Appendix",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 2,
-    "name": "Bladder",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 3,
-    "name": "Bones",
+    "name": "Kidneys",
     "health": 2,
     "isWild": false
   },
   {
     "id": 4,
-    "name": "Bowels",
+    "name": "Tongue",
     "health": 2,
     "isWild": false
   },
   {
     "id": 5,
-    "name": "Brain",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 6,
-    "name": "Esophagus",
+    "name": "Teeth",
     "health": 2,
     "isWild": false
   },
   {
     "id": 7,
-    "name": "Eyes",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 8,
-    "name": "Gallbladder",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 9,
     "name": "Heart",
     "health": 2,
     "isWild": false
   },
   {
     "id": 10,
-    "name": "Kidneys",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 11,
-    "name": "Liver",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 12,
-    "name": "Lungs",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 13,
-    "name": "Nose",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 14,
-    "name": "Pancreas",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 15,
-    "name": "Skeletal",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 16,
-    "name": "Skin Cells",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 17,
     "name": "Spleen",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 18,
-    "name": "Stomach",
+    "id": 11,
+    "name": "Eyes",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 19,
-    "name": "Teeth",
+    "id": 12,
+    "name": "Liver",
     "health": 2,
     "isWild": false
   },
   {
-    "id": 20,
-    "name": "Thyroid",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 21,
-    "name": "Tongue",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 22,
-    "name": "Tonsils",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 23,
-    "name": "Trachea",
-    "health": 2,
-    "isWild": false
-  },
-  {
-    "id": 24,
+    "id": 100,
     "name": "Wild",
     "health": 4,
     "isWild": true

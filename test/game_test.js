@@ -17,16 +17,47 @@ describe("Game model test", () => {
 
       assertInstanceOf(game, Game);
       assertEquals(playerDetails, [{
-        hasWild: false,
+        isMyTurn: false,
         id: 1,
         name: "Shivang",
         organCards: [],
       }, {
-        hasWild: false,
+        isMyTurn: false,
         id: 1,
         name: "Samiran",
         organCards: [],
       }]);
+    });
+
+    it("Should return the players' details providing wild organ", () => {
+      const players = [
+        new Player("Shivang", 1),
+        new Player("Samiran", 2),
+      ];
+
+      players.map((player) => {
+        player.fillHandWithOrgans([{ id: 1, health: 1, isWild: true }]);
+        player.fillHandWithAttacks([]);
+      });
+
+      const game = new Game(players);
+      game.setFirstPlayer();
+      const playerDetails = game.getPlayer(1);
+
+      assertInstanceOf(game, Game);
+      assertEquals(playerDetails, {
+        isMyTurn: true,
+        id: 1,
+        name: "Shivang",
+        organCards: [
+          {
+            health: 1,
+            id: 1,
+            isWild: true,
+          },
+        ],
+        attackCards: [],
+      });
     });
 
     it("Should return the index of firstPlayer", () => {
@@ -53,7 +84,10 @@ describe("Game model test", () => {
         new Player("Samiran", 1),
       ];
 
-      const attackCards = Array.from({ length: 10 }, (_, i) => `a${i + 1}`);
+      const attackCards = Array.from(
+        { length: 10 },
+        (_, i) => ({ name: `a${i + 1}`, afflictableOrgans: [] }),
+      );
       const organCards = [];
 
       const game = new Game(
@@ -66,10 +100,22 @@ describe("Game model test", () => {
       game.distributeAttackCards();
 
       const { attackCards: player1Attacks } = player1.getPlayerDetails();
-      assertEquals(player1Attacks, ["a1", "a2", "a3", "a4", "a5"]);
+      assertEquals(
+        player1Attacks,
+        Array.from(
+          { length: 5 },
+          (_, i) => ({ name: `a${i + 1}`, afflictableOrgans: [] }),
+        ),
+      );
 
       const { attackCards: player2Attacks } = player2.getPlayerDetails();
-      assertEquals(player2Attacks, ["a6", "a7", "a8", "a9", "a10"]);
+      assertEquals(
+        player2Attacks,
+        Array.from(
+          { length: 5 },
+          (_, i) => ({ name: `a${i + 6}`, afflictableOrgans: [] }),
+        ),
+      );
     });
 
     it("Should distribute 4 attack cards to each players", () => {
@@ -106,8 +152,15 @@ describe("Game model test", () => {
         new Player("Samiran", 1),
       ];
 
-      const attackCards = Array.from({ length: 10 }, (_, i) => `a${i + 1}`);
-      const organCards = Array.from({ length: 8 }, (_, i) => `o${i + 1}`);
+      const attackCards = Array.from(
+        { length: 10 },
+        (_, i) => ({ name: `a${i + 1}`, afflictableOrgans: [] }),
+      );
+      attackCards.unshift({ name: "a0", afflictableOrgans: [1] });
+      const organCards = Array.from(
+        { length: 8 },
+        (_, i) => ({ name: `o${i + 1}`, id: i }),
+      );
 
       const game = new Game(
         [player1, player2],
@@ -120,13 +173,39 @@ describe("Game model test", () => {
 
       const { attackCards: player1Attacks, organCards: player1Organs } = player1
         .getPlayerDetails();
-      assertEquals(player1Attacks, ["a1", "a2", "a3", "a4", "a5"]);
-      assertEquals(player1Organs, ["o1", "o2", "o3", "o4"]);
+      assertEquals(
+        player1Attacks,
+        Array.from(
+          { length: 5 },
+          (_, i) => ({ name: `a${i + 1}`, afflictableOrgans: [] }),
+        ),
+      );
+      assertEquals(
+        player1Organs,
+        Array.from(
+          { length: 4 },
+          (_, i) => ({ name: `o${i + 1}`, id: i }),
+        ),
+      );
 
       const { attackCards: player2Attacks, organCards: player2Organs } = player2
         .getPlayerDetails();
-      assertEquals(player2Attacks, ["a6", "a7", "a8", "a9", "a10"]);
-      assertEquals(player2Organs, ["o5", "o6", "o7", "o8"]);
+      const attackCardsExp = Array.from(
+        { length: 4 },
+        (_, i) => ({ name: `a${i + 6}`, afflictableOrgans: [] }),
+      );
+      attackCardsExp.unshift({ name: "a0", afflictableOrgans: [1] });
+      assertEquals(
+        player2Attacks,
+        attackCardsExp,
+      );
+      assertEquals(
+        player2Organs,
+        Array.from(
+          { length: 4 },
+          (_, i) => ({ name: `o${i + 5}`, id: i + 4 }),
+        ),
+      );
     });
 
     it("Should distribute cards for 6 players", () => {
@@ -134,7 +213,10 @@ describe("Game model test", () => {
         { length: 6 },
         (_, i) => new Player(`p${i + 1}`, i + 1),
       );
-      const attackCardsDeck = Array.from({ length: 40 }, (_, i) => `a${i}`);
+      const attackCardsDeck = Array.from(
+        { length: 40 },
+        (_, i) => ({ name: `a${i}`, afflictableOrgans: [] }),
+      );
       const organCardsDeck = Array.from({ length: 24 }, (_, i) => `o${i}`);
 
       const game = new Game(

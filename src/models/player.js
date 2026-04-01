@@ -63,7 +63,6 @@ export class Player {
       id: this.#id,
       attackCards: [...this.#attackCards],
       organCards: [...this.#organCards],
-      hasWild: this.holdsWild(),
     };
   }
 }

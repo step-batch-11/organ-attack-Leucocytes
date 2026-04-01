@@ -1,4 +1,4 @@
-const fetchPlayersData = () => {
+export const fetchPlayersData = () => {
   const mockData = { player: [], opponents: [], playerId: null };
 
   return fetch("/players-data")
@@ -10,19 +10,29 @@ const fetchPlayersData = () => {
 };
 
 const renderCards = (cardFragments, cards, idCategory) => {
+  console.log(cards);
   cardFragments.forEach((cardFragment, i) => {
-    const { name, id } = cards[i];
-    cardFragment.textContent = name;
-    cardFragment.setAttribute("data-type", `${idCategory}-${id}`);
-    cardFragment.setAttribute("id", `${idCategory}-${id}`);
+    if (cards[i] !== undefined) {
+      const { name, id } = cards[i];
+      cardFragment.textContent = name;
+      cardFragment.setAttribute("data-type", `${idCategory}-${id}`);
+      cardFragment.setAttribute("id", `${idCategory}-${id}`);
+    } else cardFragment.remove();
   });
 };
 
-const renderMyCards = ({ name, attackCards, organCards }) => {
+const renderMyCards = ({ name, attackCards, organCards, isMyTurn }) => {
   const playerOrgans = document.querySelectorAll(".player-area .organ");
   const playerAttacks = document.querySelectorAll(".player-area .attack-card");
   const playerName = document.querySelector(".player-area .name");
   playerName.textContent = name;
+
+  const avatar = document.querySelector(".player-area .player");
+  if (isMyTurn) {
+    avatar.classList.add("highlight-avatar");
+  } else {
+    avatar.classList.remove("highlight-avatar");
+  }
 
   renderCards(playerOrgans, organCards, "organ");
   renderCards(playerAttacks, attackCards, "attack");
@@ -30,7 +40,7 @@ const renderMyCards = ({ name, attackCards, organCards }) => {
 
 const createOpponentFragment = (
   template,
-  { name, organCards, id, hasWild },
+  { name, organCards, id, isMyTurn },
 ) => {
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
@@ -41,16 +51,19 @@ const createOpponentFragment = (
   const organs = element.querySelectorAll(".organ");
   renderCards(organs, organCards, "organ");
 
-  if (hasWild) {
-    const avatar = clone.querySelector(".avatar");
+  const avatar = clone.querySelector(".avatar");
+  if (isMyTurn) {
     avatar.classList.add("highlight-avatar");
+  } else {
+    avatar.classList.remove("highlight-avatar");
   }
   return element;
 };
 
-const renderOpponents = (opponents) => {
+export const renderOpponents = (opponents) => {
   const template = document.querySelector(".opponent-template");
   const opponentArea = document.querySelector(".opponent-area");
+  opponentArea.innerHTML = "";
 
   const fragments = opponents.map((opponent) =>
     createOpponentFragment(template, opponent)
@@ -62,4 +75,5 @@ export const setupGame = async () => {
   const { player, opponents } = await fetchPlayersData();
   renderOpponents(opponents);
   renderMyCards(player);
+  return { player, opponents };
 };

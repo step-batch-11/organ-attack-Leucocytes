@@ -37,7 +37,7 @@ describe("Game setup tests", () => {
       name: "qwerty",
       id: 1,
       organCards: [],
-      hasWild: false,
+      isMyTurn: false,
     }];
     const playerDetails = await gameSetup(ctx);
 

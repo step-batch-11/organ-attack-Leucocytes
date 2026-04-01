@@ -1,4 +1,5 @@
 import { getCookie } from "hono/cookie";
+import { getPlayerId } from "../utils.js";
 
 export const getPlayers = (c) => {
   const rooms = c.get("rooms");
@@ -15,16 +16,6 @@ export const getPlayers = (c) => {
   }
 
   return c.json(props);
-};
-
-const getPlayerId = (c) => {
-  const sessionID = getCookie(c, "sessionID");
-  if (sessionID === undefined) return -1;
-  const session = c.get("session");
-  const playerName = session[sessionID];
-  const roomID = getCookie(c, "roomID");
-  const rooms = c.get("rooms");
-  return rooms[roomID].find(({ name }) => name === playerName).id;
 };
 
 export const servePlayersData = (c) => {

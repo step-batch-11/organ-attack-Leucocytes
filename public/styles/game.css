@@ -67,9 +67,17 @@ main {
   padding-right: 1em;
   border-radius: 100vw;
 }
+
 .popup {
   position: absolute;
-  bottom: calc(var(--card-height) + var(--organ-size) + 4em);
+  bottom: calc(var(--card-height) + var(--organ-size) + 10em);
+  display: flex;
+  gap: 1em;
+  background-color: coral;
+}
+
+.popup div {
+  margin: 1em;
 }
 
 /* opponent */
@@ -107,6 +115,7 @@ main {
   gap: 1em;
   align-items: flex-start;
 }
+
 .highlight-avatar {
   box-shadow: 0px 0px 10px 5px rgb(191, 255, 136);
 }

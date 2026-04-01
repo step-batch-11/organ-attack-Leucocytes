@@ -1,16 +1,16 @@
 import { getCookie } from "hono/cookie";
 
-const handleNormalAffliction = (opponentID, organCardID, game) => {
+const handleNormalAffliction = ({ opponentID, organCardID, game }) => {
   game.afflictOrganOfOpponent(opponentID, organCardID);
   return ({ success: true });
 };
 
-export const handleAttack = async (c) => {
-  const actions = {
-    transplant: "",
-    affliction: handleNormalAffliction,
-  };
+const ACTIONS = {
+  transplant: "",
+  affliction: handleNormalAffliction,
+};
 
+export const handleAttack = async (c) => {
   const { attackerID, opponentID, attackCardID, organCardID } = await c.req
     .json();
 
@@ -19,7 +19,7 @@ export const handleAttack = async (c) => {
   const attackCard = game.removeAttackFromAttacker(attackerID, attackCardID);
 
   const attackType = attackCard.type;
-  const handler = actions[attackType];
-  const res = handler(opponentID, organCardID, game);
+  const handler = ACTIONS[attackType];
+  const res = handler({ opponentID, organCardID, game });
   return c.json(res);
 };

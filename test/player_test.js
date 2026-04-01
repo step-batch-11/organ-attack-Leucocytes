@@ -67,7 +67,6 @@ describe("Testing Player Class", () => {
       name,
       organCards,
       attackCards,
-      hasWild: false,
     });
   });
 

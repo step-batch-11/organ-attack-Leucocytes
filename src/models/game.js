@@ -30,12 +30,25 @@ export class Game {
     });
   }
 
+  #doesEffectAnyOwnOrgan(attackCard, organCards) {
+    return organCards.some(({ id }) =>
+      attackCard.afflictableOrgans.includes(id)
+    );
+  }
+
   distributeAttackCards() {
     this.#attackCards = this.#cardShuffler(this.#attackCards);
-    const attackCardsLimit = 5;
+    const limit = 5;
 
     this.#players.forEach((player) => {
-      const attackCards = this.#attackCards.splice(0, attackCardsLimit);
+      const attackCards = [];
+      let i = 0;
+      const { organCards } = player.getPlayerDetails();
+      while (attackCards.length < limit && i < this.#attackCards.length) {
+        if (!this.#doesEffectAnyOwnOrgan(this.#attackCards[i], organCards)) {
+          attackCards.push(...this.#attackCards.splice(i, 1));
+        } else i++;
+      }
       player.fillHandWithAttacks(attackCards);
     });
   }
@@ -77,18 +90,19 @@ export class Game {
     this.#attacksDiscardPile.push(attackCard);
     const newAttackCard = this.#attackCards.pop();
     attacker.refillHand(newAttackCard);
+    this.#currentPlayer = ++this.#currentPlayer % this.#players.length;
     return attackCard;
   }
 
   distributeCards() {
-    this.distributeAttackCards();
     this.distributeOrganCards();
+    this.distributeAttackCards();
   }
 
   getPlayers() {
     return this.#players.map((player) => {
-      const { name, id, organCards, hasWild } = player.getPlayerDetails();
-      return { name, id, organCards, hasWild };
+      const { name, id, organCards } = player.getPlayerDetails();
+      return { name, id, organCards, isMyTurn: this.#isPlayerTurn(id) };
     });
   }
 
@@ -98,6 +112,11 @@ export class Game {
 
   getPlayer(id) {
     const player = this.#findPlayer(id);
-    return player.getPlayerDetails();
+    return { ...player.getPlayerDetails(), isMyTurn: this.#isPlayerTurn(id) };
+  }
+
+  #isPlayerTurn(id) {
+    const player = this.#players[this.#currentPlayer];
+    return player === undefined ? false : player.getId() === id;
   }
 }
