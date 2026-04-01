@@ -11,10 +11,11 @@ export const fetchPlayersData = () => {
 
 const renderAttackCards = (attackCardNodes, attackCards) => {
   attackCardNodes.forEach((attackCard, i) => {
-    const { name, id } = attackCards[i];
+    const { name, id, type } = attackCards[i];
     const attackCardName = attackCard.querySelector("h1");
     attackCardName.textContent = name;
     attackCard.setAttribute("data-id", id);
+    attackCard.setAttribute("data-type", type);
     attackCard.setAttribute("id", `attack-${id}`);
   });
 };

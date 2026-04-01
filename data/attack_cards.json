@@ -172,11 +172,11 @@
     "id": 17,
     "name": "Chart mixup",
     "isInstant": false,
-    "afflictableOrgans": [1],
+    "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
-    "Desc": "Urinary Tract Infection! affecting organs",
+    "Desc": "Chart mixup",
     "action": "chart-mixup",
     "type": "bureaucracy",
     "isBlockable": true

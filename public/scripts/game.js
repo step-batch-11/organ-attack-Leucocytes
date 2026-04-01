@@ -33,7 +33,7 @@ const createPopupOrgans = (afflictableOrgans) => {
 };
 
 const removePopup = () => {
-  const popup = document.querySelector(".popup");
+  const popup = document.querySelector(".popup > div");
   if (popup !== null) popup.remove();
 };
 
@@ -44,19 +44,19 @@ const displayAfflictableOrgans = (
   attackCardID,
 ) => {
   removePopup();
-  const popup = document.createElement("div");
-  popup.setAttribute("class", "popup");
+  const container = document.createElement("div");
+  container.setAttribute("class", "popup-afflicatble-organs");
   const afflictableOrgans = getAfflictableOrgans(
     player,
     opponents,
     attackCardID,
   );
   const organs = createPopupOrgans(afflictableOrgans);
-  popup.append(...organs);
-  popup.addEventListener("click", async (e) => {
+  container.append(...organs);
+  container.addEventListener("click", async (e) => {
     afflictOrgan(e, attackCardID, player);
   });
-  document.querySelector(".player-area").append(popup);
+  document.querySelector(".popup").append(container);
 };
 
 const afflictOrgan = async (e, attackCardID, player) => {
