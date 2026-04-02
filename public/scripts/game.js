@@ -103,14 +103,15 @@ const initGame = async () => {
   } else {
     attackCards.onclick = () => "";
   }
-
-  poll();
 };
-
-window.onload = initGame;
 
 const poll = async () => {
   await fetch("/wait-for-affliction");
   await initGame();
-  // poll();
+  poll();
+};
+
+window.onload = async () => {
+  await initGame();
+  poll();
 };

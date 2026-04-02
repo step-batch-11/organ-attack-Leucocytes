@@ -1,9 +1,11 @@
-// import { attackCards, organCards } from "./constants.js";
-import { Game } from "./models/game.js";
+import * as attacks from "../data/attack_cards.json" with { type: "json" };
+import * as organs from "../data/organ_cards.json" with { type: "json" };
 import { Player } from "./models/player.js";
-
-import * as attackCards from "../data/attack_cards.json" with { type: "json" };
-import * as organCards from "../data/organ_cards.json" with { type: "json" };
+import { Game } from "./models/game.js";
+import { Organ } from "./models/organ.js";
+import { Deck } from "./models/deck.js";
+import { Dealer } from "./models/dealer.js";
+import { AfflictionHandler } from "./models/affliction_handler.js";
 
 export const gameSetup = async (ctx) => {
   const games = ctx.get("games");
@@ -14,16 +16,27 @@ export const gameSetup = async (ctx) => {
   if (!(roomID in rooms)) return ctx.json({ message: "Invalid roomId" }, 400);
 
   const players = rooms[roomID].map(({ name, id }) => new Player(name, id));
+  const attackCards = new Deck(attacks.default, shuffle);
+
+  const organCards = [];
+  organs.default.forEach(({ name, id, health, isWild }) => {
+    organCards.push(new Organ(name, id, health, isWild));
+  });
+  const organDeck = new Deck(organCards, shuffle);
+
+  const dealer = new Dealer(attackCards, organDeck, players);
+  const afflictionHandler = new AfflictionHandler(attackCards, organDeck);
 
   const game = new Game(
     players,
-    attackCards.default,
-    organCards.default,
-    shuffle,
+    attackCards,
+    organDeck,
+    dealer,
+    afflictionHandler,
   );
-  game.distributeCards();
+  game.dealCards();
   game.setFirstPlayer();
   games[roomID] = game;
 
-  return ctx.json(game.getPlayers(), 201);
+  return ctx.json(game.getAllPlayersDetails(), 201);
 };

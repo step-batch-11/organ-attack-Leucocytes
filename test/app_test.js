@@ -4,6 +4,9 @@ import { createApp } from "../src/app.js";
 import { counter } from "../src/utils.js";
 import { Game } from "../src/models/game.js";
 import { Player } from "../src/models/player.js";
+import { Deck } from "../src/models/deck.js";
+import { AfflictionHandler } from "../src/models/affliction_handler.js";
+import { Dealer } from "../src/models/dealer.js";
 
 describe("tests for app", () => {
   const logger = () => (_, next) => {
@@ -144,14 +147,17 @@ describe("tests for app", () => {
       const rooms = { 101: [{ name: "chiru", id: 1 }] };
       const games = {};
       const players = rooms[101].map(({ name, id }) => new Player(name, id));
+      const dealer = new Dealer([], [], players);
+      const afflictionHandler = new AfflictionHandler([], []);
 
       const game = new Game(
         players,
         [],
         [],
-        shuffle,
+        dealer,
+        afflictionHandler,
       );
-      game.distributeCards();
+
       games[101] = game;
       const app = createApp({
         session,
@@ -336,13 +342,24 @@ describe("tests for app", () => {
     it("Should wait until someone attacks", async () => {
       players.map((player) => {
         player.fillHandWithOrgans([{ id: 1, health: 1, isWild: true }]);
-        player.fillHandWithAttacks([{ id: 1, action: "affliction" }]);
+        player.fillHandWithAttacks([{
+          id: 1,
+          action: "affliction",
+          afflicatbleOrgans: [],
+        }]);
       });
-      game = new Game(
+      const attackDeck = new Deck([{ afflictableOrgans: [] }]);
+      const organDeck = new Deck();
+
+      const dealer = new Dealer([], [], players);
+      const afflictionHandler = new AfflictionHandler(attackDeck, organDeck);
+
+      const game = new Game(
         players,
         [],
         [],
-        shuffle,
+        dealer,
+        afflictionHandler,
       );
       games[101] = game;
       app.request("/wait-for-affliction", {

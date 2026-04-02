@@ -36,7 +36,7 @@ describe("Testing Player Class", () => {
     const givenAttacks = Array.from({ length: 5 }, (_, i) => `a${i + 1}`);
     player.fillHandWithAttacks(givenAttacks);
     const expectedAttackCards = [...givenAttacks];
-    const attackCards = player.discardAttackCards();
+    const attackCards = player.discardAllAttackCards();
     assertEquals(attackCards, expectedAttackCards);
   });
 

@@ -4,6 +4,9 @@ import { createApp } from "../src/app.js";
 import { Game } from "../src/models/game.js";
 import { Player } from "../src/models/player.js";
 import { counter } from "../src/utils.js";
+import { Dealer } from "../src/models/dealer.js";
+import { Deck } from "../src/models/deck.js";
+import { AfflictionHandler } from "../src/models/affliction_handler.js";
 
 describe("Testing ChartMixup", () => {
   let roomId;
@@ -18,25 +21,33 @@ describe("Testing ChartMixup", () => {
     };
 
     const session = { "1": "chiru" };
-    const attackCards = Array.from(
-      { length: 10 },
-      (_, i) => ({ id: i + 1, type: "affliction" }),
+    const attackCards = new Deck(
+      Array.from(
+        { length: 10 },
+        (_, i) => ({ id: i + 1, type: "affliction" }),
+      ),
+      shuffle,
     );
+    const organCards = new Deck([{ id: 1, health: 2 }], shuffle);
     const idGenerator = counter();
     const playerIdGenerator = counter();
     const roomIdGenerator = counter();
     const rooms = { 101: [{ name: "chiru", id: 1 }, { name: "kumar", id: 2 }] };
     const games = {};
     players = rooms[101].map(({ name, id }) => new Player(name, id));
+    const dealer = new Dealer(attackCards, organCards, players);
+
+    const afflictionHandler = new AfflictionHandler(attackCards, organCards);
 
     const game = new Game(
       players,
       attackCards,
-      [{ id: 1, health: 2 }],
-      shuffle,
+      organCards,
+      dealer,
+      afflictionHandler,
     );
     games[101] = game;
-    game.distributeCards();
+    game.dealCards();
     app = createApp({
       session,
       idGenerator,

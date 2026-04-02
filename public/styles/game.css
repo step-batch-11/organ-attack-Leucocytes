@@ -96,7 +96,7 @@ main {
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
-[data-type="dummy"] {
+[data-type="dummy"], [data-type="wild"] {
   background-image: radial-gradient(yellowgreen, var(--clr-gray));
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);

@@ -4,6 +4,7 @@ export class Player {
   #attackCards;
   #organCards;
   #type;
+
   constructor(name, id, type) {
     this.#name = name;
     this.#id = id;
@@ -14,6 +15,10 @@ export class Player {
 
   fillHandWithOrgans(organCards) {
     this.#organCards = organCards;
+  }
+
+  fillHandWithAttacks(attackCards) {
+    this.#attackCards = attackCards;
   }
 
   #isOrganDead(organ) {
@@ -41,10 +46,6 @@ export class Player {
     this.#attackCards.push(attackCard);
   }
 
-  fillHandWithAttacks(attackCards) {
-    this.#attackCards = attackCards;
-  }
-
   getId() {
     return this.#id;
   }
@@ -53,7 +54,7 @@ export class Player {
     return this.#organCards.some((organ) => organ.isWild);
   }
 
-  discardAttackCards() {
+  discardAllAttackCards() {
     return this.#attackCards.splice(0);
   }
 

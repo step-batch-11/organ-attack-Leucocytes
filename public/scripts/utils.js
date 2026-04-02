@@ -10,7 +10,7 @@ export const getAfflictableOrgans = (
     organCards.forEach((card) => card.playerId = id);
     return allCards.concat(organCards);
   }, []);
-  if (attackCard.type === "dummy") return allOrganCards;
+  if (attackCard.isWild) return allOrganCards;
 
   return allOrganCards.filter(({ id }) =>
     afflictableOrgansIds.includes(id) || id === 100
