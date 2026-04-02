@@ -16,3 +16,8 @@ export const getAfflictableOrgans = (
     afflictableOrgansIds.includes(id) || id === 100
   );
 };
+
+export const cloneFromTemplate = (templateID, element = "*") => {
+  const template = document.querySelector(templateID);
+  return template.content.cloneNode(true).querySelector(element);
+};

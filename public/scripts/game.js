@@ -1,4 +1,4 @@
-import { fetchPlayersData, renderOpponents, setupGame } from "./board_setup.js";
+import { renderGame, renderOpponents } from "./render_game.js";
 import { getAfflictableOrgans } from "./utils.js";
 
 const getCardId = (attackCard) => Number(attackCard.dataset.id);
@@ -81,8 +81,20 @@ const ACTION_HANDLERS = {
   "affliction": displayAfflictableOrgans,
 };
 
+const fetchPlayersData = () => {
+  const mockData = { player: [], opponents: [], playerId: null };
+
+  return fetch("/players-data")
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error(err);
+      return mockData;
+    });
+};
+
 const initGame = async () => {
-  const { player, opponents } = await setupGame();
+  const { player, opponents, event } = await fetchPlayersData();
+  await renderGame({ player, opponents, event });
   const attackCards = document.querySelector(".player-area .attack-cards");
 
   console.log(player, opponents);

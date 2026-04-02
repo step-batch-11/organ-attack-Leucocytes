@@ -72,7 +72,6 @@ const renderTimeOutAndRedirectToGame = (body) => {
   startCountdown(waitingSpan, body);
 };
 
-//-------------
 
 const main = async () => {
   const body = await makeGETReq("/get-players").catch((_) => {});
