@@ -101,4 +101,35 @@ describe("Testing Player Class", () => {
     player.fillHandWithOrgans(organCardsExp);
     assertEquals(player.afflictOrgan(1), { id: 1, name: "o2", health: 0 });
   });
+
+  it("Should remove organ", () => {
+    const player = new Player("Chiru", 1);
+    const attackCardsExp = Array.from(
+      { length: 5 },
+      (_, i) => ({ id: i, name: `a${i + 1}` }),
+    );
+    const organCardsExp = Array.from(
+      { length: 4 },
+      (_, i) => ({ id: i, name: `o${i + 1}`, health: 1 }),
+    );
+    player.fillHandWithAttacks(attackCardsExp);
+    player.fillHandWithOrgans(organCardsExp);
+    assertEquals(player.removeOrgan(1), { id: 1, name: "o2", health: 1 });
+  });
+
+  it("Should add organ", () => {
+    const player = new Player("Chiru", 1);
+    const attackCardsExp = Array.from(
+      { length: 5 },
+      (_, i) => ({ id: i, name: `a${i + 1}` }),
+    );
+    const organCardsExp = Array.from(
+      { length: 4 },
+      (_, i) => ({ id: i, name: `o${i + 1}`, health: 1 }),
+    );
+    player.fillHandWithAttacks(attackCardsExp);
+    player.fillHandWithOrgans(organCardsExp);
+    player.addOrgan({ id: 100 });
+    assertEquals(player.removeOrgan(100), { id: 100 });
+  });
 });

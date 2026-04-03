@@ -1,83 +1,81 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="shortcut icon"
-      href="/assets/favicon/favicon.png"
-      type="image/x-icon"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="/styles/game.css" />
-    <link rel="stylesheet" href="/styles/vaccine.css" />
-    <title>Game</title>
-    <script type="module" src="/scripts/game.js"></script>
 
-    <template class="opponent-template">
-      <div class="opponent">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="/assets/favicon/favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles/game.css" />
+  <link rel="stylesheet" href="/styles/vaccine.css" />
+  <title>Game</title>
+  <script type="module" src="/scripts/game.js"></script>
+
+  <template class="opponent-template">
+    <div class="opponent">
+      <div class="avatar">
+        <p class="name"></p>
+      </div>
+    </div>
+  </template>
+
+  <template id="flash-screen-affliction-template">
+    <div class="flash-screen">
+      <div class="actor">
         <div class="avatar">
           <p class="name"></p>
         </div>
-
-        <div class="organ"><img /></div>
-        <div class="organ"><img /></div>
-        <div class="organ"><img /></div>
-        <div class="organ"><img /></div>
       </div>
-    </template>
+      <div class="attack-card">
+        <h1></h1>
+      </div>
+      <div class="target">
+        <div class="organ"><img /></div>
+        <div class="avatar">
+          <p class="name"></p>
+        </div>
+      </div>
+    </div>
+  </template>
 
-    <template id="flash-screen-affliction-template">
-      <div class="flash-screen">
-        <div class="actor">
-          <div class="avatar">
-            <p class="name"></p>
-          </div>
+  <template id="organ-card-template">
+    <div class="organ"><img /></div>
+  </template>
+</head>
+
+<body>
+  <main>
+    <div class="opponent-area"></div>
+    <div class="player-area">
+      <div class="attack-cards">
+        <div class="attack-card">
+          <h1></h1>
         </div>
         <div class="attack-card">
           <h1></h1>
         </div>
-        <div class="target">
-          <div class="organ"><img /></div>
-          <div class="avatar">
-            <p class="name"></p>
-          </div>
+        <div class="attack-card">
+          <h1></h1>
+        </div>
+        <div class="attack-card">
+          <h1></h1>
+        </div>
+        <div class="attack-card">
+          <h1></h1>
         </div>
       </div>
-    </template>
-  </head>
-
-  <body>
-    <main>
-      <div class="opponent-area"></div>
-      <div class="player-area">
-        <div class="attack-cards">
-          <div class="attack-card">
-            <h1></h1>
-          </div>
-          <div class="attack-card"><h1></h1></div>
-          <div class="attack-card"><h1></h1></div>
-          <div class="attack-card"><h1></h1></div>
-          <div class="attack-card"><h1></h1></div>
-        </div>
-        <div class="organs">
-          <div class="organ"><img /></div>
-          <div class="organ"><img /></div>
-          <div class="organ"><img /></div>
-          <div class="organ"><img /></div>
-        </div>
-
-        <div class="player">
-          <div class="avatar"></div>
-          <p class="name">Template</p>
-        </div>
+      <div class="organs">
       </div>
-      <div class="popup"></div>
-    </main>
-  </body>
+
+      <div class="player">
+        <div class="avatar"></div>
+        <p class="name">Template</p>
+      </div>
+    </div>
+    <div class="popup"></div>
+  </main>
+</body>
+
 </html>

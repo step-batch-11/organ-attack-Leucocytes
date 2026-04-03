@@ -49,6 +49,13 @@ export class Game {
     player.applyVaccine();
   }
 
+  transplantOrgan(playerID, opponentID, organCardID) {
+    const player = this.#findPlayer(playerID);
+    const opponent = this.#findPlayer(opponentID);
+    const organ = opponent.removeOrgan(organCardID);
+    player.addOrgan(organ);
+  }
+
   chartMixup() {
     this.#discardAllAttackCards();
     this.#attackCards.refillDrawingPile();

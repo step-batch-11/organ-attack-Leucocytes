@@ -2,11 +2,12 @@ import { getCookie } from "hono/cookie";
 import {
   handleChartMixup,
   handleNormalAffliction,
+  handleTransplant,
   handleVaccine,
 } from "./card_action_handler.js";
 
 const ACTIONS = {
-  transplant: () => ({ success: true }),
+  transplant: handleTransplant,
   affliction: handleNormalAffliction,
   "chart-mixup": handleChartMixup,
   Vaccine: handleVaccine,

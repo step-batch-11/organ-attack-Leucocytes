@@ -52,7 +52,11 @@ export class AfflictionHandler {
   discardAttackCard(attacker, attackCardID) {
     const attackCard = attacker.removeAttackCard(attackCardID);
 
-    this.#attackCards.addToDiscardPile(attackCard);
+    if (
+      attackCard.action !== "transplant" && attackCard.action !== "its-alive"
+    ) {
+      this.#attackCards.addToDiscardPile(attackCard);
+    }
     this.#refillAttackCard(attacker);
 
     return attackCard;

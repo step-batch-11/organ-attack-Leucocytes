@@ -70,6 +70,15 @@ export class Player {
     return this.#organCards.some((organ) => organ.isWild);
   }
 
+  addOrgan(organ) {
+    this.#organCards.push(organ);
+  }
+
+  removeOrgan(id) {
+    const index = this.#organCards.findIndex((card) => card.id === id);
+    return this.#organCards.splice(index, 1)[0];
+  }
+
   discardAllAttackCards() {
     return this.#attackCards.splice(0);
   }

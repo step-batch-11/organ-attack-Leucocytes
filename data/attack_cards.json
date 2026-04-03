@@ -219,8 +219,8 @@
     "isWild": false,
     "afflictPoints": 0,
     "Desc": "Transplant",
-    "action": "Transplant",
-    "type": "Tactical",
+    "action": "transplant",
+    "type": "tactical",
     "isBlockable": true
   },
   {

@@ -12,3 +12,11 @@ export const handleVaccine = ({ attackerID, game }) => {
   game.applyVaccine(attackerID);
   return ({ success: true });
 };
+
+export const handleTransplant = (
+  { attackerID, opponentID, organCardID, game },
+) => {
+  game.transplantOrgan(attackerID, opponentID, organCardID);
+  return ({ success: true });
+};
+//

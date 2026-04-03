@@ -12,7 +12,7 @@ export const getAfflictableOrgans = (
     return allCards.concat(organCards);
   }, []);
 
-  if (attackCard.isWild) return allOrganCards;
+  if (attackCard.isWild || attackCardId === 19) return allOrganCards;
 
   return allOrganCards.filter(({ id }) =>
     afflictableOrgansIds.includes(id) || id === 100

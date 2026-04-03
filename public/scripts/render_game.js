@@ -32,17 +32,15 @@ const renderOrganImage = (organ, name) => {
   image.setAttribute("title", name);
 };
 
-const renderOrgans = (organNodes, organCards) => {
-  organNodes.forEach((organ, i) => {
-    if (organCards[i] !== undefined) {
-      const { name, id, isWild, health } = organCards[i];
-      renderOrganImage(organ, name);
-
-      const maxHealth = isWild ? 4 : 2;
-      organ.setAttribute("data-affliction", maxHealth - health);
-      organ.setAttribute("data-id", id);
-      organ.setAttribute("id", `organ-${id}`);
-    } else organ.remove();
+const renderOrgans = (container, organCards) => {
+  organCards.forEach(({ name, id, isWild, health }) => {
+    const organ = cloneFromTemplate("#organ-card-template");
+    renderOrganImage(organ, name);
+    const maxHealth = isWild ? 4 : 2;
+    organ.setAttribute("data-affliction", maxHealth - health);
+    organ.setAttribute("data-id", id);
+    organ.setAttribute("id", `organ-${id}`);
+    container.append(organ);
   });
 };
 
@@ -51,10 +49,10 @@ const renderMyCards = (
   opponents,
 ) => {
   const playerArea = document.querySelector(".player-area");
-  const playerOrgans = playerArea.querySelectorAll(".organ");
+  const playerOrganContainer = playerArea.querySelector(".organs");
   const playerAttacks = playerArea.querySelectorAll(".attack-card");
 
-  console.log({ playerArea, playerOrgans, playerAttacks });
+  console.log({ playerArea, playerAttacks });
   setTextContent(playerArea, ".name", name);
   console.log("Mee", isMyTurn);
 
@@ -69,7 +67,8 @@ const renderMyCards = (
     avatar.classList.remove("highlight-avatar");
   }
 
-  renderOrgans(playerOrgans, organCards);
+  playerOrganContainer.innerHTML = "";
+  renderOrgans(playerOrganContainer, organCards);
   renderAttackCards(playerAttacks, attackCards, opponents);
 };
 
@@ -77,7 +76,7 @@ const createOppFragment = (
   template,
   { name, organCards, id, isMyTurn, vaccinePoints },
 ) => {
-  console.log(vaccinePoints);
+  console.log(organCards);
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
   element.setAttribute("id", `player-${id}`);
@@ -93,8 +92,8 @@ const createOppFragment = (
   if (vaccinePoints === 0) {
     element.classList.remove("vacced-half");
   }
-  const organs = element.querySelectorAll(".organ");
-  renderOrgans(organs, organCards);
+  // const organs = element.querySelectorA(".organ");
+  renderOrgans(element, organCards);
 
   const avatar = clone.querySelector(".avatar");
   if (isMyTurn) {

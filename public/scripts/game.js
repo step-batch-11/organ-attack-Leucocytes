@@ -72,6 +72,7 @@ const afflictOrgan = async (
     opponentID,
     isInstant,
   };
+  removePopup();
 
   await postJSON("/attack", body)
     .then(async ({ success }) => {
@@ -80,8 +81,6 @@ const afflictOrgan = async (
         renderOpponents(opponents);
       }
     });
-
-  removePopup();
 };
 
 const postJSON = (url, body) => {
@@ -103,6 +102,7 @@ const ACTION_HANDLERS = {
   "chart-mixup": performChartMixup,
   affliction: displayAfflictableOrgans,
   Vaccine: playVaccineCard,
+  "transplant": displayAfflictableOrgans,
 };
 
 const attachEventListener = (e, player, opponents, isInstant = false) => {
