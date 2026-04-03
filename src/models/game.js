@@ -48,6 +48,12 @@ export class Game {
     });
   }
 
+  chartMixup() {
+    this.#discardAllAttackCards();
+    this.#attackCards.refillDrawingPile();
+    this.#dealer.dealAttackCards();
+  }
+
   applyVaccine(playerID) {
     const player = this.#findPlayer(playerID);
     player.applyVaccine();
@@ -60,10 +66,9 @@ export class Game {
     player.addOrgan(organ);
   }
 
-  chartMixup() {
-    this.#discardAllAttackCards();
-    this.#attackCards.refillDrawingPile();
-    this.#dealer.dealAttackCards();
+  healOrgan(playerID, organCardID) {
+    const player = this.#findPlayer(playerID);
+    player.healOrgan(organCardID);
   }
 
   #findPlayer(id) {

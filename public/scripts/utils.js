@@ -1,10 +1,4 @@
-export const getAfflictableOrgans = (
-  { attackCards },
-  opponents,
-  attackCardId,
-) => {
-  const attackCard = attackCards
-    .find(({ id }) => id === attackCardId);
+export const getAfflictableOrgans = (opponents, attackCard) => {
   const afflictableOrgansIds = attackCard.afflictableOrgans;
 
   const allOrganCards = opponents.reduce((allCards, { organCards, id }) => {
@@ -12,7 +6,7 @@ export const getAfflictableOrgans = (
     return allCards.concat(organCards);
   }, []);
 
-  if (attackCard.isWild || attackCardId === 19) return allOrganCards;
+  if (attackCard.isWild || attackCard.id === 19) return allOrganCards;
 
   return allOrganCards.filter(({ id }) =>
     afflictableOrgansIds.includes(id) || id === 100
