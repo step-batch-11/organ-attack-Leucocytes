@@ -5,6 +5,7 @@ export class Game {
   #dealer;
   #afflictionHandler;
   #currentPlayer;
+  #event;
 
   constructor(players, attackCards, organCards, dealer, afflictionHandler) {
     this.#players = players;
@@ -12,6 +13,7 @@ export class Game {
     this.#organCards = organCards;
     this.#dealer = dealer;
     this.#afflictionHandler = afflictionHandler;
+    this.#event = {};
   }
 
   setFirstPlayer() {
@@ -97,5 +99,18 @@ export class Game {
     const player = this.#players[this.#currentPlayer];
     if (player === undefined) return false;
     return player.getId() === id;
+  }
+
+  getGameState() {
+    const players = this.getAllPlayersDetails();
+    const currentPlayer = this.#players[this.#currentPlayer].getId();
+    const event = this.#event;
+    // const this.
+
+    return structuredClone({ players, currentPlayer, event });
+  }
+
+  registerEvent(event) {
+    this.#event = event;
   }
 }

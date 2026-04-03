@@ -27,7 +27,7 @@ const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
 
 const renderOrganImage = (organ, name) => {
   const image = organ.querySelector("img");
-  image.setAttribute("src", `/assets/organs/${name.toLowerCase()}.png`);
+  image.setAttribute("src", `/assets/organs/${String(name).toLowerCase()}.png`);
   image.setAttribute("alt", name);
   image.setAttribute("title", name);
 };
@@ -105,7 +105,6 @@ export const renderOpponents = (opponents) => {
   const template = document.querySelector(".opponent-template");
   const opponentArea = document.querySelector(".opponent-area");
   opponentArea.innerHTML = "";
-
   const fragments = opponents.map((opponent) => {
     return createOppFragment(template, opponent);
   });
@@ -117,8 +116,9 @@ const setTextContent = (container, selector, content) => {
 };
 
 const renderFlashScreen = ({ name, actor, target, card }) => {
-  if (name === "idle" || name === undefined) {
-    document.querySelector(".flash-screen")?.remove();
+  document.querySelector(".flash-screen")?.remove();
+
+  if (name !== "affliction") {
     return;
   }
   const flashScreen = cloneFromTemplate("#flash-screen-affliction-template");
@@ -154,8 +154,13 @@ const mockEventData = {
   },
 };
 
-export const renderGame = async ({ player, opponents, event }) => {
+export const renderGame = async (gameState) => {
+  // { player, opponents, event }
+
+  const { event, players, self } = gameState;
+  const opponents = players.filter(({ id }) => id !== self.id);
+
   renderOpponents(opponents);
-  renderMyCards(player, opponents);
+  renderMyCards(self, opponents);
   renderFlashScreen(event || mockEventData);
 };

@@ -2,12 +2,7 @@ import { assertEquals } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "../src/app.js";
 import { counter } from "../src/utils.js";
-import { Game } from "../src/models/game.js";
-import { Player } from "../src/models/player.js";
-import { Deck } from "../src/models/deck.js";
-import { AfflictionHandler } from "../src/models/affliction_handler.js";
-import { Dealer } from "../src/models/dealer.js";
-import { Organ } from "../src/models/organ.js";
+
 describe("tests for app", () => {
   const logger = () => (_, next) => {
     return next();
@@ -139,58 +134,6 @@ describe("tests for app", () => {
       assertEquals(contentType, "text/html; charset=utf-8");
     });
 
-    it("=> app should send players data ", async () => {
-      const session = { "1": "chiru" };
-      const idGenerator = counter();
-      const playerIdGenerator = counter();
-      const roomIdGenerator = counter();
-      const rooms = { 101: [{ name: "chiru", id: 1 }] };
-      const games = {};
-      const players = rooms[101].map(({ name, id }) => new Player(name, id));
-      const dealer = new Dealer([], [], players);
-      const afflictionHandler = new AfflictionHandler([], []);
-
-      const game = new Game(
-        players,
-        [],
-        [],
-        dealer,
-        afflictionHandler,
-      );
-
-      games[101] = game;
-      const app = createApp({
-        session,
-        idGenerator,
-        playerIdGenerator,
-        roomIdGenerator,
-        rooms,
-        shuffle,
-        games,
-      }, logger);
-
-      const response = await app.request("/players-data", {
-        method: "GET",
-        headers: { cookie: "sessionID=1;roomID=101" },
-      });
-      const contentType = response.headers.get("content-type");
-
-      assertEquals(response.status, 200);
-      assertEquals(contentType, "application/json");
-    });
-
-    it(" app should not send player data if there is no sessionId", async () => {
-      const response = await app.request("/players-data", {
-        method: "GET",
-      });
-      const contentType = response.headers.get("content-type");
-      const { msg } = await response.json();
-      assertEquals(response.status, 400);
-
-      assertEquals(contentType, "application/json");
-      assertEquals(msg, "BAD REQUEST");
-    });
-
     it("=> app should send players data and roomId", async () => {
       const formData = new FormData();
       formData.append("username", "user1");
@@ -247,147 +190,39 @@ describe("tests for app", () => {
       assertEquals(body.myId, 1);
     });
   });
-
-  describe("Serve players data", () => {
+  describe("get: /game-state test", () => {
     let session;
-    let idGenerator;
-    let playerIdGenerator;
-    let roomIdGenerator;
+    let app;
     let rooms;
     let games;
-    let players;
-    let game;
-    let app;
-    const shuffle = (x) => x;
 
     beforeEach(() => {
       session = { "1": "chiru" };
-      idGenerator = counter();
-      playerIdGenerator = counter();
-      roomIdGenerator = counter();
-      rooms = {
-        101: [{ name: "chiru", id: 1 }, { name: "chiru2", id: 1 }],
+      rooms = { 101: [{ name: "chiru", id: 1 }] };
+      games = {
+        101: {
+          getGameState() {
+            return { data: "dummy game state" };
+          },
+          getPlayer() {
+            return 1;
+          },
+        },
       };
-      games = {};
-      players = rooms[101].map(({ name, id }) => new Player(name, id));
-
       app = createApp({
         session,
-        idGenerator,
-        playerIdGenerator,
-        roomIdGenerator,
         rooms,
-        shuffle,
         games,
       }, logger);
     });
 
-    it("=> app should send players data while providing wild card", async () => {
-      players.map((player) => {
-        player.fillHandWithOrgans([new Organ("wild", 1, 1)]);
-        player.fillHandWithAttacks([{ id: 1, type: "affliction" }]);
-      });
-      game = new Game(
-        players,
-        [],
-        [],
-        shuffle,
-      );
-      games[101] = game;
-      const response = await app.request("/players-data", {
-        method: "GET",
-        headers: { cookie: "sessionID=1;roomID=101" },
-      });
-      const contentType = response.headers.get("content-type");
+    it("should return a dummy game state", async () => {
+      const headers = new Headers();
+      headers.append("Cookie", "sessionID=1; roomID=101");
+      const res = await app.request("/game-state", { headers });
+      const body = await res.json();
 
-      assertEquals(response.status, 200);
-      assertEquals(contentType, "application/json");
-    });
-
-    it("=> app should send players data without providing wild card", async () => {
-      players.map((player) => {
-        player.fillHandWithOrgans([new Organ("", 1, 1)]);
-        player.fillHandWithAttacks([{ id: 1, type: "affliction" }]);
-      });
-      game = new Game(
-        players,
-        [],
-        [],
-        shuffle,
-      );
-      games[101] = game;
-      const response = await app.request("/players-data", {
-        method: "GET",
-        headers: { cookie: "sessionID=1;roomID=101" },
-      });
-      const contentType = response.headers.get("content-type");
-
-      assertEquals(response.status, 200);
-      assertEquals(contentType, "application/json");
-    });
-
-    it(" app should not send player data if there is no sessionId", async () => {
-      const response = await app.request("/players-data", {
-        method: "GET",
-      });
-      const contentType = response.headers.get("content-type");
-      assertEquals(response.status, 400);
-
-      const { msg } = await response.json();
-
-      assertEquals(contentType, "application/json");
-      assertEquals(msg, "BAD REQUEST");
-    });
-
-    it("Should wait until someone attacks", async () => {
-      players.map((player) => {
-        const organCards = Array.from(
-          { length: 2 },
-          (_, i) => (new Organ(`o${i + 1}`, i, 1)),
-        );
-        player.fillHandWithOrgans(organCards);
-        player.fillHandWithAttacks([{
-          id: 1,
-          action: "affliction",
-          afflictableOrgans: [],
-        }]);
-      });
-
-      const attackDeck = new Deck([{ afflictableOrgans: [] }]);
-
-      const organCards = Array.from(
-        { length: 2 },
-        (_, i) => (new Organ(`o${i + 1}`, i, 1)),
-      );
-
-      const organDeck = new Deck(organCards);
-
-      const dealer = new Dealer([], [], players);
-      const afflictionHandler = new AfflictionHandler(attackDeck, organDeck);
-
-      const game = new Game(
-        players,
-        [],
-        [],
-        dealer,
-        afflictionHandler,
-      );
-      games[101] = game;
-      app.request("/wait-for-affliction", { method: "GET" });
-
-      const response = await app.request("/attack", {
-        method: "post",
-        headers: { cookie: "sessionID=1;roomID=101" },
-        body: JSON.stringify({
-          attackerID: 1,
-          opponentID: 1,
-          attackCardID: 1,
-          organCardID: 1,
-        }),
-      });
-
-      const contentType = response.headers.get("content-type");
-      assertEquals(contentType, "application/json");
+      assertEquals(body, { self: 1, data: "dummy game state" });
     });
   });
 });

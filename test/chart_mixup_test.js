@@ -48,6 +48,7 @@ describe("Testing ChartMixup", () => {
     );
     games[101] = game;
     game.dealCards();
+    game.setFirstPlayer();
     app = createApp({
       session,
       idGenerator,
@@ -98,7 +99,7 @@ describe("Testing ChartMixup", () => {
       headers: { cookie: `roomID=${roomId}` },
     });
 
-    assertEquals(response.status, 200);
-    assertEquals(await response.json(), { msg: "Invalid action" });
+    assertEquals(response.status, 400);
+    assertEquals(await response.json(), { message: "Invalid action" });
   });
 });

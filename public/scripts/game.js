@@ -1,11 +1,11 @@
-import { renderGame, renderOpponents } from "./render_game.js";
+import { renderGame } from "./render_game.js";
 import { performChartMixup } from "./perform_chart_mixup.js";
 import { getAfflictableOrgans } from "./utils.js";
 
 const fetchPlayersData = () => {
   const mockData = { player: [], opponents: [], playerId: null };
 
-  return fetch("/players-data")
+  return fetch("/game-state")
     .then((res) => res.json())
     .catch((err) => {
       console.error(err);
@@ -56,8 +56,8 @@ const afflictOrgan = async (
   await postJSON("/attack", body)
     .then(async ({ success }) => {
       if (success) {
-        const { opponents } = await fetchPlayersData();
-        renderOpponents(opponents);
+        // const { opponents } = await fetchPlayersData();
+        // renderOpponents(opponents);
       }
     });
 };
@@ -119,15 +119,16 @@ const attachEventListener = (e, player, opponents, isInstant = false) => {
   });
 };
 
-const manageTurn = async () => {
-  const data = await fetchPlayersData();
-  const { player, opponents, event } = data;
-  await renderGame({ player, opponents, event });
+const manageTurn = async (data) => {
+  // const data = await fetchPlayersData();
+  const { self, players, event } = data;
+  const opponents = players.filter(({ id }) => id !== self.id);
+  await renderGame({ self, players, event });
   const attackCards = document.querySelectorAll(".player-area .attack-card");
 
-  if (player.isMyTurn) {
+  if (self.isMyTurn) {
     [...attackCards].forEach((card) => {
-      card.onclick = (e) => attachEventListener(e, player, opponents);
+      card.onclick = (e) => attachEventListener(e, self, opponents);
     });
   } else {
     attackCards.forEach((card) => card.onclick = () => "");
@@ -137,17 +138,23 @@ const manageTurn = async () => {
     (card) => Number(card.getAttribute("is-instant")) === 1,
   );
   instantCards.forEach((card) => {
-    card.onclick = (e) => attachEventListener(e, player, opponents, true);
+    card.onclick = (e) => attachEventListener(e, self, opponents, true);
   });
 };
 
 const poll = async () => {
-  await fetch("/wait-for-affliction");
-  await manageTurn();
+  const res = await fetch("/poll");
+  if (res.status === 200) {
+    const gameState = await res.json();
+    console.log({ gameState });
+
+    await manageTurn(gameState);
+  }
   poll();
 };
 
 window.onload = async () => {
-  await manageTurn();
+  const playerData = await fetchPlayersData();
+  await manageTurn(playerData);
   poll();
 };

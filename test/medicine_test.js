@@ -78,6 +78,7 @@ describe("should test handleMedicine", () => {
       afflictionHandler,
     );
     // game.dealCards();
+    game.setFirstPlayer();
     games[101] = game;
 
     app = createApp({

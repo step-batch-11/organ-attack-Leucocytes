@@ -77,6 +77,7 @@ describe("should test handleTransplant", () => {
       afflictionHandler,
     );
     // game.dealCards();
+    game.setFirstPlayer();
     games[101] = game;
 
     app = createApp({

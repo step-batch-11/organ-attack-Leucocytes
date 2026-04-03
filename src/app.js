@@ -1,15 +1,35 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { getPlayers, servePlayersData } from "./handlers/serve_players.js";
+import {
+  getPlayerData,
+  getPlayers,
+  serveGameState,
+} from "./handlers/serve_players.js";
 import {
   allowLoggedInUser,
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers/login_handler.js";
 import { gameSetup } from "./game_setup.js";
-import { handleAttack } from "./handlers/attack_handler.js";
+import { resolveAction } from "./handlers/attack_handler.js";
 
-const clients = [];
+const waitingList = new Set();
+
+export const updateGameState = (publicGameState) => {
+  for (const { resolve, c } of waitingList) {
+    const res = getPlayerData(c);
+
+    if (!res.success) {
+      resolve(c.json({ message: res.message }, 400));
+      return;
+    }
+    const { data: playerData } = res;
+    const gameState = { ...publicGameState, self: playerData };
+    resolve(c.json(gameState));
+  }
+  waitingList.clear();
+  return;
+};
 
 export const createApp = ({
   session,
@@ -34,19 +54,15 @@ export const createApp = ({
 
   app.post("/setup-game", gameSetup);
   app.post("/login", loginHandler);
-  app.post("/attack", (c) => {
-    clients.forEach((resolve) => resolve(c.json({ success: true })));
-    clients.length = 0;
-    return handleAttack(c);
-  });
+  app.post("/attack", resolveAction);
 
-  app.get("/wait-for-affliction", () => {
+  app.get("/poll", (c) => {
     return new Promise((resolve) => {
-      clients.push(resolve);
+      waitingList.add({ resolve, c });
     });
   });
 
-  app.get("/players-data", servePlayersData);
+  app.get("/game-state", serveGameState);
   app.get(
     "/game-page",
     serveStatic({ root: "public", path: "/pages/game.html" }),

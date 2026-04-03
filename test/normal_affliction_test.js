@@ -66,6 +66,8 @@ describe("Testing Normal Affliction", () => {
       dealer,
       afflictionHandler,
     );
+    // game.distributeCards();
+    game.setFirstPlayer();
     games[101] = game;
     const response = await app.request("/attack", {
       method: "post",
@@ -102,7 +104,7 @@ describe("Testing Normal Affliction", () => {
       dealer,
       afflictionHandler,
     );
-    // game.distributeCards();
+    game.setFirstPlayer();
     games[101] = game;
 
     const response = await app.request("/attack", {

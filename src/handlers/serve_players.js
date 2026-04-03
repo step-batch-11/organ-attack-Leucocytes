@@ -18,17 +18,27 @@ export const getPlayers = (c) => {
   return c.json(props);
 };
 
-export const servePlayersData = (c) => {
+export const getPlayerData = (c) => {
   const playerId = getPlayerId(c);
 
   if (playerId === -1) {
-    return c.json({ msg: "BAD REQUEST" }, 400);
+    return { success: false, message: "BAD REQUEST" };
   }
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
-
-  const opponents = game.getOpponents(playerId);
   const player = game.getPlayer(playerId);
 
-  return c.json({ opponents, player });
+  return { success: true, data: player };
+};
+
+export const serveGameState = (c) => {
+  const roomID = getCookie(c, "roomID");
+  const game = c.get("games")[roomID];
+
+  const publiGameState = game.getGameState();
+
+  const res = getPlayerData(c);
+  const { data: playerData } = res;
+
+  return c.json({ ...publiGameState, self: playerData });
 };
