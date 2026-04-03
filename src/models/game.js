@@ -34,9 +34,13 @@ export class Game {
     return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
   }
 
-  afflictOrganOfOpponent(opponentID, organCardID) {
+  afflictOrganOfOpponent(opponentID, organCardID, afflictPoints) {
     const opponent = this.#findPlayer(opponentID);
-    this.#afflictionHandler.afflictOrganOfOpponent(opponent, organCardID);
+    this.#afflictionHandler.afflictOrganOfOpponent(
+      opponent,
+      organCardID,
+      afflictPoints,
+    );
   }
 
   #discardAllAttackCards() {

@@ -7,8 +7,8 @@ export class AfflictionHandler {
     this.#organCards = organCards;
   }
 
-  afflictOrganOfOpponent(opponent, organCardID) {
-    const organ = opponent.afflictOrgan(organCardID);
+  afflictOrganOfOpponent(opponent, organCardID, afflictPoints) {
+    const organ = opponent.afflictOrgan(organCardID, afflictPoints);
     if (organ !== undefined) {
       this.#organCards.addToDiscardPile(organ);
     }

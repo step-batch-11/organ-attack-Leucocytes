@@ -208,7 +208,7 @@
     "Desc": "Chart mixup",
     "action": "chart-mixup",
     "type": "bureaucracy",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 19,
@@ -276,8 +276,8 @@
     "isBlockable": true
   },
   {
-    "id": 22,
-    "name": "BY the Book",
+    "id": 23,
+    "name": "By the Book",
     "isInstant": false,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -286,6 +286,19 @@
     "Desc": "Discard all non afflictions",
     "action": "by-the-book",
     "type": "bureaucracy",
+    "isBlockable": false
+  },
+  {
+    "id": 24,
+    "name": "Necrosis",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 2,
+    "Desc": "Removes an organ",
+    "action": "affliction",
+    "type": "necrosis",
     "isBlockable": true
   }
 ]

@@ -114,6 +114,11 @@ main {
   color: var(--fg-color);
   border: 0.3em solid black;
 }
+[data-type="necrosis"] {
+  background-image: radial-gradient(violet, purple);
+  color: var(--fg-color);
+  border: 0.3em solid black;
+}
 
 .attack-card {
   width: var(--card-width);

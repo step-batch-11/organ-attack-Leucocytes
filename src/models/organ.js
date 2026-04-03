@@ -12,7 +12,7 @@ export class Organ {
   }
 
   afflict(afflictionPoint) {
-    this.#health -= afflictionPoint;
+    this.#health -= afflictionPoint || 1;
   }
 
   heal() {

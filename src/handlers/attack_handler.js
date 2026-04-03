@@ -43,16 +43,23 @@ export const handleAttack = async (c) => {
     attackCardID,
     isInstant,
   );
-  const attackAction = attackCard.action;
+  const { action, afflictPoints } = attackCard;
 
-  if (!(attackAction in ACTIONS)) {
+  if (!(action in ACTIONS)) {
     return { message: "Invalid action" };
   }
 
-  const handler = ACTIONS[attackAction];
-  const res = handler({ attackerID, opponentID, organCardID, game });
+  const handler = ACTIONS[action];
+  const res = handler({
+    attackerID,
+    opponentID,
+    organCardID,
+    game,
+    afflictPoints,
+  });
+
   const target = {};
-  if (attackAction === "affliction") {
+  if (action === "affliction") {
     target.targetPlayer = game.getPlayer(opponentID);
     target.targetOrgan = target.targetPlayer
       .organCards.find(({ id }) => id === organCardID);
@@ -60,7 +67,7 @@ export const handleAttack = async (c) => {
   const { targetPlayer, targetOrgan } = target;
 
   const event = {
-    name: attackAction,
+    name: action,
     actor: game.getPlayer(attackerID).name,
     target: {
       playerName: targetPlayer?.name,

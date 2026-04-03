@@ -33,7 +33,7 @@ export class Player {
     this.#attackCards = attackCards;
   }
 
-  afflictOrgan(organCardID) {
+  afflictOrgan(organCardID, afflictPoints) {
     if (this.isVaccinated()) {
       this.#decreaseVaccinePts();
       return;
@@ -42,7 +42,7 @@ export class Player {
     const organ = this.#organCards
       .find((organ) => organ.getID() === organCardID);
 
-    organ.afflict(1);
+    organ.afflict(afflictPoints);
     const organIndex = this.#organCards
       .findIndex((organ) => organ.getID() === organCardID);
 
