@@ -81,7 +81,7 @@ export class Player {
 
   healOrgan(id) {
     const organ = this.#organCards.find((card) => card.getID() === id);
-    organ.health += 1;
+    organ.heal();
   }
 
   discardAllAttackCards() {
