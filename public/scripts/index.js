@@ -30,7 +30,7 @@ const renderPlayers = (players, myId, roomId) => {
 const amIHost = (players, myId) => {
   return players.find((player) => player.id === myId).type === "host";
 };
-//--------------
+
 const removeLoader = () => {
   const loader = document.querySelector(".loader");
   if (loader !== null) loader.remove();
@@ -51,7 +51,7 @@ const redirectToGame = (body) => {
 };
 
 const startCountdown = (waitingSpan, body) => {
-  let timeLeft = 0;
+  let timeLeft = 5000;
 
   const intervalID = setInterval(() => {
     timeLeft = timeLeft - 1000;
@@ -72,6 +72,7 @@ const renderTimeOutAndRedirectToGame = (body) => {
   startCountdown(waitingSpan, body);
 };
 
+let mainIntervalID;
 const main = async () => {
   const body = await makeGETReq("/get-players").catch((_) => {});
   const { players, myId, roomID } = body;
@@ -81,15 +82,15 @@ const main = async () => {
         method: "POST",
         body: JSON.stringify({ roomID }),
       });
+      clearInterval(mainIntervalID);
     }
     renderTimeOutAndRedirectToGame(body);
   }
 
   renderPlayers(players, myId, roomID);
 };
-
 globalThis.onload = () => {
-  setInterval(() => {
+  mainIntervalID = setInterval(() => {
     main();
   }, 1000);
 };
