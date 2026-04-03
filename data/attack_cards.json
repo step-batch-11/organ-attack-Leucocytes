@@ -251,7 +251,7 @@
   },
   {
     "id": 21,
-    "name": "Instant Wild !",
+    "name": "Instant Wild 🔥",
     "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -273,6 +273,19 @@
     "Desc": "Can afflict any organ",
     "action": "medicine",
     "type": "cure",
+    "isBlockable": true
+  },
+  {
+    "id": 22,
+    "name": "BY the Book",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Discard all non afflictions",
+    "action": "by-the-book",
+    "type": "bureaucracy",
     "isBlockable": true
   }
 ]

@@ -24,3 +24,8 @@ export const handleMedicine = ({ attackerID, organCardID, game }) => {
   game.healOrgan(attackerID, organCardID);
   return ({ success: true });
 };
+
+export const handleBythebook = ({ game }) => {
+  game.bythebook();
+  return ({ success: true });
+};

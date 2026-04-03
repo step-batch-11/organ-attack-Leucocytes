@@ -1,5 +1,6 @@
 import { getCookie } from "hono/cookie";
 import {
+  handleBythebook,
   handleChartMixup,
   handleMedicine,
   handleNormalAffliction,
@@ -14,6 +15,7 @@ const ACTIONS = {
   "chart-mixup": handleChartMixup,
   Vaccine: handleVaccine,
   medicine: handleMedicine,
+  "by-the-book": handleBythebook,
 };
 
 export const resolveAction = async (c) => {

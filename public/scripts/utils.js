@@ -17,3 +17,19 @@ export const cloneFromTemplate = (templateID, element = "*") => {
   const template = document.querySelector(templateID);
   return template.content.cloneNode(true).querySelector(element);
 };
+
+export const postJSON = (url, body) => {
+  return fetch(url, { method: "POST", body: JSON.stringify(body) })
+    .then((r) => r.json());
+};
+
+export const fetchPlayersData = () => {
+  const mockData = { player: [], opponents: [], playerId: null };
+
+  return fetch("/game-state")
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error(err);
+      return mockData;
+    });
+};

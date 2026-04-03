@@ -97,4 +97,14 @@ export class Player {
       vaccinePoints: this.#vaccinePoints,
     };
   }
+
+  getNonAfflictedCards() {
+    const cards = this.#attackCards.filter((card) =>
+      card.type !== "affliction" && card.action !== "common-cold"
+    );
+    this.#attackCards = this.#attackCards.filter((card) =>
+      card.type === "affliction" || card.action === "common-cold"
+    );
+    return cards;
+  }
 }

@@ -4,6 +4,7 @@ import {
 } from "./utils.js";
 
 const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
+  console.log({ attackCards });
   attackCardNodes.forEach((attackCard, i) => {
     const { name, id, type, isInstant } = attackCards[i];
     const attackCardName = attackCard.querySelector("h1");

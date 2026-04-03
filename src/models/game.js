@@ -1,7 +1,7 @@
 export class Game {
   #players;
-  #attackCards;
-  #organCards;
+  #attacksDeck;
+  #organsDeck;
   #dealer;
   #afflictionHandler;
   #currentPlayer;
@@ -9,8 +9,8 @@ export class Game {
 
   constructor(players, attackCards, organCards, dealer, afflictionHandler) {
     this.#players = players;
-    this.#attackCards = attackCards;
-    this.#organCards = organCards;
+    this.#attacksDeck = attackCards;
+    this.#organsDeck = organCards;
     this.#dealer = dealer;
     this.#afflictionHandler = afflictionHandler;
     this.#event = {};
@@ -42,13 +42,13 @@ export class Game {
   #discardAllAttackCards() {
     this.#players.forEach((player) => {
       const attackCards = player.discardAllAttackCards();
-      attackCards.forEach((card) => this.#attackCards.addToDiscardPile(card));
+      attackCards.forEach((card) => this.#attacksDeck.addToDiscardPile(card));
     });
   }
 
   chartMixup() {
     this.#discardAllAttackCards();
-    this.#attackCards.refillDrawingPile();
+    this.#attacksDeck.refillDrawingPile();
     this.#dealer.dealAttackCards();
   }
 
@@ -67,6 +67,16 @@ export class Game {
   healOrgan(playerID, organCardID) {
     const player = this.#findPlayer(playerID);
     player.healOrgan(organCardID);
+  }
+
+  bythebook() {
+    this.#players.forEach((player) => {
+      const cards = player.getNonAfflictedCards();
+      cards.forEach((card) => {
+        this.#attacksDeck.addToDiscardPile(card);
+        this.#afflictionHandler.refillAttackCard(player);
+      });
+    });
   }
 
   #findPlayer(id) {

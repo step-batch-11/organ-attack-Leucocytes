@@ -98,6 +98,11 @@ main {
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
+[data-type="cure"], [data-type="resistance"] {
+  background-image: radial-gradient(skyblue, var(--clr-gray));
+  color: var(--fg-color);
+  border: 0.3em solid white;
+}
 [data-type="dummy"],
 [data-type="wild"] {
   background-image: radial-gradient(yellowgreen, var(--clr-gray));
@@ -109,6 +114,7 @@ main {
   color: var(--fg-color);
   border: 0.3em solid black;
 }
+
 .attack-card {
   width: var(--card-width);
   height: var(--card-height);
