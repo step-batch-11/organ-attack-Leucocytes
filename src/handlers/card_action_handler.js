@@ -19,4 +19,8 @@ export const handleTransplant = (
   game.transplantOrgan(attackerID, opponentID, organCardID);
   return ({ success: true });
 };
-//
+
+export const handleMedicine = ({ attackerID, organCardID, game }) => {
+  game.healOrgan(attackerID, organCardID);
+  return ({ success: true });
+};

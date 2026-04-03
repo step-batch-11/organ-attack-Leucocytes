@@ -261,5 +261,18 @@
     "action": "affliction",
     "type": "instant wild",
     "isBlockable": true
+  },
+  {
+    "id": 22,
+    "name": "Medicine",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Can afflict any organ",
+    "action": "medicine",
+    "type": "cure",
+    "isBlockable": true
   }
 ]

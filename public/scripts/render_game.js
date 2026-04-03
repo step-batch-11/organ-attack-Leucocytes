@@ -14,7 +14,7 @@ const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
     attackCard.setAttribute("id", `attack-${id}`);
     attackCard.setAttribute("is-instant", Number(isInstant));
 
-    const organsToAttack = getOrganList({ attackCards }, opponents, id);
+    const organsToAttack = getOrganList(opponents, attackCards[i]);
     const typeCheck = !(["bureaucracy", "resistance"].includes(type));
 
     if (organsToAttack.length === 0 && typeCheck) {

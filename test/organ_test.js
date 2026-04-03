@@ -4,13 +4,14 @@ import { Organ } from "../src/models/organ.js";
 
 describe("organ class", () => {
   let organ;
-  beforeEach(() => organ = new Organ("wild", 1, 2));
+  beforeEach(() => organ = new Organ("wild", 1, 2, 2));
   describe("Get details", () => {
     it(" organDetails", () => {
       assertEquals(organ.getDetails(), {
         name: "wild",
         id: 1,
         health: 2,
+        maxHealth: 2,
         isWild: true,
       });
     });

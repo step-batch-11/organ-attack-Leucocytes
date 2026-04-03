@@ -79,6 +79,11 @@ export class Player {
     return this.#organCards.splice(index, 1)[0];
   }
 
+  healOrgan(id) {
+    const organ = this.#organCards.find((card) => card.id === id);
+    organ.health += 1;
+  }
+
   discardAllAttackCards() {
     return this.#attackCards.splice(0);
   }

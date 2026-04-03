@@ -34,32 +34,11 @@ const removePopup = () => {
   if (popup !== null) popup.remove();
 };
 
-const displayAfflictableOrgans = (
-  { player, opponents, attackCardID, isInstant, attackCardElement: card },
-) => {
-  console.log({ isInstant });
-  removePopup();
-  const container = document.createElement("div");
-  container.setAttribute("class", "popup-afflicatble-organs");
-  const afflictableOrgans = getAfflictableOrgans(
-    player,
-    opponents,
-    attackCardID,
-  );
-  const organs = createPopupOrgans(afflictableOrgans);
-  container.append(...organs);
-  container.addEventListener("click", async (e) => {
-    afflictOrgan(e, attackCardID, player, isInstant, card);
-  });
-  document.querySelector(".popup").append(container);
-};
-
 const afflictOrgan = async (
   e,
   attackCardID,
   player,
   isInstant,
-  card,
 ) => {
   const organ = e.target.closest(".organ");
   const organCardID = Number(organ.getAttribute("organ-id"));
@@ -83,6 +62,27 @@ const afflictOrgan = async (
     });
 };
 
+const displayOrgans = (
+  { player, opponents, attackCardID, isInstant },
+) => {
+  const attackCard = player.attackCards
+    .find(({ id }) => id === attackCardID);
+  removePopup();
+
+  const container = document.createElement("div");
+  container.setAttribute("class", "popup-afflicatble-organs");
+  const organCards = attackCard.action === "medicine"
+    ? player.organCards.filter(({ health, maxHealth }) => health !== maxHealth)
+    : getAfflictableOrgans(opponents, attackCard);
+
+  const organs = createPopupOrgans(organCards);
+  container.append(...organs);
+  container.addEventListener("click", async (e) => {
+    afflictOrgan(e, attackCardID, player, isInstant);
+  });
+  document.querySelector(".popup").append(container);
+};
+
 const postJSON = (url, body) => {
   return fetch(url, { method: "POST", body: JSON.stringify(body) })
     .then((r) => r.json());
@@ -100,9 +100,10 @@ const playVaccineCard = async ({ e, player, attackCardID }) => {
 
 const ACTION_HANDLERS = {
   "chart-mixup": performChartMixup,
-  affliction: displayAfflictableOrgans,
+  affliction: displayOrgans,
   Vaccine: playVaccineCard,
-  "transplant": displayAfflictableOrgans,
+  "transplant": displayOrgans,
+  "medicine": displayOrgans,
 };
 
 const attachEventListener = (e, player, opponents, isInstant = false) => {
