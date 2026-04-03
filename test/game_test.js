@@ -41,8 +41,8 @@ describe("Game model test", () => {
 
       players.map((player) => {
         player.fillHandWithOrgans([
-          new Organ("o1", 1, 1),
-          new Organ("wild", 2, 3),
+          new Organ("o1", 1, 1, 2),
+          new Organ("wild", 2, 3, 4),
         ]);
         player.fillHandWithAttacks([]);
       });
@@ -62,11 +62,13 @@ describe("Game model test", () => {
             health: 1,
             id: 1,
             isWild: false,
+            maxHealth: 2,
           },
           {
             name: "wild",
             health: 3,
             id: 2,
+            maxHealth: 4,
             isWild: true,
           },
         ],

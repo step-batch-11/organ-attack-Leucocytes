@@ -108,6 +108,7 @@ describe("Testing Player Class", () => {
       id: 1,
       name: "o2",
       health: 0,
+      maxHealth: 1,
       isWild: false,
     });
   });
@@ -121,10 +122,16 @@ describe("Testing Player Class", () => {
     const organCardsExp = Array.from(
       { length: 4 },
       (_, i) => ({ id: i, name: `o${i + 1}`, health: 1 }),
-    );
+    ).map(({ name, id, health }) => new Organ(name, id, health));
     player.fillHandWithAttacks(attackCardsExp);
     player.fillHandWithOrgans(organCardsExp);
-    assertEquals(player.removeOrgan(1), { id: 1, name: "o2", health: 1 });
+    assertEquals(player.removeOrgan(1).getDetails(), {
+      id: 1,
+      name: "o2",
+      health: 1,
+      isWild: false,
+      maxHealth: 1,
+    });
   });
 
   it("Should add organ", () => {
@@ -136,10 +143,16 @@ describe("Testing Player Class", () => {
     const organCardsExp = Array.from(
       { length: 4 },
       (_, i) => ({ id: i, name: `o${i + 1}`, health: 1 }),
-    );
+    ).map(({ name, id, health }) => new Organ(name, id, health));
     player.fillHandWithAttacks(attackCardsExp);
     player.fillHandWithOrgans(organCardsExp);
-    player.addOrgan({ id: 100 });
-    assertEquals(player.removeOrgan(100), { id: 100 });
+    player.addOrgan(new Organ("", 100, 1));
+    assertEquals(player.removeOrgan(100).getDetails(), {
+      name: "",
+      id: 100,
+      health: 1,
+      isWild: false,
+      maxHealth: 1,
+    });
   });
 });

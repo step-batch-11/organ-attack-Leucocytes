@@ -42,12 +42,11 @@ describe("should test handleTransplant", () => {
       shuffle,
     );
     const organCards = new Deck(
-      [{ id: 1, health: 2 }, { id: 2, health: 2 }, {
-        id: 3,
+      [{ id: 1, health: 2 }, { id: 2, health: 2 }, { id: 3, health: 2 }, {
+        id: 4,
         health: 2,
-      }, { id: 4, health: 2 }].map(({ id, health }) =>
-        new Organ("o" + id, id, health)
-      ),
+      }]
+        .map(({ id, health }) => new Organ("o" + id, id, health)),
       shuffle,
     );
     rooms = { 101: [{ name: "chiru", id: 1 }, { name: "kumar", id: 2 }] };
@@ -55,7 +54,7 @@ describe("should test handleTransplant", () => {
 
     players = rooms[roomId].map(({ name, id }) => new Player(name, id));
     players.map((player) => {
-      player.fillHandWithOrgans([{ id: 1, health: 1 }]);
+      player.fillHandWithOrgans([new Organ("Heart", 1, 1)]);
       player.fillHandWithAttacks([{
         id: 1,
         action: "transplant",

@@ -45,7 +45,6 @@ export class Player {
     organ.afflict(1);
     const organIndex = this.#organCards
       .findIndex((organ) => organ.getID() === organCardID);
-    console.log(organIndex);
 
     if (organ.isDead()) {
       this.#organCards.splice(organIndex, 1);
@@ -76,12 +75,12 @@ export class Player {
   }
 
   removeOrgan(id) {
-    const index = this.#organCards.findIndex((card) => card.id === id);
+    const index = this.#organCards.findIndex((card) => card.getID() === id);
     return this.#organCards.splice(index, 1)[0];
   }
 
   healOrgan(id) {
-    const organ = this.#organCards.find((card) => card.id === id);
+    const organ = this.#organCards.find((card) => card.getID() === id);
     organ.health += 1;
   }
 

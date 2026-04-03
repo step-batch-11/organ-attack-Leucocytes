@@ -125,7 +125,6 @@ const manageTurn = async () => {
   await renderGame({ player, opponents, event });
   const attackCards = document.querySelectorAll(".player-area .attack-card");
 
-  console.log({ player, opponents });
   if (player.isMyTurn) {
     [...attackCards].forEach((card) => {
       card.onclick = (e) => attachEventListener(e, player, opponents);

@@ -9,7 +9,7 @@ import { AfflictionHandler } from "../src/models/affliction_handler.js";
 import { Dealer } from "../src/models/dealer.js";
 import { Organ } from "../src/models/organ.js";
 
-describe("should test handleTransplant", () => {
+describe("should test handleMedicine", () => {
   let roomId;
   let players;
   let shuffle;
@@ -55,7 +55,7 @@ describe("should test handleTransplant", () => {
 
     players = rooms[roomId].map(({ name, id }) => new Player(name, id));
     players.map((player) => {
-      player.fillHandWithOrgans([{ id: 1, health: 1 }]);
+      player.fillHandWithOrgans([new Organ("", 1, 1)]);
       player.fillHandWithAttacks([{
         id: 1,
         action: "medicine",
@@ -90,7 +90,7 @@ describe("should test handleTransplant", () => {
       games,
     }, logger);
   });
-  it("should transplant organ", async () => {
+  it("should heal organ", async () => {
     const res = await app.request("/attack", {
       method: "post",
       body: JSON.stringify({

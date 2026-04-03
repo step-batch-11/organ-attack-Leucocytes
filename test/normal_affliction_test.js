@@ -115,8 +115,7 @@ describe("Testing Normal Affliction", () => {
       }),
       headers: { cookie: "roomID=101" },
     });
-    console.log(response);
-    console.log(players.map((p) => p.getPlayerDetails()));
+
     assertEquals(await response.json(), { success: true });
   });
 });

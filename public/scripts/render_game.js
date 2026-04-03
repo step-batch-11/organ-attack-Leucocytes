@@ -52,9 +52,7 @@ const renderMyCards = (
   const playerOrganContainer = playerArea.querySelector(".organs");
   const playerAttacks = playerArea.querySelectorAll(".attack-card");
 
-  console.log({ playerArea, playerAttacks });
   setTextContent(playerArea, ".name", name);
-  console.log("Mee", isMyTurn);
 
   const avatar = playerArea.querySelector(".player");
   if (isMyTurn) {
@@ -109,15 +107,12 @@ export const renderOpponents = (opponents) => {
   opponentArea.innerHTML = "";
 
   const fragments = opponents.map((opponent) => {
-    console.log("opp", opponent);
     return createOppFragment(template, opponent);
   });
   opponentArea.append(...fragments);
 };
 
 const setTextContent = (container, selector, content) => {
-  console.log({ container, selector, content });
-
   container.querySelector(selector).textContent = content;
 };
 

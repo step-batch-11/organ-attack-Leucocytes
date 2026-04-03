@@ -340,7 +340,6 @@ describe("tests for app", () => {
     });
 
     it("Should wait until someone attacks", async () => {
-      console.log({ players }, "HERE");
       players.map((player) => {
         const organCards = Array.from(
           { length: 2 },
@@ -386,7 +385,6 @@ describe("tests for app", () => {
           organCardID: 1,
         }),
       });
-      // console.log("dlkfsdlkjdslfk", await response.json());
 
       const contentType = response.headers.get("content-type");
       assertEquals(contentType, "application/json");

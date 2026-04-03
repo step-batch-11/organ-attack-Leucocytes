@@ -34,10 +34,6 @@ export class Game {
 
   afflictOrganOfOpponent(opponentID, organCardID) {
     const opponent = this.#findPlayer(opponentID);
-    // // opponent.afflictOrgan(organCardID);
-    // console.log(this.#afflictionHandler, "HERE");
-    // console.log(this.#afflictionHandler.afflictOrganOfOpponent + "", "HERE @@");
-
     this.#afflictionHandler.afflictOrganOfOpponent(opponent, organCardID);
   }
 

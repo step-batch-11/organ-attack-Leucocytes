@@ -8,7 +8,7 @@ export class Organ {
     this.#name = name;
     this.#id = id;
     this.#health = health;
-    this.#maxHealth = maxHealth;
+    this.#maxHealth = maxHealth || health;
   }
 
   afflict(afflictionPoint) {

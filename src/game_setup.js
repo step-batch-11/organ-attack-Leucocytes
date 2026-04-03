@@ -20,8 +20,8 @@ export const gameSetup = async (ctx) => {
   const attackCards = new Deck(attacks.default, shuffle);
 
   const organCards = [];
-  organs.default.forEach(({ name, id, health, maxHealth }) => {
-    organCards.push(new Organ(name, id, health, maxHealth));
+  organs.default.forEach(({ name, id, health }) => {
+    organCards.push(new Organ(name, id, health));
   });
   const organDeck = new Deck(organCards, shuffle);
 
