@@ -300,5 +300,18 @@
     "action": "affliction",
     "type": "necrosis",
     "isBlockable": true
+  },
+  {
+    "id": 25,
+    "name": "Poison",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 2,
+    "Desc": "Removes an own organ",
+    "action": "poison",
+    "type": "poison",
+    "isBlockable": true
   }
 ]

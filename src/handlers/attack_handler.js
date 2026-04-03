@@ -4,6 +4,7 @@ import {
   handleChartMixup,
   handleMedicine,
   handleNormalAffliction,
+  handlePoison,
   handleTransplant,
   handleVaccine,
 } from "./card_action_handler.js";
@@ -16,6 +17,7 @@ const ACTIONS = {
   Vaccine: handleVaccine,
   medicine: handleMedicine,
   "by-the-book": handleBythebook,
+  "poison": handlePoison,
 };
 
 export const resolveAction = async (c) => {

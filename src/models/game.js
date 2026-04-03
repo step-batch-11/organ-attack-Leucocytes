@@ -83,6 +83,12 @@ export class Game {
     });
   }
 
+  removeOrgan(playerID, organCardID) {
+    const player = this.#findPlayer(playerID);
+    const organ = player.removeOrgan(organCardID);
+    this.#organsDeck.addToDiscardPile(organ);
+  }
+
   #findPlayer(id) {
     return this.#players.find((player) => player.getId() === id);
   }

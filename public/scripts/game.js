@@ -42,11 +42,25 @@ const attachEventListener = (e, player, opponents, isInstant = false) => {
   });
 };
 
+const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
+
 const manageTurn = async (data) => {
   // const data = await fetchPlayersData();
   const { self, players, event } = data;
   const opponents = players.filter(({ id }) => id !== self.id);
   await renderGame({ self, players, event });
+
+  const poisonCard = findPoisonCard(self.attackCards);
+  if (poisonCard !== undefined) {
+    displayOrgans({
+      player: self,
+      opponents,
+      attackCardID: poisonCard.id,
+      isInstant: true,
+    });
+    return;
+  }
+
   const attackCards = document.querySelectorAll(".player-area .attack-card");
 
   if (self.isMyTurn) {

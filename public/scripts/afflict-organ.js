@@ -51,9 +51,15 @@ export const displayOrgans = (
 
   const container = document.createElement("div");
   container.setAttribute("class", "popup-afflicatble-organs");
-  const organCards = attackCard.action === "medicine"
-    ? player.organCards.filter(({ health, maxHealth }) => health !== maxHealth)
-    : getAfflictableOrgans(opponents, attackCard);
+
+  const cards = {
+    "medicine": player.organCards.filter(({ health, maxHealth }) =>
+      health !== maxHealth
+    ),
+    "poison": player.organCards,
+  };
+  const organCards = cards[attackCard.action] ||
+    getAfflictableOrgans(opponents, attackCard);
 
   const organs = createPopupOrgans(organCards);
   container.append(...organs);

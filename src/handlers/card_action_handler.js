@@ -31,3 +31,8 @@ export const handleBythebook = ({ game }) => {
   game.bythebook();
   return ({ success: true });
 };
+
+export const handlePoison = ({ attackerID, organCardID, game }) => {
+  game.removeOrgan(attackerID, organCardID);
+  return ({ success: true });
+};
