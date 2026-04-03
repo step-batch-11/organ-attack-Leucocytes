@@ -134,7 +134,7 @@ const manageTurn = async () => {
   }
 
   const instantCards = [...document.querySelectorAll(".attack-card")].filter(
-    (card) => Number(card.getAttribute("isInstant")) === 1,
+    (card) => Number(card.getAttribute("is-instant")) === 1,
   );
   instantCards.forEach((card) => {
     card.onclick = (e) => attachEventListener(e, player, opponents, true);
