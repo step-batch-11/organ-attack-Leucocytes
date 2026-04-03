@@ -62,11 +62,13 @@ describe("Testing Player Class", () => {
     const organCards = [];
     const attackCards = [];
     const playerDetails = player.getPlayerDetails();
+    const vaccinePoints = 0;
     assertEquals(playerDetails, {
       id,
       name,
       organCards,
       attackCards,
+      vaccinePoints,
     });
   });
 

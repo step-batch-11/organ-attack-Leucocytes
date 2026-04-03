@@ -1,0 +1,70 @@
+.vacced {
+  padding: 24px 32px;
+  border-radius: 100px;
+  max-width: 300px;
+  position: relative;
+  font-family: sans-serif;
+  color: white;
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #0091ff, #00c6ff);
+}
+
+.vacced-half {
+  padding: 24px 32px;
+  border-radius: 100px;
+  max-width: 300px;
+  position: relative;
+  font-family: sans-serif;
+  color: white;
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #ffffff, #b9f0ff);
+}
+
+
+.vacced::before,
+.vacced::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
+
+
+.vacced::before {
+  width: 40px;
+  height: 40px;
+  top: 10px;
+  left: 20px;
+}
+
+.vacced::after {
+  width: 25px;
+  height: 25px;
+  bottom: 15px;
+  right: 25px;
+}
+
+.vacced span::before,
+.vacced span::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.vacced span::before {
+  width: 15px;
+  height: 15px;
+  top: 50%;
+  left: 10%;
+}
+
+.vacced span::after {
+  width: 10px;
+  height: 10px;
+  bottom: 20%;
+  right: 10%;
+}

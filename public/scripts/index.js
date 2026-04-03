@@ -51,7 +51,7 @@ const redirectToGame = (body) => {
 };
 
 const startCountdown = (waitingSpan, body) => {
-  let timeLeft = 5000;
+  let timeLeft = 0;
 
   const intervalID = setInterval(() => {
     timeLeft = timeLeft - 1000;

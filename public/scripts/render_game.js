@@ -1,19 +1,22 @@
-import { cloneFromTemplate, getAfflictableOrgans } from "./utils.js";
+import {
+  cloneFromTemplate,
+  getAfflictableOrgans as getOrganList,
+} from "./utils.js";
 
 const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
   attackCardNodes.forEach((attackCard, i) => {
     const { name, id, type } = attackCards[i];
+    const attackCardName = attackCard.querySelector("h1");
+    attackCardName.textContent = name;
 
-    setTextContent(attackCard, "h1", name);
     attackCard.setAttribute("data-id", id);
     attackCard.setAttribute("data-type", type);
     attackCard.setAttribute("id", `attack-${id}`);
-    const afflictableOrgans = getAfflictableOrgans(
-      { attackCards },
-      opponents,
-      id,
-    );
-    if (afflictableOrgans.length === 0 && type !== "bureaucracy") {
+
+    const organsToAttack = getOrganList({ attackCards }, opponents, id);
+    const typeCheck = !(["bureaucracy", "resistance"].includes(type));
+
+    if (organsToAttack.length === 0 && typeCheck) {
       attackCard.classList.add("disabled-card");
     }
   });
@@ -48,6 +51,7 @@ const renderMyCards = (
   const playerOrgans = playerArea.querySelectorAll(".organ");
   const playerAttacks = playerArea.querySelectorAll(".attack-card");
 
+  console.log({ playerArea, playerOrgans, playerAttacks });
   setTextContent(playerArea, ".name", name);
 
   const avatar = playerArea.querySelector(".player");
@@ -65,19 +69,28 @@ const renderMyCards = (
   renderAttackCards(playerAttacks, attackCards, opponents);
 };
 
-const createOpponentFragment = (
+const createOppFragment = (
   template,
-  { name, organCards, id, isMyTurn },
+  { name, organCards, id, isMyTurn, vaccinePoints },
 ) => {
+  console.log(vaccinePoints);
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
   element.setAttribute("id", `player-${id}`);
 
   setTextContent(element, ".name", name);
-
+  if (vaccinePoints === 2) {
+    element.classList.add("vacced");
+  }
+  if (vaccinePoints === 1) {
+    element.classList.remove("vacced");
+    element.classList.add("vacced-half");
+  }
+  if (vaccinePoints === 0) {
+    element.classList.remove("vacced-half");
+  }
   const organs = element.querySelectorAll(".organ");
   renderOrgans(organs, organCards);
-  console.log("Opponent", isMyTurn);
 
   const avatar = clone.querySelector(".avatar");
   if (isMyTurn) {
@@ -93,13 +106,16 @@ export const renderOpponents = (opponents) => {
   const opponentArea = document.querySelector(".opponent-area");
   opponentArea.innerHTML = "";
 
-  const fragments = opponents.map((opponent) =>
-    createOpponentFragment(template, opponent)
-  );
+  const fragments = opponents.map((opponent) => {
+    console.log("opp", opponent);
+    return createOppFragment(template, opponent);
+  });
   opponentArea.append(...fragments);
 };
 
 const setTextContent = (container, selector, content) => {
+  console.log({ container, selector, content });
+
   container.querySelector(selector).textContent = content;
 };
 

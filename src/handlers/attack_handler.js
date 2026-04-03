@@ -1,24 +1,24 @@
 import { getCookie } from "hono/cookie";
-
-const handleNormalAffliction = ({ opponentID, organCardID, game }) => {
-  game.afflictOrganOfOpponent(opponentID, organCardID);
-  return ({ success: true });
-};
-
-const handleChartMixup = ({ game }) => {
-  game.chartMixup();
-  return ({ success: true });
-};
+import {
+  handleChartMixup,
+  handleNormalAffliction,
+  handleVaccine,
+} from "./card_action_handler.js";
 
 const ACTIONS = {
-  transplant: "",
-  "affliction": handleNormalAffliction,
+  transplant: () => ({ success: true }),
+  affliction: handleNormalAffliction,
   "chart-mixup": handleChartMixup,
+  Vaccine: handleVaccine,
 };
 
 export const handleAttack = async (c) => {
-  const { attackerID, opponentID, attackCardID, organCardID } = await c.req
-    .json();
+  const {
+    attackerID,
+    opponentID,
+    attackCardID,
+    organCardID,
+  } = await c.req.json();
 
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
@@ -28,7 +28,11 @@ export const handleAttack = async (c) => {
   if (!(attackAction in ACTIONS)) {
     return c.json({ msg: "Invalid action" });
   }
+
   const handler = ACTIONS[attackAction];
-  const res = handler({ opponentID, organCardID, game });
+
+  const res = handler({ attackerID, opponentID, organCardID, game });
+  // console.log(res);
+
   return c.json(res);
 };

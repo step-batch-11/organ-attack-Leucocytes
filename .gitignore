@@ -6,3 +6,4 @@ temp-folder
 .env
 .github/ISSUE_TEMPLATE/*.md
 data/temp.json
+game2.js

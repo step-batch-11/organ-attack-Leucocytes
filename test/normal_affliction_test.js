@@ -47,12 +47,12 @@ describe("Testing Normal Affliction", () => {
   });
 
   it("Should afflict an organ of player with given IDs", async () => {
-    players.map((player) => {
-      player.fillHandWithOrgans([{ id: 1, health: 2 }]);
+    players.map((player, i) => {
+      player.fillHandWithOrgans([{ id: i + 1, health: 2 }]);
       player.fillHandWithAttacks([{
-        id: 1,
+        id: i + 1,
         action: "affliction",
-        afflictableOrgans: [],
+        afflictableOrgans: [1],
       }]);
     });
 
@@ -80,7 +80,7 @@ describe("Testing Normal Affliction", () => {
     assertEquals(await response.json(), { success: true });
   });
 
-  it("Should remove an organ of player with given IDs", async () => {
+  it("-----------Should remove an organ of player with given IDs", async () => {
     players.map((player) => {
       player.fillHandWithOrgans([{ id: 1, health: 1 }]);
       player.fillHandWithAttacks([{
@@ -134,7 +134,6 @@ describe("Testing Normal Affliction", () => {
       dealer,
       afflictionHandler,
     );
-    // game.distributeCards();
     games[101] = game;
 
     const response = await app.request("/attack", {
@@ -147,6 +146,7 @@ describe("Testing Normal Affliction", () => {
       }),
       headers: { cookie: "roomID=101" },
     });
+
     assertEquals(await response.json(), { success: true });
   });
 });

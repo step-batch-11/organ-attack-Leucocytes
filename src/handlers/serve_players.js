@@ -29,6 +29,7 @@ export const servePlayersData = (c) => {
 
   const opponents = game.getOpponents(playerId);
   const player = game.getPlayer(playerId);
+  // console.log(player);
 
   return c.json({ opponents, player });
 };

@@ -49,7 +49,7 @@ export const createApp = ({
   app.get("/players-data", servePlayersData);
   app.get(
     "/game-page",
-    serveStatic({ root: "public", path: "pages/game.html" }),
+    serveStatic({ root: "public", path: "/pages/game.html" }),
   );
   app.get("/get-players", getPlayers);
   app.get("/", allowLoggedInUser);

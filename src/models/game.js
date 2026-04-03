@@ -15,9 +15,8 @@ export class Game {
   }
 
   setFirstPlayer() {
-    this.#currentPlayer = this.#players.findIndex((player) =>
-      player.holdsWild()
-    );
+    this.#currentPlayer = this.#players
+      .findIndex((player) => player.holdsWild());
     return this.#currentPlayer;
   }
 
@@ -43,6 +42,11 @@ export class Game {
     });
   }
 
+  applyVaccine(playerID) {
+    const player = this.#findPlayer(playerID);
+    player.applyVaccine();
+  }
+
   chartMixup() {
     this.#discardAllAttackCards();
     this.#attackCards.refillDrawingPile();
@@ -55,8 +59,14 @@ export class Game {
 
   getAllPlayersDetails() {
     return this.#players.map((player) => {
-      const { name, id, organCards } = player.getPlayerDetails();
-      return { name, id, organCards, isMyTurn: this.#isPlayerTurn(id) };
+      const { name, id, organCards, vaccinePoints } = player.getPlayerDetails();
+      return {
+        name,
+        id,
+        organCards,
+        isMyTurn: this.#isPlayerTurn(id),
+        vaccinePoints,
+      };
     });
   }
 

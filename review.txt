@@ -1,0 +1,1904 @@
+File: src/app.js
+import { Hono } from "hono";
+import { serveStatic } from "hono/deno";
+import { getPlayers, servePlayersData } from "./handlers/serve_players.js";
+import {
+  allowLoggedInUser,
+  loginHandler,
+  redirectLoggedInUser,
+} from "./handlers/login_handler.js";
+import { gameSetup } from "./game_setup.js";
+import { handleAttack } from "./handlers/attack_handler.js";
+
+const clients = [];
+
+export const createApp = ({
+  session,
+  idGenerator,
+  playerIdGenerator,
+  games,
+  rooms,
+  shuffle,
+}, logger) => {
+  const app = new Hono();
+  app.use(logger());
+
+  app.use(async (c, next) => {
+    c.set("session", session);
+    c.set("idGenerator", idGenerator);
+    c.set("games", games);
+    c.set("shuffle", shuffle);
+    c.set("playerIdGenerator", playerIdGenerator);
+    c.set("rooms", rooms);
+    await next();
+  });
+
+  app.post("/setup-game", gameSetup);
+  app.post("/login", loginHandler);
+  app.post("/attack", (c) => {
+    clients.forEach((resolve) => resolve(c.json({ success: true })));
+    clients.length = 0;
+    return handleAttack(c);
+  });
+
+  app.get("/wait-for-affliction", () => {
+    return new Promise((resolve) => {
+      clients.push(resolve);
+    });
+  });
+
+  app.get("/players-data", servePlayersData);
+  app.get(
+    "/game-page",
+    serveStatic({ root: "public", path: "pages/game.html" }),
+  );
+  app.get("/get-players", getPlayers);
+  app.get("/", allowLoggedInUser);
+  app.get("/pages/login.html", redirectLoggedInUser);
+  app.get("*", serveStatic({ root: "./public" }));
+
+  return app;
+};
+
+File: src/game_setup.js
+import * as attacks from "../data/attack_cards.json" with { type: "json" };
+import * as organs from "../data/organ_cards.json" with { type: "json" };
+import { Player } from "./models/player.js";
+import { Game } from "./models/game.js";
+import { Organ } from "./models/organ.js";
+import { Deck } from "./models/deck.js";
+import { Dealer } from "./models/dealer.js";
+import { AfflictionHandler } from "./models/affliction_handler.js";
+
+export const gameSetup = async (ctx) => {
+  const games = ctx.get("games");
+  const shuffle = ctx.get("shuffle");
+  const rooms = ctx.get("rooms");
+  const { roomID } = await ctx.req.json();
+
+  if (!(roomID in rooms)) return ctx.json({ message: "Invalid roomId" }, 400);
+
+  const players = rooms[roomID].map(({ name, id }) => new Player(name, id));
+  const attackCards = new Deck(attacks.default, shuffle);
+
+  const organCards = [];
+  organs.default.forEach(({ name, id, health, isWild }) => {
+    organCards.push(new Organ(name, id, health, isWild));
+  });
+  const organDeck = new Deck(organCards, shuffle);
+
+  const dealer = new Dealer(attackCards, organDeck, players);
+  const afflictionHandler = new AfflictionHandler(attackCards, organDeck);
+
+  const game = new Game(
+    players,
+    attackCards,
+    organDeck,
+    dealer,
+    afflictionHandler,
+  );
+  game.dealCards();
+  game.setFirstPlayer();
+  games[roomID] = game;
+
+  return ctx.json(game.getAllPlayersDetails(), 201);
+};
+
+File: src/handlers/attack_handler.js
+import { getCookie } from "hono/cookie";
+
+const handleNormalAffliction = ({ opponentID, organCardID, game }) => {
+  game.afflictOrganOfOpponent(opponentID, organCardID);
+  return ({ success: true });
+};
+
+const handleChartMixup = ({ game }) => {
+  game.chartMixup();
+  return ({ success: true });
+};
+
+const handleVaccine = ({ attackerID, game }) => {
+  game.applyVaccine(attackerID);
+  console.log("HERE");
+
+  return ({ success: true });
+};
+
+const ACTIONS = {
+  transplant: () => ({ success: true }),
+  affliction: handleNormalAffliction,
+  "chart-mixup": handleChartMixup,
+  Vaccine: handleVaccine,
+};
+
+export const handleAttack = async (c) => {
+  const {
+    attackerID,
+    opponentID,
+    attackCardID,
+    organCardID,
+  } = await c.req.json();
+
+  const roomID = getCookie(c, "roomID");
+  const game = c.get("games")[roomID];
+  const attackCard = game.discardAttackCard(attackerID, attackCardID);
+  const attackAction = attackCard.action;
+
+  if (!(attackAction in ACTIONS)) {
+    return c.json({ msg: "Invalid action" });
+  }
+
+  const handler = ACTIONS[attackAction];
+
+  const res = handler({ attackerID, opponentID, organCardID, game });
+  console.log(res);
+
+  return c.json(res);
+};
+
+File: src/handlers/auth.js
+import { getCookie, setCookie } from "hono/cookie";
+const hoursToMaxAge = (hour) => 3600 * hour;
+
+export const loginHandler = async (c) => {
+  const playerIdGenerator = c.get("playerIdGenerator");
+  const idGenerator = c.get("idGenerator");
+  const fd = await c.req.formData();
+  const username = fd.get("username");
+  const roomID = 101;
+  const rooms = c.get("rooms");
+  const players = rooms[roomID];
+
+  if (username === null || username.trim() === "") {
+    return c.json({ message: "invalid username" }, 401);
+  }
+
+  const sessionID = idGenerator();
+  const session = c.get("session");
+  session[sessionID] = username;
+  const maxAge = hoursToMaxAge(2);
+  setCookie(c, "sessionID", sessionID, { maxAge });
+  setCookie(c, "roomID", roomID, { maxAge });
+  const player = {
+    id: playerIdGenerator(),
+    name: username,
+    type: (players.length === 0) ? "host" : "non-host",
+  };
+  players.push(player);
+  return c.redirect("/");
+};
+
+export const redirectLoggedInUser = (c, next) => {
+  const session = c.get("session");
+  const sessionID = getCookie(c, "sessionID");
+
+  return (sessionID in session) ? c.redirect("/") : next();
+};
+
+export const allowLoggedInUser = (c, next) => {
+  const session = c.get("session");
+  const sessionID = getCookie(c, "sessionID");
+
+  return !(sessionID in session) ? c.redirect("/pages/login.html") : next();
+};
+
+File: src/handlers/login_handler.js
+import { getCookie, setCookie } from "hono/cookie";
+
+const TWO_HOURS = 60 * 60 * 2;
+
+export const loginHandler = async (c) => {
+  const maxAge = TWO_HOURS;
+  const playerIdGenerator = c.get("playerIdGenerator");
+  const idGenerator = c.get("idGenerator");
+  const payload = await c.req.formData();
+  const username = payload.get("username");
+  const roomID = 101;
+  const rooms = c.get("rooms");
+  const players = rooms[roomID];
+
+  if (username === null || username.trim() === "") {
+    return c.json({ message: "invalid username" }, 401);
+  }
+
+  const sessionID = idGenerator();
+  const session = c.get("session");
+  session[sessionID] = username;
+  setCookie(c, "sessionID", sessionID, {
+    maxAge,
+  });
+  setCookie(c, "roomID", roomID, {
+    maxAge,
+  });
+  const player = {
+    id: playerIdGenerator(),
+    name: username,
+    type: (players.length === 0) ? "host" : "non-host",
+  };
+  players.push(player);
+  return c.redirect("/");
+};
+
+export const redirectLoggedInUser = (c, next) => {
+  const session = c.get("session");
+  const sessionID = getCookie(c, "sessionID");
+
+  return (sessionID in session) ? c.redirect("/") : next();
+};
+
+export const allowLoggedInUser = (c, next) => {
+  const session = c.get("session");
+  const sessionID = getCookie(c, "sessionID");
+
+  return !(sessionID in session) ? c.redirect("/pages/login.html") : next();
+};
+
+File: src/handlers/serve_players.js
+import { getCookie } from "hono/cookie";
+import { getPlayerId } from "../utils.js";
+
+export const getPlayers = (c) => {
+  const rooms = c.get("rooms");
+  const roomID = getCookie(c, "roomID");
+  const players = rooms[roomID];
+  const session = c.get("session");
+  const sessionID = getCookie(c, "sessionID");
+  const myId = players.find((player) => player.name === session[sessionID]).id;
+  const props = { players, myId, roomID, status: 200 };
+
+  if (players.length === 2) {
+    props.status = 302;
+    props.redirectPath = "/game-page";
+  }
+
+  return c.json(props);
+};
+
+export const servePlayersData = (c) => {
+  const playerId = getPlayerId(c);
+
+  if (playerId === -1) {
+    return c.json({ msg: "BAD REQUEST" }, 400);
+  }
+  const roomID = getCookie(c, "roomID");
+  const game = c.get("games")[roomID];
+
+  const opponents = game.getOpponents(playerId);
+  const player = game.getPlayer(playerId);
+  console.log(player);
+
+  return c.json({ opponents, player });
+};
+
+File: src/models/affliction_handler.js
+export class AfflictionHandler {
+  #attackCards;
+  #organCards;
+
+  constructor(attackCards, organCards) {
+    this.#attackCards = attackCards;
+    this.#organCards = organCards;
+  }
+
+  afflictOrganOfOpponent(opponent, organCardID) {
+    const organ = opponent.afflictOrgan(organCardID);
+    if (!opponent.isVaccinated()) {
+      this.refillAttackCard(opponent);
+    }
+    if (organ !== undefined) {
+      this.#organCards.addToDiscardPile(organ);
+    }
+  }
+
+  #doesEffectAnyOwnOrgan(attackCard, organCards) {
+    return organCards.some(({ id }) =>
+      attackCard.afflictableOrgans.includes(id)
+    );
+  }
+
+  #refillAttackCard(attacker) {
+    const { organCards } = attacker.getPlayerDetails();
+    const attackCard = this.#attackCards.getCard();
+    if (this.#doesEffectAnyOwnOrgan(attackCard, organCards)) {
+      const dummyCard = {
+        "id": 100,
+        "name": "Dummy",
+        "isInstant": false,
+        "afflictableOrgans": [
+          1000,
+        ],
+        "removableOrgans": [],
+        "isWild": true,
+        "afflictPoints": 1,
+        "Desc": "A Dummy Attack Card",
+        "type": "dummy",
+        "action": "affliction",
+        "isBlockable": true,
+      };
+      attacker.refillHand(dummyCard);
+      this.#attackCards.addToDiscardPile(attackCard);
+    } else {
+      attacker.refillHand(attackCard);
+    }
+  }
+
+  discardAttackCard(attacker, attackCardID) {
+    const attackCard = attacker.removeAttackCard(attackCardID);
+
+    this.#attackCards.addToDiscardPile(attackCard);
+    this.#refillAttackCard(attacker);
+
+    return attackCard;
+  }
+}
+
+File: src/models/dealer.js
+export class Dealer {
+  #attackCards;
+  #organCards;
+  #players;
+
+  constructor(attackCards, organCards, players) {
+    this.#attackCards = attackCards;
+    this.#organCards = organCards;
+    this.#players = players;
+  }
+
+  #doesEffectAnyOwnOrgan(attackCard, organCards) {
+    return organCards.some(({ id }) =>
+      attackCard.afflictableOrgans.includes(id)
+    );
+  }
+
+  #dealOrganCards() {
+    this.#organCards.shuffleCards();
+    const organCardsLimit = Math.floor(
+      this.#organCards.getDrawingPile().length / this.#players.length,
+    );
+
+    this.#players.forEach((player) => {
+      const organCards = [];
+      for (let i = 0; i < organCardsLimit; i++) {
+        organCards.push(this.#organCards.getCard().getDetails());
+      }
+
+      player.fillHandWithOrgans(organCards);
+    });
+  }
+
+  dealAttackCards() {
+    this.#attackCards.shuffleCards();
+    const limit = 5;
+
+    this.#players.forEach((player) => {
+      const attackCards = [];
+      const { organCards } = player.getPlayerDetails();
+      while (attackCards.length < limit) {
+        const card = this.#attackCards.getCard();
+
+        if (this.#doesEffectAnyOwnOrgan(card, organCards)) {
+          this.#attackCards.addToDiscardPile(card);
+        } else {
+          attackCards.push(card);
+        }
+      }
+      player.fillHandWithAttacks(attackCards);
+    });
+  }
+
+  dealCards() {
+    this.#dealOrganCards();
+    this.dealAttackCards();
+  }
+}
+
+File: src/models/deck.js
+export class Deck {
+  #drawingPile;
+  #discardPile;
+  #shuffle;
+
+  constructor(cards, shuffler) {
+    this.#drawingPile = cards;
+    this.#discardPile = [];
+    this.#shuffle = shuffler;
+  }
+
+  shuffleCards() {
+    this.#drawingPile = this.#shuffle(this.#drawingPile);
+  }
+
+  refillDrawingPile() {
+    this.#drawingPile.push(...this.#discardPile);
+    this.#discardPile.length = 0;
+  }
+
+  getCard() {
+    if (this.#drawingPile.length === 0) this.refillDrawingPile();
+    return this.#drawingPile.pop();
+  }
+
+  addToDiscardPile(card) {
+    this.#discardPile.push(card);
+  }
+
+  getDrawingPile() {
+    return [...this.#drawingPile];
+  }
+
+  getDiscardPile() {
+    return [...this.#discardPile];
+  }
+}
+
+File: src/models/game.js
+export class Game {
+  #players;
+  #attackCards;
+  #organCards;
+  #dealer;
+  #afflictionHandler;
+  #currentPlayer;
+
+  constructor(players, attackCards, organCards, dealer, afflictionHandler) {
+    this.#players = players;
+    this.#attackCards = attackCards;
+    this.#organCards = organCards;
+    this.#dealer = dealer;
+    this.#afflictionHandler = afflictionHandler;
+  }
+
+  setFirstPlayer() {
+    this.#currentPlayer = this.#players.findIndex((player) =>
+      player.holdsWild()
+    );
+    return this.#currentPlayer;
+  }
+
+  dealCards() {
+    this.#dealer.dealCards();
+  }
+
+  discardAttackCard(attackerID, attackCardID) {
+    const attacker = this.#findPlayer(attackerID);
+    this.#currentPlayer = ++this.#currentPlayer % this.#players.length;
+    return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
+  }
+
+  afflictOrganOfOpponent(opponentID, organCardID) {
+    const opponent = this.#findPlayer(opponentID);
+    this.#afflictionHandler.afflictOrganOfOpponent(opponent, organCardID);
+  }
+
+  #discardAllAttackCards() {
+    this.#players.forEach((player) => {
+      const attackCards = player.discardAllAttackCards();
+      attackCards.forEach((card) => this.#attackCards.addToDiscardPile(card));
+    });
+  }
+
+  applyVaccine(playerID) {
+    const player = this.#findPlayer(playerID);
+    player.applyVaccine();
+  }
+
+  chartMixup() {
+    this.#discardAllAttackCards();
+    this.#attackCards.refillDrawingPile();
+    this.#dealer.dealAttackCards();
+  }
+
+  #findPlayer(id) {
+    return this.#players.find((player) => player.getId() === id);
+  }
+
+  getAllPlayersDetails() {
+    return this.#players.map((player) => {
+      const { name, id, organCards, vaccinePoints } = player.getPlayerDetails();
+      return {
+        name,
+        id,
+        organCards,
+        isMyTurn: this.#isPlayerTurn(id),
+        vaccinePoints,
+      };
+    });
+  }
+
+  getOpponents(id) {
+    return this.getAllPlayersDetails().filter((player) => player.id !== id);
+  }
+
+  getPlayer(id) {
+    const player = this.#findPlayer(id);
+    return { ...player.getPlayerDetails(), isMyTurn: this.#isPlayerTurn(id) };
+  }
+
+  #isPlayerTurn(id) {
+    const player = this.#players[this.#currentPlayer];
+    if (player === undefined) return false;
+    return player.getId() === id;
+  }
+}
+
+File: src/models/organ.js
+export class Organ {
+  #name;
+  #id;
+  #health;
+
+  constructor(name, id, health) {
+    this.#name = name;
+    this.#id = id;
+    this.#health = health;
+  }
+
+  afflict(afflictionPoint) {
+    this.#health -= afflictionPoint;
+  }
+
+  heal() {
+    this.#health += 1;
+  }
+
+  isDead() {
+    return this.#health <= 0;
+  }
+
+  isWild() {
+    return this.#name.toLowerCase() === "wild";
+  }
+
+  getDetails() {
+    return {
+      name: this.#name,
+      id: this.#id,
+      health: this.#health,
+      isWild: this.isWild(),
+    };
+  }
+}
+
+File: src/models/player.js
+export class Player {
+  #name;
+  #id;
+  #attackCards;
+  #organCards;
+  #type;
+  #vaccinePoints;
+  constructor(name, id, type) {
+    this.#name = name;
+    this.#id = id;
+    this.#attackCards = [];
+    this.#organCards = [];
+    this.#type = type;
+    this.#vaccinePoints = 0;
+  }
+  isVaccinated() {
+    return this.#vaccinePoints > 0;
+  }
+
+  applyVaccine() {
+    this.#vaccinePoints += 2;
+  }
+
+  #decreaseVaccinePts() {
+    this.#vaccinePoints -= 1;
+  }
+
+  fillHandWithOrgans(organCards) {
+    this.#organCards = organCards;
+  }
+
+  fillHandWithAttacks(attackCards) {
+    this.#attackCards = attackCards;
+  }
+
+  #isOrganDead(organ) {
+    return organ.health <= 0;
+  }
+
+  afflictOrgan(organCardID) {
+    if (this.isVaccinated()) {
+      this.#decreaseVaccinePts();
+      return;
+    }
+    const organIndex = this.#organCards
+      .findIndex(({ id }) => id === organCardID);
+    const organ = this.#organCards[organIndex];
+    organ.health -= 1;
+    if (this.#isOrganDead(organ)) {
+      this.#organCards.splice(organIndex, 1);
+      return organ;
+    }
+  }
+
+  removeAttackCard(attackCardID) {
+    const attackIndex = this.#attackCards
+      .findIndex(({ id }) => id === attackCardID);
+    return (this.#attackCards.splice(attackIndex, 1))[0];
+  }
+
+  refillHand(attackCard) {
+    this.#attackCards.push(attackCard);
+  }
+
+  getId() {
+    return this.#id;
+  }
+
+  holdsWild() {
+    return this.#organCards.some((organ) => organ.isWild);
+  }
+
+  discardAllAttackCards() {
+    return this.#attackCards.splice(0);
+  }
+
+  getPlayerDetails() {
+    return {
+      name: this.#name,
+      id: this.#id,
+      attackCards: [...this.#attackCards],
+      organCards: [...this.#organCards],
+      vaccinePoints: this.#vaccinePoints,
+    };
+  }
+}
+
+File: src/utils.js
+import { getCookie } from "hono/cookie";
+
+export const counter = () => {
+  let i = 0;
+  return () => ++i;
+};
+
+export const getPlayerId = (c) => {
+  const sessionID = getCookie(c, "sessionID");
+  if (sessionID === undefined) return -1;
+  const session = c.get("session");
+  const playerName = session[sessionID];
+  const roomID = getCookie(c, "roomID");
+  const rooms = c.get("rooms");
+  return rooms[roomID].find(({ name }) => name === playerName).id;
+};
+
+File: public/scripts/game.js
+import { renderGame, renderOpponents } from "./render_game.js";
+import { performChartMixup } from "./perform_chart_mixup.js";
+import { getAfflictableOrgans } from "./utils.js";
+
+const getCardId = (attackCard) => Number(attackCard.dataset.id);
+
+const createPopupOrgans = (afflictableOrgans) => {
+  return afflictableOrgans.map((afflictableOrgan) => {
+    const organ = document.createElement("div");
+    organ.setAttribute("class", "organ");
+    organ.setAttribute("organ-id", `${afflictableOrgan.id}`);
+    organ.setAttribute("player-id", `${afflictableOrgan.playerId}`);
+    const organName = afflictableOrgan.name;
+    const image = document.createElement("img");
+    image.setAttribute("src", `/assets/organs/${organName.toLowerCase()}.png`);
+    organ.append(image);
+    return organ;
+  });
+};
+
+const removePopup = () => {
+  const popup = document.querySelector(".popup > div");
+  if (popup !== null) popup.remove();
+};
+
+const displayAfflictableOrgans = (
+  { e, player, opponents, attackCardID },
+) => {
+  removePopup();
+  const container = document.createElement("div");
+  container.setAttribute("class", "popup-afflicatble-organs");
+  const afflictableOrgans = getAfflictableOrgans(
+    player,
+    opponents,
+    attackCardID,
+  );
+  const organs = createPopupOrgans(afflictableOrgans);
+  container.append(...organs);
+  container.addEventListener("click", async (e) => {
+    afflictOrgan(e, attackCardID, player);
+  });
+  document.querySelector(".popup").append(container);
+};
+
+const afflictOrgan = async (e, attackCardID, player) => {
+  const organ = e.target.closest(".organ");
+  const organCardID = Number(organ.getAttribute("organ-id"));
+  const opponentID = Number(organ.getAttribute("player-id"));
+  console.log(player.vaccinePoints);
+
+  const res = await fetch("/attack", {
+    method: "post",
+    body: JSON.stringify({
+      attackCardID,
+      attackerID: player.id,
+      organCardID,
+      opponentID,
+    }),
+  })
+    .then((res) => res.json())
+    .then(async ({ success }) => {
+      if (success) {
+        const { opponents } = await fetchPlayersData();
+        renderOpponents(opponents);
+      }
+    });
+  removePopup();
+};
+
+const applyVaccine = async ({ e, player, attackCardID }) => {
+  console.log("APPLE");
+
+  const { success } = await fetch("/attack", {
+    method: "POST",
+    body: JSON.stringify({ attackerID: player.id, attackCardID }),
+  }).then((res) => res.json());
+
+  if (success) {
+    const organsArea = document.querySelector(".organs");
+    organsArea.classList.add("vacced");
+  }
+};
+
+const ACTION_HANDLERS = {
+  "chart-mixup": performChartMixup,
+  affliction: displayAfflictableOrgans,
+  Vaccine: applyVaccine,
+};
+
+const fetchPlayersData = () => {
+  const mockData = { player: [], opponents: [], playerId: null };
+
+  return fetch("/players-data")
+    .then((res) => res.json())
+    .catch((err) => {
+      console.error(err);
+      return mockData;
+    });
+};
+
+const initGame = async () => {
+  const { player, opponents, event } = await fetchPlayersData();
+  await renderGame({ player, opponents, event });
+  const attackCards = document.querySelector(".player-area .attack-cards");
+  if (player.isMyTurn) {
+    attackCards.onclick = (e) => {
+      const attackCardElement = e.target.closest(".attack-card");
+      const attackCardID = getCardId(attackCardElement);
+      const attackCard = player.attackCards.find(({ id }) =>
+        id === attackCardID
+      );
+      ACTION_HANDLERS[attackCard.action]({
+        e,
+        player,
+        opponents,
+        attackCardID,
+      });
+    };
+  } else {
+    attackCards.onclick = () => "";
+  }
+};
+
+const poll = async () => {
+  await fetch("/wait-for-affliction");
+  await initGame();
+  poll();
+};
+
+window.onload = async () => {
+  await initGame();
+  poll();
+};
+
+File: public/scripts/index.js
+const makeGETReq = (url) => {
+  return fetch(url).then((r) => r.json());
+};
+
+const renderPlayers = (players, myId, roomId) => {
+  const playersLength = document.querySelector("#players-count #number");
+  const template = document.querySelector("#player-row");
+  const list = document.querySelector("#waiting-members ul");
+  playersLength.textContent = players.length;
+  const roomIdElement = document.querySelector("#room-number");
+  roomIdElement.textContent = roomId;
+
+  const elements = players.map((player) => {
+    const templateClone = document.importNode(template.content, true);
+    const li = templateClone.querySelector("li");
+    const nameElement = templateClone.querySelector(".player-name");
+    const indication = templateClone.querySelector("#indication");
+
+    if (player.id === myId) {
+      indication.textContent = "(YOU)";
+    }
+
+    li.id = player.id;
+    nameElement.textContent = player.name;
+
+    return li;
+  });
+  list.replaceChildren(...elements);
+};
+const amIHost = (players, myId) => {
+  return players.find((player) => player.id === myId).type === "host";
+};
+//--------------
+const removeLoader = () => {
+  const loader = document.querySelector(".loader");
+  loader.remove();
+};
+
+const setupWaitingMessage = (waitingSpan) => {
+  waitingSpan.classList.add("timer");
+  waitingSpan.textContent = "5 seconds to begin the game";
+};
+
+const updateWaitingMessage = (waitingSpan, timeLeft) => {
+  waitingSpan.textContent = `${timeLeft / 1000} seconds to begin the game`;
+};
+
+const redirectToGame = (body) => {
+  const { redirectPath } = body;
+  globalThis.location.href = redirectPath;
+};
+
+const startCountdown = (waitingSpan, body) => {
+  let timeLeft = 0;
+
+  const intervalID = setInterval(() => {
+    timeLeft = timeLeft - 1000;
+    updateWaitingMessage(waitingSpan, timeLeft);
+
+    if (timeLeft <= 0) {
+      clearInterval(intervalID);
+      redirectToGame(body);
+    }
+  }, 1000);
+};
+
+const renderTimeOutAndRedirectToGame = (body) => {
+  const waitingSpan = document.querySelector("#waiting-msg");
+
+  removeLoader();
+  setupWaitingMessage(waitingSpan);
+  startCountdown(waitingSpan, body);
+};
+
+
+const main = async () => {
+  const body = await makeGETReq("/get-players").catch((_) => {});
+  const { players, myId, roomID } = body;
+  if (body.status === 302) {
+    if (amIHost(players, myId)) {
+      await fetch("/setup-game", {
+        method: "POST",
+        body: JSON.stringify({ roomID }),
+      });
+    }
+    renderTimeOutAndRedirectToGame(body);
+  }
+
+  renderPlayers(players, myId, roomID);
+};
+
+globalThis.onload = () => {
+  setInterval(() => {
+    main();
+  }, 1000);
+};
+
+File: public/scripts/perform_chart_mixup.js
+export const performChartMixup = async ({ player, attackCardID }) => {
+  const res = await fetch("/attack", {
+    method: "post",
+    body: JSON.stringify({
+      attackCardID,
+      attackerID: player.id,
+    }),
+  });
+};
+
+File: public/scripts/render_game.js
+import {
+  cloneFromTemplate,
+  getAfflictableOrgans as getOrganList,
+} from "./utils.js";
+
+const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
+  attackCardNodes.forEach((attackCard, i) => {
+    const { name, id, type } = attackCards[i];
+    const attackCardName = attackCard.querySelector("h1");
+    attackCardName.textContent = name;
+
+    attackCard.setAttribute("data-id", id);
+    attackCard.setAttribute("data-type", type);
+    attackCard.setAttribute("id", `attack-${id}`);
+
+    const organsToAttack = getOrganList({ attackCards }, opponents, id);
+    const typeCheck = !(["bureaucracy", "resistance"].includes(type));
+
+    if (organsToAttack.length === 0 && typeCheck) {
+      attackCard.classList.add("disabled-card");
+    }
+  });
+};
+
+const renderOrganImage = (organ, name) => {
+  const image = organ.querySelector("img");
+  image.setAttribute("src", `/assets/organs/${name.toLowerCase()}.png`);
+  image.setAttribute("alt", name);
+  image.setAttribute("title", name);
+};
+
+const renderOrgans = (organNodes, organCards) => {
+  organNodes.forEach((organ, i) => {
+    if (organCards[i] !== undefined) {
+      const { name, id, isWild, health } = organCards[i];
+      renderOrganImage(organ, name);
+
+      const maxHealth = isWild ? 4 : 2;
+      organ.setAttribute("data-affliction", maxHealth - health);
+      organ.setAttribute("data-id", id);
+      organ.setAttribute("id", `organ-${id}`);
+    } else organ.remove();
+  });
+};
+
+const renderMyCards = (
+  { name, attackCards, organCards, isMyTurn },
+  opponents,
+) => {
+  const playerArea = document.querySelector(".player-area");
+  const playerOrgans = playerArea.querySelectorAll(".organ");
+  const playerAttacks = playerArea.querySelectorAll(".attack-card");
+
+  console.log({ playerArea, playerOrgans, playerAttacks });
+  setTextContent(playerArea, ".name", name);
+
+  const avatar = playerArea.querySelector(".player");
+  if (isMyTurn) {
+    document.querySelector("body").style.background =
+      "radial-gradient( gray, black )";
+    avatar.classList.add("highlight-avatar");
+  } else {
+    document.querySelector("body").style.background =
+      "radial-gradient(var(--bg-color), black)";
+    avatar.classList.remove("highlight-avatar");
+  }
+
+  renderOrgans(playerOrgans, organCards);
+  renderAttackCards(playerAttacks, attackCards, opponents);
+};
+
+const createOppFragment = (
+  template,
+  { name, organCards, id, isMyTurn, vaccinePoints },
+) => {
+  console.log(vaccinePoints);
+  const clone = template.content.cloneNode(true);
+  const element = clone.querySelector(".opponent");
+  element.setAttribute("id", `player-${id}`);
+
+  setTextContent(element, ".name", name);
+  if (vaccinePoints === 2) {
+    element.classList.add("vacced");
+  }
+  if (vaccinePoints === 1) {
+    element.classList.remove("vacced");
+    element.classList.add("vacced-half");
+  }
+  if (vaccinePoints === 0) {
+    element.classList.remove("vacced-half");
+  }
+  const organs = element.querySelectorAll(".organ");
+  renderOrgans(organs, organCards);
+
+  const avatar = clone.querySelector(".avatar");
+  if (isMyTurn) {
+    avatar.classList.add("highlight-avatar");
+  } else {
+    avatar.classList.remove("highlight-avatar");
+  }
+  return element;
+};
+
+export const renderOpponents = (opponents) => {
+  const template = document.querySelector(".opponent-template");
+  const opponentArea = document.querySelector(".opponent-area");
+  opponentArea.innerHTML = "";
+
+  const fragments = opponents.map((opponent) => {
+    console.log("opp", opponent);
+    return createOppFragment(template, opponent);
+  });
+  opponentArea.append(...fragments);
+};
+
+const setTextContent = (container, selector, content) => {
+  console.log({ container, selector, content });
+
+  container.querySelector(selector).textContent = content;
+};
+
+const renderFlashScreen = ({ name, actor, target, card }) => {
+  if (name === "idle" || name === undefined) {
+    document.querySelector(".flash-screen")?.remove();
+    return;
+  }
+  const flashScreen = cloneFromTemplate("#flash-screen-affliction-template");
+
+  const attackCard = flashScreen.querySelector(".attack-card");
+  const targetContainer = flashScreen.querySelector(".target");
+  const targetOrgan = targetContainer.querySelector(".organ");
+
+  setTextContent(flashScreen, ".actor .name", actor);
+  setTextContent(attackCard, " h1", card.name);
+  setTextContent(targetContainer, ".name", target.playerName);
+
+  renderOrganImage(targetOrgan, target.organName);
+  attackCard.setAttribute("data-type", "affliction");
+
+  document.querySelector("main").appendChild(flashScreen);
+};
+
+// for testing......
+const mockEventData = {
+  name: "idle",
+  actor: "Player1",
+  target: {
+    playerName: "player2",
+    organName: "Teeth",
+  },
+  card: {
+    name: "Scalding coffee",
+    isInstant: false,
+    "isWild": false,
+    "Desc": "Scalding coffee affecting organs",
+    "type": "affliction",
+  },
+};
+
+export const renderGame = async ({ player, opponents, event }) => {
+  renderOpponents(opponents);
+  renderMyCards(player, opponents);
+  renderFlashScreen(event || mockEventData);
+};
+
+File: public/scripts/utils.js
+export const getAfflictableOrgans = (
+  { attackCards },
+  opponents,
+  attackCardId,
+) => {
+  const attackCard = attackCards
+    .find(({ id }) => id === attackCardId);
+  const afflictableOrgansIds = attackCard.afflictableOrgans;
+  const allOrganCards = opponents.reduce((allCards, { organCards, id }) => {
+    organCards.forEach((card) => card.playerId = id);
+    return allCards.concat(organCards);
+  }, []);
+  if (attackCard.isWild) return allOrganCards;
+
+  return allOrganCards.filter(({ id }) =>
+    afflictableOrgansIds.includes(id) || id === 100
+  );
+};
+
+export const cloneFromTemplate = (templateID, element = "*") => {
+  const template = document.querySelector(templateID);
+  return template.content.cloneNode(true).querySelector(element);
+};
+
+File: public/index.html
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./styles/index.css" />
+  <link rel="shortcut icon" href="/assets/favicon/favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap" rel="stylesheet" />
+  <title>lobby page</title>
+  <script type="module" src="./scripts/index.js"></script>
+</head>
+
+<body>
+  <main>
+    <section id="waiting-table">
+      <section id="waiting-header">
+        <h2>Room Id : <span id="room-number">0001</span></h2>
+        <h3 id="players-count">players : <span id="number"></span> / 2</h3>
+      </section>
+      <section id="waiting-members">
+        <ul></ul>
+      </section>
+    </section>
+
+    <section id="table-footer">
+      <div class="loader"></div>
+      <span id="waiting-msg"> waiting for other players to join </span>
+    </section>
+  </main>
+  <template id="player-row">
+    <li>
+      <div class="player-profile"></div>
+      <span class="player-name"></span> <span id="indication"></span>
+    </li>
+  </template>
+</body>
+
+</html>
+
+File: public/pages/game.html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="/assets/favicon/favicon.png"
+      type="image/x-icon"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/game.css" />
+    <link rel="stylesheet" href="/styles/vaccine.css" />
+    <title>Game</title>
+    <script type="module" src="/scripts/game.js"></script>
+
+    <template class="opponent-template">
+      <div class="opponent">
+        <div class="avatar">
+          <p class="name"></p>
+        </div>
+
+        <div class="organ"><img /></div>
+        <div class="organ"><img /></div>
+        <div class="organ"><img /></div>
+        <div class="organ"><img /></div>
+      </div>
+    </template>
+
+    <template id="flash-screen-affliction-template">
+      <div class="flash-screen">
+        <div class="actor">
+          <div class="avatar">
+            <p class="name"></p>
+          </div>
+        </div>
+        <div class="attack-card">
+          <h1></h1>
+        </div>
+        <div class="target">
+          <div class="organ"><img /></div>
+          <div class="avatar">
+            <p class="name"></p>
+          </div>
+        </div>
+      </div>
+    </template>
+  </head>
+
+  <body>
+    <main>
+      <div class="opponent-area"></div>
+      <div class="player-area">
+        <div class="attack-cards">
+          <div class="attack-card">
+            <h1></h1>
+          </div>
+          <div class="attack-card"><h1></h1></div>
+          <div class="attack-card"><h1></h1></div>
+          <div class="attack-card"><h1></h1></div>
+          <div class="attack-card"><h1></h1></div>
+        </div>
+        <div class="organs">
+          <div class="organ"><img /></div>
+          <div class="organ"><img /></div>
+          <div class="organ"><img /></div>
+          <div class="organ"><img /></div>
+        </div>
+
+        <div class="player">
+          <div class="avatar"></div>
+          <p class="name">Template</p>
+        </div>
+      </div>
+      <div class="popup"></div>
+    </main>
+  </body>
+</html>
+
+File: public/pages/login.html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="/assets/favicon/favicon.png"
+      type="image/x-icon"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles/login.css" />
+    <title>login page</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>organ Attack</h1>
+    </header>
+    <main>
+      <form action="/login" method="post" id="login-form">
+        <input
+          type="text"
+          name="username"
+          id="username"
+          placeholder="Enter your name"
+          required
+          minlength="3"
+          maxlength="8"
+        />
+        <button type="submit">Login</button>
+      </form>
+    </main>
+  </body>
+</html>
+
+File: public/styles/game.css
+* {
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --bg-color: hsl(0, 0%, 15%);
+  --bg-gradient: radial-gradient(var(--bg-color), black);
+  --fg-color: hsl(0, 0%, 95%);
+  --card-height: 9em;
+  --card-width: 7em;
+  --organ-size: 44px;
+  --clr-red: hsl(348, 83%, 47%);
+  --clr-red-alpha-30: hsla(348, 83%, 47%, 0.3);
+  --clr-dark-red: hsl(355, 85%, 30%);
+  --clr-gold: hsl(51, 100%, 63%);
+  --clr-dark-gray: hsl(0, 0%, 12%);
+  --clr-gray: hsl(0, 0%, 30%);
+  --clr-light-gray: hsl(0, 0%, 65%);
+}
+
+body {
+  font-family: Schoolbell, fantasy;
+  line-height: 1.2;
+  background-image: var(--bg-gradient);
+  color: var(--fg-color);
+  height: 100vh;
+}
+main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.organ {
+  background-color: hsl(208, 100%, 97%);
+  font-size: larger;
+  width: var(--organ-size);
+  height: var(--organ-size);
+  border-radius: 100vw;
+  position: relative;
+}
+
+.organ[data-affliction="1"]::before {
+  content: "";
+
+  position: absolute;
+  /* display: block; */
+  right: -8px;
+  z-index: 3;
+  width: 18px;
+  height: 18px;
+
+  background-image: url("/assets/icons/blood_drop.svg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.organ[data-affliction="1"] > img {
+  filter: brightness(60%);
+}
+.organ img {
+  font-size: 14px;
+
+  color: crimson;
+  width: 150%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+/* Player */
+.player-area {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+.attack-cards {
+  display: flex;
+  gap: 1em;
+}
+[data-type="affliction"] {
+  background-image: radial-gradient(var(--clr-red), var(--clr-dark-red));
+  color: var(--clr-gold);
+  border: 0.3em solid var(--clr-red);
+}
+[data-type="bureaucracy"] {
+  background-image: radial-gradient(var(--clr-gray), var(--clr-dark-gray));
+  color: var(--clr-gold);
+  border: 0.3em solid var(--clr-gold);
+}
+[data-type="tactical"] {
+  background-image: radial-gradient(var(--clr-gray), var(--clr-gray));
+  color: var(--fg-color);
+  border: 0.3em solid var(--clr-light-gray);
+}
+[data-type="dummy"], [data-type="wild"] {
+  background-image: radial-gradient(yellowgreen, var(--clr-gray));
+  color: var(--fg-color);
+  border: 0.3em solid var(--clr-light-gray);
+}
+.attack-card {
+  width: var(--card-width);
+  height: var(--card-height);
+  border-radius: 0.3em;
+  box-sizing: border-box;
+
+  padding: 0.2em;
+  transition: 200ms;
+  cursor: pointer;
+}
+
+.disabled-card {
+  background: rgb(72, 72, 72);
+  border: 0.3em solid rgb(72, 72, 72);
+  color: var(--clr-light-gray);
+  text-decoration: line-through 4px;
+}
+
+.attack-card:hover {
+  box-shadow: 0 0 10px 1px hsl(0, 0%, 0%);
+  scale: 1.03;
+}
+.organs {
+  gap: 1em;
+  display: flex;
+}
+.player-area .player {
+  position: relative;
+  right: -30em;
+  bottom: 4em;
+  width: 10em;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  border: 1px solid white;
+  padding: 0.4em;
+  padding-right: 1em;
+  border-radius: 100vw;
+}
+
+.player-area .player .name {
+  text-transform: capitalize;
+}
+.popup {
+  position: absolute;
+  bottom: calc(var(--card-height) + var(--organ-size) + 10em);
+  display: flex;
+  gap: 1em;
+}
+h1 {
+  font-size: 18px;
+  word-wrap: break-word;
+  text-align: center;
+}
+h1,
+.name {
+  font-family: "Nerko One";
+  letter-spacing: 1px;
+}
+/* opponent */
+
+.opponent-area {
+  flex: 1;
+  width: 100%;
+  display: grid;
+  grid-template-areas:
+    "opp-2 . opp-1 . opp-3"
+    ".     .   .   .     ."
+    "opp-4 .   .   . opp-5";
+  justify-content: space-between;
+}
+
+.opponent:nth-child(1) {
+  grid-area: opp-1;
+}
+.opponent:nth-child(2) {
+  grid-area: opp-2;
+}
+.opponent:nth-child(3) {
+  grid-area: opp-3;
+}
+.opponent:nth-child(4) {
+  grid-area: opp-4;
+}
+.opponent:nth-child(5) {
+  grid-area: opp-5;
+}
+
+.opponent {
+  display: flex;
+  gap: 1em;
+  align-items: flex-start;
+  padding: 1em;
+}
+.highlight-avatar {
+  box-shadow: 0px 0px 0px 5px var(--clr-gold);
+}
+
+.avatar {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 100vw;
+  background-image:
+    radial-gradient(circle at 50% 30%, rgb(72, 72, 72) 30%, transparent 30%),
+    radial-gradient(circle at 50% 100%, rgb(72, 72, 72) 50%, transparent 50%),
+    linear-gradient(#fff, #fff);
+}
+
+.flash-screen .name,
+.opponent .name {
+  text-transform: capitalize;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  background-color: #272727;
+  border-radius: 5px;
+}
+
+/* popups */
+.popup-afflicatble-organs {
+  background-color: var(--clr-gray);
+  border-radius: 0.4em;
+  /* padding: 0.8em; */
+  display: flex;
+  gap: 1em;
+}
+
+.popup-afflicatble-organs > div {
+  margin: 0.8em;
+}
+
+.popup-afflicatble-organs img {
+  cursor: pointer;
+  transition: 200ms;
+}
+
+.popup-afflicatble-organs img:hover {
+  /* box-shadow: 0 0 10px 1px hsl(0, 0%, 0%); */
+  scale: 1.05;
+}
+
+/* flash screen */
+
+.flash-screen {
+  background-color: var(--clr-red-alpha-30);
+  position: absolute;
+  bottom: calc(var(--card-height) + var(--organ-size) + 20em);
+  left: 50%;
+
+  translate: -50% 0%;
+
+  border-radius: 0.4em;
+  display: flex;
+  padding: 1em;
+  gap: 5em;
+}
+
+.flash-screen .actor {
+  position: relative;
+}
+.flash-screen .actor::after {
+  content: "USED";
+  position: absolute;
+  top: 2em;
+  right: -3em;
+}
+
+.flash-screen .target {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1em;
+}
+.flash-screen .attack-card {
+  margin-block: 2em;
+}
+.flash-screen .target::before {
+  content: "ON";
+  position: absolute;
+  bottom: 6em;
+  left: -3em;
+}
+
+File: public/styles/index.css
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+body,
+#waiting-header,
+#waiting-table,
+#table-footer,
+ul {
+  display: flex;
+  align-items: center;
+}
+
+body {
+  font-family: Schoolbell, fantasy;
+  height: 100vh;
+  background: radial-gradient(rgb(48, 47, 47), rgb(0, 0, 0));
+  background-repeat: no-repeat;
+  justify-content: center;
+}
+
+#waiting-table {
+  width: 800px;
+  height: 600px;
+  background-color: rgba(101, 101, 101, 0.5);
+  flex-direction: column;
+  row-gap: 15px;
+  border-radius: 10px;
+  justify-content: none;
+}
+
+#waiting-header {
+  width: 100%;
+  height: 70px;
+  box-sizing: border-box;
+  background-color: rgb(130, 25, 25);
+  justify-content: space-between;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 0px -2px 8px 1px rgba(255, 255, 255, 0.8);
+}
+
+#waiting-header h2 {
+  font-family: "Nerko One";
+  letter-spacing: 1px;
+  color: rgb(247, 184, 59);
+}
+
+#waiting-members {
+  width: 88%;
+}
+
+ul {
+  flex-direction: column;
+}
+
+li {
+  list-style: none;
+  width: 100%;
+  color: rgb(194, 194, 194);
+  padding: 15px;
+  font-size: 22px;
+  border-bottom: 1px solid black;
+  display: flex;
+  align-items: center;
+  column-gap: 18px;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.player-profile {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: black;
+  border: 1px solid white;
+}
+
+.loader {
+  /* border: 4px solid #1e293b; */
+  border: 4px solid hsla(51, 100%, 50%, 0.2);
+  /* border-top: 4px solid #38bdf8; */
+  border-top: 4px solid gold;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#table-footer {
+  margin: 10px;
+  justify-content: center;
+  gap: 10px;
+}
+
+.timer{
+  color: rgb(253, 208, 23) !important;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7),
+               0 0 20px rgba(255, 215, 0, 0.5); 
+  
+  font-weight: bold;
+    font-size: 20px; 
+}
+
+#waiting-msg {
+  color: rgb(116, 116, 116);
+  font-size: 15px;
+}
+
+
+#players-count {
+  color: white;
+}
+
+File: public/styles/login.css
+* {
+  padding: 0px;
+  margin: 0px;
+}
+:root {
+  --bg-color: #1f1f1f;
+  --fg-color: #fdfdfd;
+  --organ-size: 44px;
+  --clr-red: crimson;
+  --bg-gradient: radial-gradient(var(--bg-color), black);
+  --clr-dark-red: hsl(355, 85%, 30%);
+  --clr-gold: gold;
+}
+
+body {
+  background-image: var(--bg-gradient);
+  color: var(--fg-color);
+  font-family: Schoolbell, fantasy;
+}
+main,
+#login-form,
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+header h1 {
+  padding-top: 1em;
+  font-family: "serif";
+  font-size: 80px;
+}
+
+main {
+  height: 80vh;
+  width: 100vw;
+}
+
+#login-form {
+  /* height: 30%;
+  width: 25%; */
+  flex-direction: row;
+  gap: 1em;
+  padding: 2em;
+  background-color: var(--bg-color);
+  box-shadow: 0 0 5px black;
+  border-radius: 0.4em;
+}
+
+#login-form input {
+  width: 200px;
+}
+
+input {
+  color: var(--fg-color);
+  border: none;
+  border-radius: 0.2em;
+  font-size: 18px;
+  padding: 0.4em 0.8em;
+  background-color: hsla(51, 100%, 50%, 0.1);
+  /* outline-style: dashed; */
+}
+input:focus {
+  outline-color: hsla(51, 100%, 50%, 0.5);
+}
+
+button {
+  font-family: "Nerko one", fantasy;
+  font-size: 18px;
+  border: none;
+  border-radius: 0.2em;
+  /* background-color: hsla(51, 100%, 50%, 0.9); */
+  background-color: hsla(51, 100%, 50%, 0.9);
+  box-shadow: 0 0 5px var(--clr-red);
+  padding: 0.4em 0.8em;
+}
+
+File: public/styles/style.css
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.container {
+  max-width: 500px;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
+.loader {
+  margin: 30px auto 0;
+  border: 4px solid #1e293b;
+  border-top: 4px solid #38bdf8;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+File: public/styles/vaccine.css
+.vacced {
+  padding: 24px 32px;
+  border-radius: 100px;
+  max-width: 300px;
+  position: relative;
+  font-family: sans-serif;
+  color: white;
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #0091ff, #00c6ff);
+}
+
+.vacced-half {
+  padding: 24px 32px;
+  border-radius: 100px;
+  max-width: 300px;
+  position: relative;
+  font-family: sans-serif;
+  color: white;
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #ffffff, #b9f0ff);
+}
+
+
+.vacced::before,
+.vacced::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
+
+
+.vacced::before {
+  width: 40px;
+  height: 40px;
+  top: 10px;
+  left: 20px;
+}
+
+.vacced::after {
+  width: 25px;
+  height: 25px;
+  bottom: 15px;
+  right: 25px;
+}
+
+.vacced span::before,
+.vacced span::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.vacced span::before {
+  width: 15px;
+  height: 15px;
+  top: 50%;
+  left: 10%;
+}
+
+.vacced span::after {
+  width: 10px;
+  height: 10px;
+  bottom: 20%;
+  right: 10%;
+}

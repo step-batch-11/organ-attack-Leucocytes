@@ -4,13 +4,25 @@ export class Player {
   #attackCards;
   #organCards;
   #type;
-
+  #vaccinePoints;
   constructor(name, id, type) {
     this.#name = name;
     this.#id = id;
     this.#attackCards = [];
     this.#organCards = [];
     this.#type = type;
+    this.#vaccinePoints = 0;
+  }
+  isVaccinated() {
+    return this.#vaccinePoints > 0;
+  }
+
+  applyVaccine() {
+    this.#vaccinePoints += 2;
+  }
+
+  #decreaseVaccinePts() {
+    this.#vaccinePoints -= 1;
   }
 
   fillHandWithOrgans(organCards) {
@@ -26,6 +38,10 @@ export class Player {
   }
 
   afflictOrgan(organCardID) {
+    if (this.isVaccinated()) {
+      this.#decreaseVaccinePts();
+      return;
+    }
     const organIndex = this.#organCards
       .findIndex(({ id }) => id === organCardID);
     const organ = this.#organCards[organIndex];
@@ -64,6 +80,7 @@ export class Player {
       id: this.#id,
       attackCards: [...this.#attackCards],
       organCards: [...this.#organCards],
+      vaccinePoints: this.#vaccinePoints,
     };
   }
 }

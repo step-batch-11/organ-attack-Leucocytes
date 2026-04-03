@@ -9,6 +9,9 @@ export class AfflictionHandler {
 
   afflictOrganOfOpponent(opponent, organCardID) {
     const organ = opponent.afflictOrgan(organCardID);
+    if (!opponent.isVaccinated()) {
+      this.#refillAttackCard(opponent);
+    }
     if (organ !== undefined) {
       this.#organCards.addToDiscardPile(organ);
     }
@@ -48,6 +51,7 @@ export class AfflictionHandler {
 
   discardAttackCard(attacker, attackCardID) {
     const attackCard = attacker.removeAttackCard(attackCardID);
+
     this.#attackCards.addToDiscardPile(attackCard);
     this.#refillAttackCard(attacker);
 

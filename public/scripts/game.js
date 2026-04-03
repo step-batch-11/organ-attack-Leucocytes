@@ -1,4 +1,5 @@
 import { renderGame, renderOpponents } from "./render_game.js";
+import { performChartMixup } from "./perform_chart_mixup.js";
 import { getAfflictableOrgans } from "./utils.js";
 
 const getCardId = (attackCard) => Number(attackCard.dataset.id);
@@ -45,40 +46,39 @@ const afflictOrgan = async (e, attackCardID, player) => {
   const organ = e.target.closest(".organ");
   const organCardID = Number(organ.getAttribute("organ-id"));
   const opponentID = Number(organ.getAttribute("player-id"));
-  console.log({ opponentID, organCardID });
 
-  const res = await fetch("/attack", {
-    method: "post",
-    body: JSON.stringify({
-      attackCardID,
-      attackerID: player.id,
-      organCardID,
-      opponentID,
-    }),
-  })
-    .then((res) => res.json())
+  const body = { attackCardID, attackerID: player.id, organCardID, opponentID };
+
+  await postJSON("/attack", body)
     .then(async ({ success }) => {
       if (success) {
         const { opponents } = await fetchPlayersData();
         renderOpponents(opponents);
       }
     });
+
   removePopup();
 };
 
-const performChartMixup = async ({ player, attackCardID }) => {
-  const res = await fetch("/attack", {
-    method: "post",
-    body: JSON.stringify({
-      attackCardID,
-      attackerID: player.id,
-    }),
-  });
+const postJSON = (url, body) => {
+  return fetch(url, { method: "POST", body: JSON.stringify(body) })
+    .then((r) => r.json());
+};
+
+const playVaccineCard = async ({ e, player, attackCardID }) => {
+  const body = { attackerID: player.id, attackCardID };
+  const { success } = await postJSON("/attack", body);
+
+  if (success) {
+    const organsArea = document.querySelector(".organs");
+    organsArea.classList.add("vacced");
+  }
 };
 
 const ACTION_HANDLERS = {
   "chart-mixup": performChartMixup,
-  "affliction": displayAfflictableOrgans,
+  affliction: displayAfflictableOrgans,
+  Vaccine: playVaccineCard,
 };
 
 const fetchPlayersData = () => {
@@ -92,19 +92,19 @@ const fetchPlayersData = () => {
     });
 };
 
-const initGame = async () => {
-  const { player, opponents, event } = await fetchPlayersData();
+const manageTurn = async () => {
+  const data = await fetchPlayersData();
+  const { player, opponents, event } = data;
   await renderGame({ player, opponents, event });
   const attackCards = document.querySelector(".player-area .attack-cards");
-
-  console.log(player, opponents);
   if (player.isMyTurn) {
     attackCards.onclick = (e) => {
       const attackCardElement = e.target.closest(".attack-card");
       const attackCardID = getCardId(attackCardElement);
-      const attackCard = player.attackCards.find(({ id }) =>
-        id === attackCardID
-      );
+
+      const attackCard = player.attackCards
+        .find(({ id }) => id === attackCardID);
+
       ACTION_HANDLERS[attackCard.action]({
         e,
         player,
@@ -113,17 +113,18 @@ const initGame = async () => {
       });
     };
   } else {
+    console.log({ data });
     attackCards.onclick = () => "";
   }
 };
 
 const poll = async () => {
   await fetch("/wait-for-affliction");
-  await initGame();
+  await manageTurn();
   poll();
 };
 
 window.onload = async () => {
-  await initGame();
+  await manageTurn();
   poll();
 };

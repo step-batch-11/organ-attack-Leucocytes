@@ -23,11 +23,13 @@ describe("Game model test", () => {
         id: 1,
         name: "Shivang",
         organCards: [],
+        vaccinePoints: 0,
       }, {
         isMyTurn: false,
         id: 1,
         name: "Samiran",
         organCards: [],
+        vaccinePoints: 0,
       }]);
     });
 
@@ -59,6 +61,7 @@ describe("Game model test", () => {
           },
         ],
         attackCards: [],
+        vaccinePoints: 0,
       });
     });
 
