@@ -40,7 +40,10 @@ describe("Game model test", () => {
       ];
 
       players.map((player) => {
-        player.fillHandWithOrgans([{ id: 1, health: 1, isWild: true }]);
+        player.fillHandWithOrgans([
+          new Organ("o1", 1, 1),
+          new Organ("wild", 2, 3),
+        ]);
         player.fillHandWithAttacks([]);
       });
 
@@ -55,8 +58,15 @@ describe("Game model test", () => {
         name: "Shivang",
         organCards: [
           {
+            name: "o1",
             health: 1,
             id: 1,
+            isWild: false,
+          },
+          {
+            name: "wild",
+            health: 3,
+            id: 2,
             isWild: true,
           },
         ],

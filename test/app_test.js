@@ -7,7 +7,7 @@ import { Player } from "../src/models/player.js";
 import { Deck } from "../src/models/deck.js";
 import { AfflictionHandler } from "../src/models/affliction_handler.js";
 import { Dealer } from "../src/models/dealer.js";
-
+import { Organ } from "../src/models/organ.js";
 describe("tests for app", () => {
   const logger = () => (_, next) => {
     return next();
@@ -284,7 +284,7 @@ describe("tests for app", () => {
 
     it("=> app should send players data while providing wild card", async () => {
       players.map((player) => {
-        player.fillHandWithOrgans([{ id: 1, health: 1, isWild: true }]);
+        player.fillHandWithOrgans([new Organ("wild", 1, 1)]);
         player.fillHandWithAttacks([{ id: 1, type: "affliction" }]);
       });
       game = new Game(
@@ -306,7 +306,7 @@ describe("tests for app", () => {
 
     it("=> app should send players data without providing wild card", async () => {
       players.map((player) => {
-        player.fillHandWithOrgans([{ id: 1, health: 1 }]);
+        player.fillHandWithOrgans([new Organ("", 1, 1)]);
         player.fillHandWithAttacks([{ id: 1, type: "affliction" }]);
       });
       game = new Game(
@@ -340,16 +340,28 @@ describe("tests for app", () => {
     });
 
     it("Should wait until someone attacks", async () => {
+      console.log({ players }, "HERE");
       players.map((player) => {
-        player.fillHandWithOrgans([{ id: 1, health: 1, isWild: true }]);
+        const organCards = Array.from(
+          { length: 2 },
+          (_, i) => (new Organ(`o${i + 1}`, i, 1)),
+        );
+        player.fillHandWithOrgans(organCards);
         player.fillHandWithAttacks([{
           id: 1,
           action: "affliction",
-          afflicatbleOrgans: [],
+          afflictableOrgans: [],
         }]);
       });
+
       const attackDeck = new Deck([{ afflictableOrgans: [] }]);
-      const organDeck = new Deck();
+
+      const organCards = Array.from(
+        { length: 2 },
+        (_, i) => (new Organ(`o${i + 1}`, i, 1)),
+      );
+
+      const organDeck = new Deck(organCards);
 
       const dealer = new Dealer([], [], players);
       const afflictionHandler = new AfflictionHandler(attackDeck, organDeck);
@@ -362,10 +374,9 @@ describe("tests for app", () => {
         afflictionHandler,
       );
       games[101] = game;
-      app.request("/wait-for-affliction", {
-        method: "GET",
-      });
-      const response = app.request("/attack", {
+      app.request("/wait-for-affliction", { method: "GET" });
+
+      const response = await app.request("/attack", {
         method: "post",
         headers: { cookie: "sessionID=1;roomID=101" },
         body: JSON.stringify({
@@ -375,12 +386,10 @@ describe("tests for app", () => {
           organCardID: 1,
         }),
       });
-      const res = await response;
-      const contentType = res.headers.get("content-type");
+      // console.log("dlkfsdlkjdslfk", await response.json());
+
+      const contentType = response.headers.get("content-type");
       assertEquals(contentType, "application/json");
     });
-  });
-
-  describe("Wait for affliction end point", () => {
   });
 });

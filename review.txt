@@ -50,7 +50,7 @@ export const createApp = ({
   app.get("/players-data", servePlayersData);
   app.get(
     "/game-page",
-    serveStatic({ root: "public", path: "pages/game.html" }),
+    serveStatic({ root: "public", path: "/pages/game.html" }),
   );
   app.get("/get-players", getPlayers);
   app.get("/", allowLoggedInUser);
@@ -68,6 +68,7 @@ import { Game } from "./models/game.js";
 import { Organ } from "./models/organ.js";
 import { Deck } from "./models/deck.js";
 import { Dealer } from "./models/dealer.js";
+
 import { AfflictionHandler } from "./models/affliction_handler.js";
 
 export const gameSetup = async (ctx) => {
@@ -106,23 +107,11 @@ export const gameSetup = async (ctx) => {
 
 File: src/handlers/attack_handler.js
 import { getCookie } from "hono/cookie";
-
-const handleNormalAffliction = ({ opponentID, organCardID, game }) => {
-  game.afflictOrganOfOpponent(opponentID, organCardID);
-  return ({ success: true });
-};
-
-const handleChartMixup = ({ game }) => {
-  game.chartMixup();
-  return ({ success: true });
-};
-
-const handleVaccine = ({ attackerID, game }) => {
-  game.applyVaccine(attackerID);
-  console.log("HERE");
-
-  return ({ success: true });
-};
+import {
+  handleChartMixup,
+  handleNormalAffliction,
+  handleVaccine,
+} from "./card_action_handler.js";
 
 const ACTIONS = {
   transplant: () => ({ success: true }),
@@ -149,9 +138,7 @@ export const handleAttack = async (c) => {
   }
 
   const handler = ACTIONS[attackAction];
-
   const res = handler({ attackerID, opponentID, organCardID, game });
-  console.log(res);
 
   return c.json(res);
 };
@@ -200,6 +187,22 @@ export const allowLoggedInUser = (c, next) => {
   const sessionID = getCookie(c, "sessionID");
 
   return !(sessionID in session) ? c.redirect("/pages/login.html") : next();
+};
+
+File: src/handlers/card_action_handler.js
+export const handleNormalAffliction = ({ opponentID, organCardID, game }) => {
+  game.afflictOrganOfOpponent(opponentID, organCardID);
+  return ({ success: true });
+};
+
+export const handleChartMixup = ({ game }) => {
+  game.chartMixup();
+  return ({ success: true });
+};
+
+export const handleVaccine = ({ attackerID, game }) => {
+  game.applyVaccine(attackerID);
+  return ({ success: true });
 };
 
 File: src/handlers/login_handler.js
@@ -285,7 +288,7 @@ export const servePlayersData = (c) => {
 
   const opponents = game.getOpponents(playerId);
   const player = game.getPlayer(playerId);
-  console.log(player);
+  // console.log(player);
 
   return c.json({ opponents, player });
 };
@@ -303,7 +306,7 @@ export class AfflictionHandler {
   afflictOrganOfOpponent(opponent, organCardID) {
     const organ = opponent.afflictOrgan(organCardID);
     if (!opponent.isVaccinated()) {
-      this.refillAttackCard(opponent);
+      this.#refillAttackCard(opponent);
     }
     if (organ !== undefined) {
       this.#organCards.addToDiscardPile(organ);
@@ -379,7 +382,8 @@ export class Dealer {
     this.#players.forEach((player) => {
       const organCards = [];
       for (let i = 0; i < organCardsLimit; i++) {
-        organCards.push(this.#organCards.getCard().getDetails());
+        const organ = this.#organCards.getCard().getOrgan();
+        organCards.push(organ);
       }
 
       player.fillHandWithOrgans(organCards);
@@ -469,9 +473,8 @@ export class Game {
   }
 
   setFirstPlayer() {
-    this.#currentPlayer = this.#players.findIndex((player) =>
-      player.holdsWild()
-    );
+    this.#currentPlayer = this.#players
+      .findIndex((player) => player.holdsWild());
     return this.#currentPlayer;
   }
 
@@ -487,7 +490,9 @@ export class Game {
 
   afflictOrganOfOpponent(opponentID, organCardID) {
     const opponent = this.#findPlayer(opponentID);
-    this.#afflictionHandler.afflictOrganOfOpponent(opponent, organCardID);
+    opponent.afflictOrgan(organCardID);
+
+    // this.#afflictionHandler.afflictOrganOfOpponent(opponent, organCardID);
   }
 
   #discardAllAttackCards() {
@@ -568,11 +573,16 @@ export class Organ {
   isWild() {
     return this.#name.toLowerCase() === "wild";
   }
-
+  getOrgan() {
+    return this;
+  }
+  getID() {
+    return this.#id;
+  }
   getDetails() {
     return {
       name: this.#name,
-      id: this.#id,
+      id: this.getID(),
       health: this.#health,
       isWild: this.isWild(),
     };
@@ -580,6 +590,9 @@ export class Organ {
 }
 
 File: src/models/player.js
+import { throws } from "node:assert";
+import { Organ } from "./organ.js";
+
 export class Player {
   #name;
   #id;
@@ -615,23 +628,24 @@ export class Player {
     this.#attackCards = attackCards;
   }
 
-  #isOrganDead(organ) {
-    return organ.health <= 0;
-  }
-
   afflictOrgan(organCardID) {
     if (this.isVaccinated()) {
       this.#decreaseVaccinePts();
       return;
     }
+
+    const organ = this.#organCards
+      .find((organ) => organ.getID() === organCardID);
+
+    organ.afflict(1);
     const organIndex = this.#organCards
-      .findIndex(({ id }) => id === organCardID);
-    const organ = this.#organCards[organIndex];
-    organ.health -= 1;
-    if (this.#isOrganDead(organ)) {
+      .findIndex((organ) => organ.getID() === organCardID);
+    console.log(organIndex);
+
+    if (organ.isDead()) {
       this.#organCards.splice(organIndex, 1);
-      return organ;
     }
+    return organ;
   }
 
   removeAttackCard(attackCardID) {
@@ -661,7 +675,7 @@ export class Player {
       name: this.#name,
       id: this.#id,
       attackCards: [...this.#attackCards],
-      organCards: [...this.#organCards],
+      organCards: [...this.#organCards.map((organ) => organ.getDetails())],
       vaccinePoints: this.#vaccinePoints,
     };
   }
@@ -683,6 +697,11 @@ export const getPlayerId = (c) => {
   const roomID = getCookie(c, "roomID");
   const rooms = c.get("rooms");
   return rooms[roomID].find(({ name }) => name === playerName).id;
+};
+
+File: public/scripts/config.js
+export const CARD_TYPES = {
+  VACCINATION: "VACCINATION",
 };
 
 File: public/scripts/game.js
@@ -734,34 +753,28 @@ const afflictOrgan = async (e, attackCardID, player) => {
   const organ = e.target.closest(".organ");
   const organCardID = Number(organ.getAttribute("organ-id"));
   const opponentID = Number(organ.getAttribute("player-id"));
-  console.log(player.vaccinePoints);
 
-  const res = await fetch("/attack", {
-    method: "post",
-    body: JSON.stringify({
-      attackCardID,
-      attackerID: player.id,
-      organCardID,
-      opponentID,
-    }),
-  })
-    .then((res) => res.json())
+  const body = { attackCardID, attackerID: player.id, organCardID, opponentID };
+
+  await postJSON("/attack", body)
     .then(async ({ success }) => {
       if (success) {
         const { opponents } = await fetchPlayersData();
         renderOpponents(opponents);
       }
     });
+
   removePopup();
 };
 
-const applyVaccine = async ({ e, player, attackCardID }) => {
-  console.log("APPLE");
+const postJSON = (url, body) => {
+  return fetch(url, { method: "POST", body: JSON.stringify(body) })
+    .then((r) => r.json());
+};
 
-  const { success } = await fetch("/attack", {
-    method: "POST",
-    body: JSON.stringify({ attackerID: player.id, attackCardID }),
-  }).then((res) => res.json());
+const playVaccineCard = async ({ e, player, attackCardID }) => {
+  const body = { attackerID: player.id, attackCardID };
+  const { success } = await postJSON("/attack", body);
 
   if (success) {
     const organsArea = document.querySelector(".organs");
@@ -772,7 +785,7 @@ const applyVaccine = async ({ e, player, attackCardID }) => {
 const ACTION_HANDLERS = {
   "chart-mixup": performChartMixup,
   affliction: displayAfflictableOrgans,
-  Vaccine: applyVaccine,
+  Vaccine: playVaccineCard,
 };
 
 const fetchPlayersData = () => {
@@ -786,17 +799,19 @@ const fetchPlayersData = () => {
     });
 };
 
-const initGame = async () => {
-  const { player, opponents, event } = await fetchPlayersData();
+const manageTurn = async () => {
+  const data = await fetchPlayersData();
+  const { player, opponents, event } = data;
   await renderGame({ player, opponents, event });
   const attackCards = document.querySelector(".player-area .attack-cards");
   if (player.isMyTurn) {
     attackCards.onclick = (e) => {
       const attackCardElement = e.target.closest(".attack-card");
       const attackCardID = getCardId(attackCardElement);
-      const attackCard = player.attackCards.find(({ id }) =>
-        id === attackCardID
-      );
+
+      const attackCard = player.attackCards
+        .find(({ id }) => id === attackCardID);
+
       ACTION_HANDLERS[attackCard.action]({
         e,
         player,
@@ -805,18 +820,19 @@ const initGame = async () => {
       });
     };
   } else {
+    console.log({ data });
     attackCards.onclick = () => "";
   }
 };
 
 const poll = async () => {
   await fetch("/wait-for-affliction");
-  await initGame();
+  await manageTurn();
   poll();
 };
 
 window.onload = async () => {
-  await initGame();
+  await manageTurn();
   poll();
 };
 
@@ -1005,7 +1021,6 @@ const createOppFragment = (
   template,
   { name, organCards, id, isMyTurn, vaccinePoints },
 ) => {
-  console.log(vaccinePoints);
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
   element.setAttribute("id", `player-${id}`);
@@ -1104,10 +1119,12 @@ export const getAfflictableOrgans = (
   const attackCard = attackCards
     .find(({ id }) => id === attackCardId);
   const afflictableOrgansIds = attackCard.afflictableOrgans;
+
   const allOrganCards = opponents.reduce((allCards, { organCards, id }) => {
     organCards.forEach((card) => card.playerId = id);
     return allCards.concat(organCards);
   }, []);
+
   if (attackCard.isWild) return allOrganCards;
 
   return allOrganCards.filter(({ id }) =>

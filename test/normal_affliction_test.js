@@ -7,6 +7,7 @@ import { Player } from "../src/models/player.js";
 import { Dealer } from "../src/models/dealer.js";
 import { AfflictionHandler } from "../src/models/affliction_handler.js";
 import { Deck } from "../src/models/deck.js";
+import { Organ } from "../src/models/organ.js";
 
 describe("Testing Normal Affliction", () => {
   let shuffle;
@@ -48,7 +49,7 @@ describe("Testing Normal Affliction", () => {
 
   it("Should afflict an organ of player with given IDs", async () => {
     players.map((player, i) => {
-      player.fillHandWithOrgans([{ id: i + 1, health: 2 }]);
+      player.fillHandWithOrgans([new Organ("", i + 1, 2)]);
       player.fillHandWithAttacks([{
         id: i + 1,
         action: "affliction",
@@ -65,7 +66,6 @@ describe("Testing Normal Affliction", () => {
       dealer,
       afflictionHandler,
     );
-    // game.distributeCards();
     games[101] = game;
     const response = await app.request("/attack", {
       method: "post",
@@ -80,44 +80,12 @@ describe("Testing Normal Affliction", () => {
     assertEquals(await response.json(), { success: true });
   });
 
-  it("-----------Should remove an organ of player with given IDs", async () => {
+  it("Should remove an organ of player with given IDs", async () => {
     players.map((player) => {
-      player.fillHandWithOrgans([{ id: 1, health: 1 }]);
-      player.fillHandWithAttacks([{
-        id: 1,
-        action: "affliction",
-        afflictableOrgans: [],
-      }]);
-    });
-
-    const dealer = new Dealer([], [], players);
-    const afflictionHandler = new AfflictionHandler(new Deck([]), new Deck([]));
-    game = new Game(
-      players,
-      [],
-      [],
-      dealer,
-      afflictionHandler,
-    );
-    // game.distributeCards();
-    games[101] = game;
-
-    const response = await app.request("/attack", {
-      method: "post",
-      body: JSON.stringify({
-        attackerID: 1,
-        opponentID: 2,
-        attackCardID: 1,
-        organCardID: 1,
-      }),
-      headers: { cookie: "roomID=101" },
-    });
-    assertEquals(await response.json(), { success: true });
-  });
-
-  it("Should return dummy organ", async () => {
-    players.map((player) => {
-      player.fillHandWithOrgans([{ id: 1, health: 1 }]);
+      player.fillHandWithOrgans([
+        new Organ("", 1, 2),
+        new Organ("second", 2, 2),
+      ]);
       player.fillHandWithAttacks([{
         id: 1,
         action: "affliction",
@@ -134,6 +102,7 @@ describe("Testing Normal Affliction", () => {
       dealer,
       afflictionHandler,
     );
+    // game.distributeCards();
     games[101] = game;
 
     const response = await app.request("/attack", {
@@ -146,7 +115,8 @@ describe("Testing Normal Affliction", () => {
       }),
       headers: { cookie: "roomID=101" },
     });
-
+    console.log(response);
+    console.log(players.map((p) => p.getPlayerDetails()));
     assertEquals(await response.json(), { success: true });
   });
 });

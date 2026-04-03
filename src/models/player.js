@@ -33,23 +33,24 @@ export class Player {
     this.#attackCards = attackCards;
   }
 
-  #isOrganDead(organ) {
-    return organ.health <= 0;
-  }
-
   afflictOrgan(organCardID) {
     if (this.isVaccinated()) {
       this.#decreaseVaccinePts();
       return;
     }
+
+    const organ = this.#organCards
+      .find((organ) => organ.getID() === organCardID);
+
+    organ.afflict(1);
     const organIndex = this.#organCards
-      .findIndex(({ id }) => id === organCardID);
-    const organ = this.#organCards[organIndex];
-    organ.health -= 1;
-    if (this.#isOrganDead(organ)) {
+      .findIndex((organ) => organ.getID() === organCardID);
+    console.log(organIndex);
+
+    if (organ.isDead()) {
       this.#organCards.splice(organIndex, 1);
-      return organ;
     }
+    return organ;
   }
 
   removeAttackCard(attackCardID) {
@@ -88,7 +89,7 @@ export class Player {
       name: this.#name,
       id: this.#id,
       attackCards: [...this.#attackCards],
-      organCards: [...this.#organCards],
+      organCards: [...this.#organCards.map((organ) => organ.getDetails())],
       vaccinePoints: this.#vaccinePoints,
     };
   }

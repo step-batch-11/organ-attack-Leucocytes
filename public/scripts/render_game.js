@@ -76,7 +76,6 @@ const createOppFragment = (
   template,
   { name, organCards, id, isMyTurn, vaccinePoints },
 ) => {
-  console.log(organCards);
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
   element.setAttribute("id", `player-${id}`);

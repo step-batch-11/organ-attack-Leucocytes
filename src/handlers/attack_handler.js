@@ -31,9 +31,7 @@ export const handleAttack = async (c) => {
   }
 
   const handler = ACTIONS[attackAction];
-
   const res = handler({ attackerID, opponentID, organCardID, game });
-  // console.log(res);
 
   return c.json(res);
 };

@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Player } from "../src/models/player.js";
+import { Organ } from "../src/models/organ.js";
 
 describe("Testing Player Class", () => {
   it("Should Initiate player and return their details", () => {
@@ -25,10 +26,12 @@ describe("Testing Player Class", () => {
 
   it("Should fill Hand with given organs cards", () => {
     const player = new Player("Vivek", 1);
-    const organCardsExp = Array.from({ length: 4 }, (_, i) => `o${i + 1}`);
+    const organCardsExp = ["o1", "o2", "o3"].map((name, i) =>
+      new Organ(name, i + 1, 2)
+    );
     player.fillHandWithOrgans(organCardsExp);
     const { organCards } = player.getPlayerDetails();
-    assertEquals(organCards, organCardsExp);
+    assertEquals(organCards, organCardsExp.map((organ) => organ.getDetails()));
   });
 
   it("Should discard all attack cards", () => {
@@ -95,11 +98,18 @@ describe("Testing Player Class", () => {
     );
     const organCardsExp = Array.from(
       { length: 4 },
-      (_, i) => ({ id: i, name: `o${i + 1}`, health: 1 }),
+      (_, i) => (new Organ(`o${i + 1}`, i, 1)),
     );
     player.fillHandWithAttacks(attackCardsExp);
     player.fillHandWithOrgans(organCardsExp);
-    assertEquals(player.afflictOrgan(1), { id: 1, name: "o2", health: 0 });
+    const deadOrgan = player.afflictOrgan(1).getDetails();
+
+    assertEquals(deadOrgan, {
+      id: 1,
+      name: "o2",
+      health: 0,
+      isWild: false,
+    });
   });
 
   it("Should remove organ", () => {
