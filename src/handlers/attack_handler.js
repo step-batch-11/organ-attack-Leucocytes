@@ -13,16 +13,16 @@ const ACTIONS = {
 };
 
 export const handleAttack = async (c) => {
-  const {
-    attackerID,
-    opponentID,
-    attackCardID,
-    organCardID,
-  } = await c.req.json();
+  const { attackerID, opponentID, attackCardID, organCardID, isInstant } =
+    await c.req.json();
 
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
-  const attackCard = game.discardAttackCard(attackerID, attackCardID);
+  const attackCard = game.discardAttackCard(
+    attackerID,
+    attackCardID,
+    isInstant,
+  );
   const attackAction = attackCard.action;
 
   if (!(attackAction in ACTIONS)) {

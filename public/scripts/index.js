@@ -33,7 +33,7 @@ const amIHost = (players, myId) => {
 //--------------
 const removeLoader = () => {
   const loader = document.querySelector(".loader");
-  loader.remove();
+  if (loader !== null) loader.remove();
 };
 
 const setupWaitingMessage = (waitingSpan) => {
@@ -71,7 +71,6 @@ const renderTimeOutAndRedirectToGame = (body) => {
   setupWaitingMessage(waitingSpan);
   startCountdown(waitingSpan, body);
 };
-
 
 const main = async () => {
   const body = await makeGETReq("/get-players").catch((_) => {});

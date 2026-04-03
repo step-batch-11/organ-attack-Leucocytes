@@ -5,7 +5,7 @@ import {
 
 const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
   attackCardNodes.forEach((attackCard, i) => {
-    const { name, id, type } = attackCards[i];
+    const { name, id, type, isInstant } = attackCards[i];
     const attackCardName = attackCard.querySelector("h1");
     attackCardName.textContent = name;
 
@@ -18,6 +18,8 @@ const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
 
     if (organsToAttack.length === 0 && typeCheck) {
       attackCard.classList.add("disabled-card");
+    } else {
+      attackCard.classList.remove("disabled-card");
     }
   });
 };
@@ -53,6 +55,7 @@ const renderMyCards = (
 
   console.log({ playerArea, playerOrgans, playerAttacks });
   setTextContent(playerArea, ".name", name);
+  console.log("Mee", isMyTurn);
 
   const avatar = playerArea.querySelector(".player");
   if (isMyTurn) {

@@ -24,9 +24,11 @@ export class Game {
     this.#dealer.dealCards();
   }
 
-  discardAttackCard(attackerID, attackCardID) {
+  discardAttackCard(attackerID, attackCardID, isInstant) {
     const attacker = this.#findPlayer(attackerID);
-    this.#currentPlayer = ++this.#currentPlayer % this.#players.length;
+    if (!isInstant) {
+      this.#currentPlayer = ++this.#currentPlayer % this.#players.length;
+    }
     return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
   }
 

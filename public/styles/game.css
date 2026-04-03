@@ -104,6 +104,11 @@ main {
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
+[data-type="instant wild"] {
+  background-image: radial-gradient(yellow, var(--clr-gray));
+  color: var(--fg-color);
+  border: 0.3em solid black;
+}
 .attack-card {
   width: var(--card-width);
   height: var(--card-height);

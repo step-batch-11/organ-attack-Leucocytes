@@ -251,14 +251,15 @@
   },
   {
     "id": 21,
-    "name": "Wild !",
-    "isInstant": false,
+    "name": "Instant Wild !",
+    "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": true,
     "afflictPoints": 1,
     "Desc": "Can afflict any organ",
     "action": "affliction",
-    "type": "wild"
+    "type": "instant wild",
+    "isBlockable": true
   }
 ]
