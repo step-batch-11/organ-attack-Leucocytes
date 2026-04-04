@@ -16,6 +16,7 @@
   --clr-dark-gray: hsl(0, 0%, 12%);
   --clr-gray: hsl(0, 0%, 30%);
   --clr-light-gray: hsl(0, 0%, 65%);
+  --clr-blue-alpha-30: hsla(189, 100%, 80%, 0.3);
 }
 
 body {
@@ -98,7 +99,8 @@ main {
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
-[data-type="cure"], [data-type="resistance"] {
+[data-type="cure"],
+[data-type="resistance"] {
   background-image: radial-gradient(skyblue, var(--clr-gray));
   color: var(--fg-color);
   border: 0.3em solid white;
@@ -225,6 +227,8 @@ main {
 .popup {
   position: absolute;
   bottom: calc(var(--card-height) + var(--organ-size) + 10em);
+  left: 50%;
+  translate: -50% 0;
   display: flex;
   gap: 1em;
 }
@@ -271,8 +275,9 @@ h1,
 .opponent {
   display: flex;
   gap: 1em;
-  align-items: flex-start;
+  align-items: center;
   padding: 1em;
+  height: min-content;
 }
 .highlight-avatar {
   box-shadow: 0px 0px 0px 5px var(--clr-gold);
@@ -326,19 +331,24 @@ h1,
 }
 
 /* flash screen */
+.flash-screen-container {
+  position: absolute;
+  bottom: calc(var(--card-height) + var(--organ-size) + 18em);
+  left: 50%;
+  translate: -50% 0%;
+}
 
 .flash-screen {
-  background-color: var(--clr-red-alpha-30);
-  position: absolute;
-  bottom: calc(var(--card-height) + var(--organ-size) + 20em);
-  left: 50%;
-
-  translate: -50% 0%;
-
   border-radius: 0.4em;
   display: flex;
   padding: 1em;
   gap: 5em;
+}
+.flash-screen[data-cardtype="affliction"] {
+  background-color: var(--clr-red-alpha-30);
+}
+.flash-screen[data-cardtype="resistance"] {
+  background-color: var(--clr-blue-alpha-30);
 }
 
 .flash-screen .actor {

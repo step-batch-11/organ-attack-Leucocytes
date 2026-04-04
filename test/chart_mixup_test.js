@@ -12,6 +12,7 @@ describe("Testing ChartMixup", () => {
   let roomId;
   let players;
   let app;
+  let game;
 
   beforeEach(() => {
     roomId = 101;
@@ -28,18 +29,20 @@ describe("Testing ChartMixup", () => {
       ),
       shuffle,
     );
-    const organCards = new Deck([{ id: 1, health: 2 }], shuffle);
+    const organCards = new Deck([{ id: 1, health: 2, isWild: true }], shuffle);
     const idGenerator = counter();
     const playerIdGenerator = counter();
     const roomIdGenerator = counter();
     const rooms = { 101: [{ name: "chiru", id: 1 }, { name: "kumar", id: 2 }] };
     const games = {};
     players = rooms[101].map(({ name, id }) => new Player(name, id));
+    // console.log(players[0].getPlayerDetails());
+
     const dealer = new Dealer(attackCards, organCards, players);
 
     const afflictionHandler = new AfflictionHandler(attackCards, organCards);
 
-    const game = new Game(
+    game = new Game(
       players,
       attackCards,
       organCards,
@@ -62,6 +65,7 @@ describe("Testing ChartMixup", () => {
 
   it("Should perform chartMixup when player play chart mixup card", async () => {
     const [player1, player2] = players;
+    player1.refillHand({ id: 12, action: "chart-mixup" });
     player1.refillHand({ id: 12, action: "chart-mixup" });
 
     const { attackCards: player1PreAttacks } = player1.getPlayerDetails();

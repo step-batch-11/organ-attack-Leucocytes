@@ -72,7 +72,7 @@ const renderOrgans = (container, organCards) => {
 };
 
 const renderMyCards = (
-  { name, attackCards, organCards, isMyTurn },
+  { name, attackCards, organCards, isMyTurn, vaccinePoints },
   opponents,
 ) => {
   const playerArea = document.querySelector(".player-area");
@@ -91,6 +91,7 @@ const renderMyCards = (
       "radial-gradient(var(--bg-color), black)";
     avatar.classList.remove("highlight-avatar");
   }
+  playerOrganContainer.dataset.vaccine = vaccinePoints;
 
   playerOrganContainer.innerHTML = "";
   renderOrgans(playerOrganContainer, organCards);
@@ -106,17 +107,8 @@ const createOppFragment = (
   element.setAttribute("id", `player-${id}`);
 
   setTextContent(element, ".name", name);
-  if (vaccinePoints === 2) {
-    element.classList.add("vacced");
-  }
-  if (vaccinePoints === 1) {
-    element.classList.remove("vacced");
-    element.classList.add("vacced-half");
-  }
-  if (vaccinePoints === 0) {
-    element.classList.remove("vacced-half");
-  }
-  // const organs = element.querySelectorA(".organ");
+
+  element.dataset.vaccine = vaccinePoints;
   renderOrgans(element, organCards);
 
   const avatar = clone.querySelector(".avatar");
@@ -142,14 +134,9 @@ const setTextContent = (container, selector, content) => {
   container.querySelector(selector).textContent = content;
 };
 
-const renderFlashScreen = ({ name, actor, target, card }) => {
-  document.querySelector(".flash-screen")?.remove();
-
-  if (name !== "affliction") {
-    return;
-  }
-  const flashScreen = cloneFromTemplate("#flash-screen-affliction-template");
-
+const afflictionFlashScreen = (actor, target, card) => {
+  const flashScreen = cloneFromTemplate("#flash-screen-used-on-template");
+  flashScreen.dataset["cardtype"] = "affliction";
   const attackCard = flashScreen.querySelector(".attack-card");
   const targetContainer = flashScreen.querySelector(".target");
   const targetOrgan = targetContainer.querySelector(".organ");
@@ -161,7 +148,38 @@ const renderFlashScreen = ({ name, actor, target, card }) => {
   renderOrganImage(targetOrgan, target.organName);
   attackCard.setAttribute("data-type", "affliction");
 
-  document.querySelector("main").appendChild(flashScreen);
+  return flashScreen;
+};
+
+const vaccineFlashScreen = (actor, _target, card) => {
+  console.log("heyy vaccine", card);
+
+  const flashScreen = cloneFromTemplate("#flash-screen-used-template");
+  flashScreen.dataset["cardtype"] = "resistance";
+  const attackCard = flashScreen.querySelector(".attack-card");
+
+  setTextContent(flashScreen, ".actor .name", actor);
+  setTextContent(attackCard, "h1", card.name);
+  attackCard.setAttribute("data-type", "resistance");
+
+  return flashScreen;
+};
+const FLASH_SCREENS = {
+  affliction: afflictionFlashScreen,
+  "Vaccine": vaccineFlashScreen,
+};
+
+const renderFlashScreen = ({ name, actor, target, card }) => {
+  document.querySelector(".flash-screen-container > div ")?.remove();
+  console.log({ name });
+
+  if (!(name in FLASH_SCREENS)) {
+    return;
+  }
+  const flashScreen = FLASH_SCREENS[name](actor, target, card);
+  if (flashScreen instanceof HTMLElement) {
+    document.querySelector(".flash-screen-container").appendChild(flashScreen);
+  }
 };
 
 // for testing......
@@ -182,6 +200,7 @@ const mockEventData = {
 };
 
 export const renderGame = async (gameState) => {
+  console.log({ gameState });
   // { player, opponents, event }
 
   const { event, players, self } = gameState;

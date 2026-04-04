@@ -15,8 +15,10 @@ describe("utility: getPlayerId", () => {
    */
   let ctx;
   let rooms;
+  let cookie;
 
   beforeEach(() => {
+    cookie = "sessionID=1; roomID=1";
     const session = { 1: "Alpha" };
     rooms = { 1: [{ name: "Alpha", id: 1 }, { name: "Beta", id: 2 }] };
 
@@ -28,7 +30,7 @@ describe("utility: getPlayerId", () => {
         raw: {
           headers: {
             get() {
-              return "sessionID=1; roomID=1";
+              return cookie;
             },
           },
         },
@@ -44,8 +46,8 @@ describe("utility: getPlayerId", () => {
     assertEquals(playerID, 1);
   });
   it("should return mocked playerID: -1", () => {
-    rooms[1][1].id = 101;
+    cookie = "roomID=1";
     const playerID = getPlayerId(ctx);
-    assertEquals(playerID, 1);
+    assertEquals(playerID, -1);
   });
 });

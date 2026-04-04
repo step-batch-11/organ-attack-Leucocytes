@@ -11,7 +11,7 @@ const playVaccineCard = async ({ e, player, attackCardID }) => {
 
   if (success) {
     const organsArea = document.querySelector(".organs");
-    organsArea.classList.add("vacced");
+    organsArea.dataset.vaccine = 2;
   }
 };
 
@@ -87,7 +87,6 @@ const poll = async () => {
   const res = await fetch("/poll");
   if (res.status === 200) {
     const gameState = await res.json();
-    console.log({ gameState });
 
     await manageTurn(gameState);
   }

@@ -34,7 +34,7 @@ describe("tests for app", () => {
         games,
       }, logger);
     });
-    it("=> should return login.html when i don't have a cookie", async () => {
+    it("should return login.html when i don't have a cookie", async () => {
       const response = await app.request("/");
       const location = response.headers.get("location");
 
@@ -42,7 +42,7 @@ describe("tests for app", () => {
       assertEquals(location, "/pages/login.html");
     });
 
-    it(" => it should set a cookie when i login and redirect me to /", async () => {
+    it("it should set a cookie when i login and redirect me to /", async () => {
       const formData = new FormData();
       formData.append("username", "user1");
       const response = await app.request("/login", {
@@ -60,7 +60,7 @@ describe("tests for app", () => {
       );
     });
 
-    it(" => it should set a cookie unique cookies when different users login ", async () => {
+    it("it should set a cookie unique cookies when different users login ", async () => {
       const formData1 = new FormData();
       formData1.append("username", "user1");
       await app.request("/login", {
@@ -86,7 +86,7 @@ describe("tests for app", () => {
       );
     });
 
-    it(" => it shouldn't set a cookie when i login with an invalid username", async () => {
+    it("it shouldn't set a cookie when i login with an invalid username", async () => {
       const formData = new FormData();
       formData.append("username", "");
       const response = await app.request("/login", {
@@ -102,7 +102,7 @@ describe("tests for app", () => {
       assertEquals(message, "invalid username");
     });
 
-    it("=> should return index page if cookie is there", async () => {
+    it("should return index page if cookie is there", async () => {
       const response = await app.request("/", {
         headers: new Headers({
           "Cookie": "sessionID=1",
@@ -114,7 +114,7 @@ describe("tests for app", () => {
       assertEquals(response.status, 200);
     });
 
-    it("=> should restrict when i try to access login.html when i already logged in ", async () => {
+    it("should restrict when i try to access login.html when i already logged in ", async () => {
       const response = await app.request("/pages/login.html", {
         headers: new Headers({
           "Cookie": "sessionID=1",
@@ -125,7 +125,7 @@ describe("tests for app", () => {
       assertEquals(response.status, 302);
     });
 
-    it("=> app shouldn't restrict when i try to access login.html when i am not logged in ", async () => {
+    it("app shouldn't restrict when i try to access login.html when i am not logged in ", async () => {
       const response = await app.request("/pages/login.html");
       const contentType = response.headers.get("content-type");
       await response.text();
@@ -134,7 +134,7 @@ describe("tests for app", () => {
       assertEquals(contentType, "text/html; charset=utf-8");
     });
 
-    it("=> app should send players data and roomId", async () => {
+    it("app should send players data and roomId", async () => {
       const formData = new FormData();
       formData.append("username", "user1");
       const response1ToAddUser = await app.request("/login", {
