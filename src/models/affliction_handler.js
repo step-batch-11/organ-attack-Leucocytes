@@ -8,8 +8,10 @@ export class AfflictionHandler {
   }
 
   afflictOrganOfOpponent(opponent, organCardID, afflictPoints) {
-    const organ = opponent.afflictOrgan(organCardID, afflictPoints);
-    if (organ !== undefined) {
+    const { organ, isDead } = opponent.afflictOrgan(organCardID, afflictPoints);
+    console.log({ organ, isDead });
+
+    if (isDead) {
       this.#organCards.addToDiscardPile(organ);
     }
   }
@@ -23,6 +25,7 @@ export class AfflictionHandler {
   refillAttackCard(attacker) {
     const { organCards } = attacker.getPlayerDetails();
     const attackCard = this.#attackCards.getCard();
+
     if (this.#doesEffectAnyOwnOrgan(attackCard, organCards)) {
       const dummyCard = {
         "id": 100,
@@ -48,12 +51,12 @@ export class AfflictionHandler {
 
   discardAttackCard(attacker, attackCardID) {
     const attackCard = attacker.removeAttackCard(attackCardID);
+    const cardTypes = ["its-alive", "transplant"];
 
-    if (
-      attackCard.action !== "transplant" && attackCard.action !== "its-alive"
-    ) {
+    if (!cardTypes.includes(attackCard.action)) {
       this.#attackCards.addToDiscardPile(attackCard);
     }
+
     this.refillAttackCard(attacker);
 
     return attackCard;

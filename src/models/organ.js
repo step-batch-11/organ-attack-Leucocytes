@@ -41,4 +41,8 @@ export class Organ {
       isWild: this.isWild(),
     };
   }
+
+  reAnimate() {
+    this.#health = this.#maxHealth;
+  }
 }

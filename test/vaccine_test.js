@@ -47,13 +47,13 @@ describe("Game model test", () => {
       const organ1 = new Organ("organ1", 1, 2);
       const organ2 = new Organ("organ2", 2, 2);
       const player = new Player("user1", 1, "non-host");
-      player.applyVaccine();
       player.fillHandWithOrgans([organ1, organ2]);
+      player.applyVaccine();
 
       player.afflictOrgan(1);
       player.afflictOrgan(1);
-      const organ = player.afflictOrgan(1);
-
+      const { organ, isDead } = player.afflictOrgan(1);
+      assertEquals(isDead, false);
       assertEquals(player.isVaccinated(), false);
       assertEquals(organ.getDetails().health, 1);
     });

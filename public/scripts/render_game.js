@@ -154,8 +154,6 @@ const afflictionFlashScreen = (actor, target, card) => {
 };
 
 const vaccineFlashScreen = (actor, _target, card) => {
-  console.log("heyy vaccine", card);
-
   const flashScreen = cloneFromTemplate("#flash-screen-used-template");
   flashScreen.dataset["cardtype"] = "resistance";
   const attackCard = flashScreen.querySelector(".attack-card");
@@ -173,7 +171,6 @@ const FLASH_SCREENS = {
 
 const renderFlashScreen = ({ name, actor, target, card }) => {
   document.querySelector(".flash-screen-container > div ")?.remove();
-  console.log({ name });
 
   if (!(name in FLASH_SCREENS)) {
     return;
@@ -202,9 +199,6 @@ const mockEventData = {
 };
 
 export const renderGame = async (gameState) => {
-  console.log({ gameState });
-  // { player, opponents, event }
-
   const { event, players, self } = gameState;
   const opponents = players.filter(({ id }) => id !== self.id);
 

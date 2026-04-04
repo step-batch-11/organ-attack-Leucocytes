@@ -34,4 +34,14 @@ export class Deck {
   getDiscardPile() {
     return [...this.#discardPile];
   }
+
+  getCardFromDiscardPile(id) {
+    const card = this.#discardPile.find((card) => card.getID() === id);
+
+    if (card === undefined) return {};
+
+    this.#discardPile = this.#discardPile.filter((card) => card.getID() !== id);
+    // card.reAnimate();
+    return card;
+  }
 }

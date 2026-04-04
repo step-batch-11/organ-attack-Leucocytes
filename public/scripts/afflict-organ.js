@@ -48,6 +48,10 @@ const afflictOrgan = async (
 
   await postJSON("/attack", body);
 };
+const getOrgansToDisplay = (cards, attackCard, opponents) => {
+  return cards[attackCard.action] ||
+    getAfflictableOrgans(opponents, attackCard);
+};
 
 const createPopupFragment = (
   opponents,
@@ -74,7 +78,7 @@ const createPopupFragment = (
 };
 
 export const displayOrgans = (
-  { player, opponents, attackCardID, isInstant },
+  { player, opponents, attackCardID, isInstant, organDiscardPile },
 ) => {
   const attackCard = player.attackCards
     .find(({ id }) => id === attackCardID);
@@ -85,8 +89,12 @@ export const displayOrgans = (
       health !== maxHealth
     ),
     "poison": player.organCards,
+    "itsAlive": organDiscardPile,
   };
+  console.log(attackCard);
 
+  const organCards = getOrgansToDisplay(cards, attackCard, opponents);
+  // console.log(organCards, attackCard.action);
   if (attackCard.action in cards) {
     const container = document.createElement("div");
     container.setAttribute("class", "popup-afflictable-organs");

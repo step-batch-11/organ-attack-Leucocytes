@@ -61,8 +61,16 @@ describe("Testing Normal Affliction", () => {
     const afflictionHandler = new AfflictionHandler(new Deck([]), new Deck([]));
     game = new Game(
       players,
-      [],
-      [],
+      new Deck([{
+        id: 1,
+        action: "affliction",
+        afflictableOrgans: [1],
+        afflictPoints: 1,
+      }]),
+      new Deck([
+        new Organ("", 1, 2),
+        new Organ("second", 2, 2),
+      ]),
       dealer,
       afflictionHandler,
     );
@@ -92,6 +100,7 @@ describe("Testing Normal Affliction", () => {
         id: 1,
         action: "affliction",
         afflictableOrgans: [1],
+        afflictPoints: 1,
       }]);
     });
 
@@ -99,8 +108,16 @@ describe("Testing Normal Affliction", () => {
     const afflictionHandler = new AfflictionHandler(new Deck([]), new Deck([]));
     game = new Game(
       players,
-      [],
-      [],
+      new Deck([{
+        id: 1,
+        action: "affliction",
+        afflictableOrgans: [1],
+        afflictPoints: 1,
+      }]),
+      new Deck([
+        new Organ("", 1, 2),
+        new Organ("second", 2, 2),
+      ]),
       dealer,
       afflictionHandler,
     );
@@ -117,7 +134,7 @@ describe("Testing Normal Affliction", () => {
       }),
       headers: { cookie: "roomID=101" },
     });
-
+    console.log(response);
     assertEquals(await response.json(), { success: true });
   });
 });

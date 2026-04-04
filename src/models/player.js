@@ -36,7 +36,7 @@ export class Player {
   afflictOrgan(organCardID, afflictPoints) {
     if (this.isVaccinated()) {
       this.#decreaseVaccinePts();
-      return;
+      return { isDead: false };
     }
 
     const organ = this.#organCards
@@ -49,7 +49,8 @@ export class Player {
     if (organ.isDead()) {
       this.#organCards.splice(organIndex, 1);
     }
-    return organ;
+
+    return { organ, isDead: organ.isDead() };
   }
 
   removeAttackCard(attackCardID) {

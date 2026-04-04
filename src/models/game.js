@@ -16,6 +16,10 @@ export class Game {
     this.#event = {};
   }
 
+  #passTurn() {
+    this.#currentPlayer = ++this.#currentPlayer % this.#players.length;
+  }
+
   setFirstPlayer() {
     this.#currentPlayer = this.#players
       .findIndex((player) => player.holdsWild());
@@ -29,7 +33,7 @@ export class Game {
   discardAttackCard(attackerID, attackCardID, isInstant) {
     const attacker = this.#findPlayer(attackerID);
     if (!isInstant) {
-      this.#currentPlayer = ++this.#currentPlayer % this.#players.length;
+      this.#passTurn();
     }
     return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
   }
@@ -125,12 +129,25 @@ export class Game {
     const players = this.getAllPlayersDetails();
     const currentPlayer = this.#players[this.#currentPlayer].getId();
     const event = this.#event;
-    // const this.
+    console.log("org deck =>>>>>", this.#organsDeck);
 
-    return structuredClone({ players, currentPlayer, event });
+    const organDiscardPile = this.#organsDeck.getDiscardPile().map((organ) =>
+      organ.getDetails()
+    );
+    console.log("orgs discard", organDiscardPile);
+
+    return structuredClone({ players, currentPlayer, event, organDiscardPile });
   }
 
   registerEvent(event) {
     this.#event = event;
+  }
+
+  itsAlive(attackerID, organCardID) {
+    const player = this.#findPlayer(attackerID);
+    const organ = this.#organsDeck.getCardFromDiscardPile(organCardID);
+    organ.reAnimate();
+    player.addOrgan(organ);
+    return organ;
   }
 }

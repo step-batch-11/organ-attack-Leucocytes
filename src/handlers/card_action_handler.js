@@ -1,6 +1,7 @@
 export const handleNormalAffliction = (
   { opponentID, organCardID, game, afflictPoints },
 ) => {
+  console.log({ opponentID, organCardID, game, afflictPoints });
   game.afflictOrganOfOpponent(opponentID, organCardID, afflictPoints);
   return ({ success: true });
 };
@@ -48,4 +49,9 @@ export const handleHybridAffliction = (
   if (canRemove) game.removeOrgan(opponentID, organCardID);
   else game.afflictOrganOfOpponent(opponentID, organCardID, afflictPoints);
   return ({ success: true });
+};
+
+export const handleItsAlive = ({ attackerID, organCardID, game }) => {
+  game.itsAlive(attackerID, organCardID);
+  return { success: true };
 };

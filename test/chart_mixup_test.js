@@ -36,7 +36,6 @@ describe("Testing ChartMixup", () => {
     const rooms = { 101: [{ name: "chiru", id: 1 }, { name: "kumar", id: 2 }] };
     const games = {};
     players = rooms[101].map(({ name, id }) => new Player(name, id));
-    // console.log(players[0].getPlayerDetails());
 
     const dealer = new Dealer(attackCards, organCards, players);
 

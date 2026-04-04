@@ -3,6 +3,7 @@ import {
   handleBythebook,
   handleChartMixup,
   handleHybridAffliction,
+  handleItsAlive,
   handleMedicine,
   handleNormalAffliction,
   handlePoison,
@@ -22,6 +23,7 @@ const ACTIONS = {
   "poison": handlePoison,
   "remove": handleRemoveOrgan,
   "hybrid": handleHybridAffliction,
+  itsAlive: handleItsAlive,
 };
 
 export const resolveAction = async (c) => {

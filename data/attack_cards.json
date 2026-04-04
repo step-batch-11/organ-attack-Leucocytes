@@ -314,14 +314,13 @@
     "type": "poison",
     "isBlockable": true
   },
+
   {
     "id": 26,
     "name": "Removes Heart",
     "isInstant": false,
     "afflictableOrgans": [],
-    "removableOrgans": [
-      7
-    ],
+    "removableOrgans": [7],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Removes heart",
@@ -339,7 +338,7 @@
     ],
     "isWild": false,
     "afflictPoints": 1,
-    "Desc": "Removes heart",
+    "Desc": "Removes Kidney",
     "action": "remove",
     "type": "affliction",
     "isBlockable": true
@@ -356,7 +355,7 @@
     ],
     "isWild": false,
     "afflictPoints": 1,
-    "Desc": "Removes heart",
+    "Desc": "Removes kidney or spleen",
     "action": "hybrid",
     "type": "affliction",
     "isBlockable": true
@@ -375,7 +374,19 @@
     "afflictPoints": 1,
     "Desc": "Removes heart",
     "action": "hybrid",
-    "type": "affliction",
+    "type": "affliction"
+  },
+  {
+    "id": 30,
+    "name": "it's Alive",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "can bring back any dead organ",
+    "action": "itsAlive",
+    "type": "tactical",
     "isBlockable": true
   }
 ]

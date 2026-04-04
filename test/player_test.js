@@ -102,9 +102,9 @@ describe("Testing Player Class", () => {
     );
     player.fillHandWithAttacks(attackCardsExp);
     player.fillHandWithOrgans(organCardsExp);
-    const deadOrgan = player.afflictOrgan(1).getDetails();
+    const { organ } = player.afflictOrgan(1);
 
-    assertEquals(deadOrgan, {
+    assertEquals(organ.getDetails(), {
       id: 1,
       name: "o2",
       health: 0,

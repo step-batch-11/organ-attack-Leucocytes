@@ -15,25 +15,33 @@ const playVaccineCard = async ({ e, player, attackCardID }) => {
   }
 };
 
-const performBythebook = async ({ player, attackCardID }) => {
+const performByTheBook = async ({ player, attackCardID }) => {
   const body = { attackerID: player.id, attackCardID };
   const { success } = await postJSON("/attack", body);
 };
 
 const ACTION_HANDLERS = {
   "chart-mixup": performChartMixup,
-  affliction: displayOrgans,
-  remove: displayOrgans,
-  Vaccine: playVaccineCard,
+  "by-the-book": performByTheBook,
+  "affliction": displayOrgans,
+  "remove": displayOrgans,
+  "Vaccine": playVaccineCard,
   "transplant": displayOrgans,
   "medicine": displayOrgans,
-  "by-the-book": performBythebook,
   "hybrid": displayOrgans,
+  "itsAlive": displayOrgans,
 };
 
-const attachEventListener = (e, player, opponents, isInstant = false) => {
+const attachEventListener = (
+  e,
+  player,
+  opponents,
+  isInstant = false,
+  organDiscardPile,
+) => {
   const attackCardElement = e.target.closest(".attack-card");
   const attackCardID = getCardId(attackCardElement);
+  console.log(attackCardID);
   const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
   ACTION_HANDLERS[attackCard.action]({
     player,
@@ -41,18 +49,21 @@ const attachEventListener = (e, player, opponents, isInstant = false) => {
     attackCardID,
     isInstant,
     attackCardElement,
+    organDiscardPile,
   });
 };
 
 const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
 
 const manageTurn = async (data) => {
-  // const data = await fetchPlayersData();
-  const { self, players, event } = data;
+  const { self, players, event, organDiscardPile } = data;
+  console.log("org discard pile", organDiscardPile);
+
   const opponents = players.filter(({ id }) => id !== self.id);
   await renderGame({ self, players, event });
 
   const poisonCard = findPoisonCard(self.attackCards);
+
   if (poisonCard !== undefined) {
     displayOrgans({
       player: self,
@@ -70,7 +81,7 @@ const manageTurn = async (data) => {
       card.onclick = (e) => {
         if (e.target.closest(".info-btn")) return;
         if (e.target.closest(".flip-btn")) return;
-        attachEventListener(e, self, opponents);
+        attachEventListener(e, self, opponents, false, organDiscardPile);
       };
     });
   } else {
