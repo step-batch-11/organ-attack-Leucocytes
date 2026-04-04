@@ -1,23 +1,28 @@
 import { renderOpponents } from "./render_game.js";
-import { fetchPlayersData, getAfflictableOrgans, postJSON } from "./utils.js";
+import {
+  fetchPlayersData,
+  getAfflictableOrgans,
+  getRemovableOrgans,
+  postJSON,
+} from "./utils.js";
 
-const createPopupOrgans = (afflictableOrgans) => {
-  return afflictableOrgans.map((afflictableOrgan) => {
-    const organ = document.createElement("div");
-    organ.setAttribute("class", "organ");
-    organ.setAttribute("organ-id", `${afflictableOrgan.id}`);
-    organ.setAttribute("player-id", `${afflictableOrgan.playerId}`);
-    const organName = afflictableOrgan.name;
+const createPopupOrgans = (organs) => {
+  return organs.map((organ) => {
+    const organCard = document.createElement("div");
+    organCard.setAttribute("class", "organ");
+    organCard.setAttribute("organ-id", `${organ.id}`);
+    organCard.setAttribute("player-id", `${organ.playerId}`);
+    const organName = organ.name;
     const image = document.createElement("img");
     image.setAttribute("src", `/assets/organs/${organName.toLowerCase()}.png`);
-    organ.append(image);
-    return organ;
+    organCard.append(image);
+    return organCard;
   });
 };
 
-const removePopup = () => {
-  const popup = document.querySelector(".popup > div");
-  if (popup !== null) popup.remove();
+export const clearPopup = () => {
+  const popup = document.querySelectorAll(".popup > div");
+  popup.forEach((container) => container.remove());
 };
 
 const afflictOrgan = async (
@@ -25,6 +30,7 @@ const afflictOrgan = async (
   attackCardID,
   player,
   isInstant,
+  canRemove,
 ) => {
   const organ = e.target.closest(".organ");
   const organCardID = Number(organ.getAttribute("organ-id"));
@@ -36,10 +42,35 @@ const afflictOrgan = async (
     organCardID,
     opponentID,
     isInstant,
+    canRemove,
   };
-  removePopup();
+  clearPopup();
 
   await postJSON("/attack", body);
+};
+
+const createPopupFragment = (
+  opponents,
+  attackCard,
+  attackCardID,
+  player,
+  isInstant,
+  canRemove,
+) => {
+  const container = document.createElement("div");
+
+  if (canRemove) container.setAttribute("class", "popup-removable-organs");
+  else container.setAttribute("class", "popup-afflictable-organs");
+
+  const organsGetter = canRemove ? getRemovableOrgans : getAfflictableOrgans;
+  const organCards = organsGetter(opponents, attackCard);
+
+  const organs = createPopupOrgans(organCards);
+  container.append(...organs);
+  container.addEventListener("click", async (e) => {
+    afflictOrgan(e, attackCardID, player, isInstant, canRemove);
+  });
+  document.querySelector(".popup").append(container);
 };
 
 export const displayOrgans = (
@@ -47,10 +78,7 @@ export const displayOrgans = (
 ) => {
   const attackCard = player.attackCards
     .find(({ id }) => id === attackCardID);
-  removePopup();
-
-  const container = document.createElement("div");
-  container.setAttribute("class", "popup-afflicatble-organs");
+  clearPopup();
 
   const cards = {
     "medicine": player.organCards.filter(({ health, maxHealth }) =>
@@ -58,13 +86,35 @@ export const displayOrgans = (
     ),
     "poison": player.organCards,
   };
-  const organCards = cards[attackCard.action] ||
-    getAfflictableOrgans(opponents, attackCard);
 
-  const organs = createPopupOrgans(organCards);
-  container.append(...organs);
-  container.addEventListener("click", async (e) => {
-    afflictOrgan(e, attackCardID, player, isInstant);
-  });
-  document.querySelector(".popup").append(container);
+  if (attackCard.action in cards) {
+    const container = document.createElement("div");
+    container.setAttribute("class", "popup-afflictable-organs");
+
+    const organCards = cards[attackCard.action];
+
+    const organs = createPopupOrgans(organCards);
+    container.append(...organs);
+    container.addEventListener("click", async (e) => {
+      afflictOrgan(e, attackCardID, player, isInstant, false);
+    });
+    document.querySelector(".popup").append(container);
+  } else {
+    createPopupFragment(
+      opponents,
+      attackCard,
+      attackCardID,
+      player,
+      isInstant,
+      false,
+    );
+    createPopupFragment(
+      opponents,
+      attackCard,
+      attackCardID,
+      player,
+      isInstant,
+      true,
+    );
+  }
 };

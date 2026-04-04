@@ -2,9 +2,11 @@ import { getCookie } from "hono/cookie";
 import {
   handleBythebook,
   handleChartMixup,
+  handleHybridAffliction,
   handleMedicine,
   handleNormalAffliction,
   handlePoison,
+  handleRemoveOrgan,
   handleTransplant,
   handleVaccine,
 } from "./card_action_handler.js";
@@ -18,6 +20,8 @@ const ACTIONS = {
   medicine: handleMedicine,
   "by-the-book": handleBythebook,
   "poison": handlePoison,
+  "remove": handleRemoveOrgan,
+  "hybrid": handleHybridAffliction,
 };
 
 export const resolveAction = async (c) => {
@@ -35,8 +39,14 @@ export const resolveAction = async (c) => {
 };
 
 export const handleAttack = async (c) => {
-  const { attackerID, opponentID, attackCardID, organCardID, isInstant } =
-    await c.req.json();
+  const {
+    attackerID,
+    opponentID,
+    attackCardID,
+    organCardID,
+    isInstant,
+    canRemove,
+  } = await c.req.json();
 
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
@@ -58,6 +68,7 @@ export const handleAttack = async (c) => {
     organCardID,
     game,
     afflictPoints,
+    canRemove,
   });
 
   const target = {};

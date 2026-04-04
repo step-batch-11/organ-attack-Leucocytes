@@ -1,6 +1,7 @@
 import {
   cloneFromTemplate,
-  getAfflictableOrgans as getOrganList,
+  getAfflictableOrgans,
+  getRemovableOrgans,
 } from "./utils.js";
 
 const setCardContent = (attackCard, { name, Desc }) => {
@@ -18,8 +19,9 @@ const setCardAttributes = (attackCard, { id, type, isInstant }) => {
 };
 
 const checkCardDisabled = (attackCard, cardData, opponents) => {
-  const organsToAttack = getOrganList(opponents, cardData);
-  const typeCheck = !(["bureaucracy", "resistance"].includes(cardData.type));
+  const organsToAttack = getAfflictableOrgans(opponents, cardData)
+    .concat(getRemovableOrgans(opponents, cardData));
+  const typeCheck = cardData.type === "affliction";
 
   if (organsToAttack.length === 0 && typeCheck) {
     attackCard.classList.add("disabled-card");

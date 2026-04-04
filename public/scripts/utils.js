@@ -13,6 +13,15 @@ export const getAfflictableOrgans = (opponents, attackCard) => {
   );
 };
 
+export const getRemovableOrgans = (opponents, { removableOrgans }) => {
+  for (const { organCards } of opponents) {
+    for (const organ of organCards) {
+      if (removableOrgans.includes(organ.id)) return [organ];
+    }
+  }
+  return [];
+};
+
 export const cloneFromTemplate = (templateID, element = "*") => {
   const template = document.querySelector(templateID);
   return template.content.cloneNode(true).querySelector(element);

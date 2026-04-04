@@ -85,9 +85,9 @@ describe("Game model test", () => {
 
       const game = new Game(players);
 
-      players[0].fillHandWithOrgans([{ isWild: false }]);
+      players[0].fillHandWithOrgans([new Organ("", 1, 2)]);
       players[0].fillHandWithAttacks([]);
-      players[1].fillHandWithOrgans([{ isWild: true }]);
+      players[1].fillHandWithOrgans([new Organ("wild", 2, 4)]);
       players[1].fillHandWithAttacks([]);
 
       assertEquals(game.setFirstPlayer(), 1);

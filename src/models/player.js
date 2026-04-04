@@ -67,7 +67,7 @@ export class Player {
   }
 
   holdsWild() {
-    return this.#organCards.some((organ) => organ.isWild);
+    return this.#organCards.some((organ) => organ.isWild());
   }
 
   addOrgan(organ) {

@@ -313,5 +313,69 @@
     "action": "poison",
     "type": "poison",
     "isBlockable": true
+  },
+  {
+    "id": 26,
+    "name": "Removes Heart",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [
+      7
+    ],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Removes heart",
+    "action": "remove",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 27,
+    "name": "Removes kidney",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [
+      1
+    ],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Removes heart",
+    "action": "remove",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 28,
+    "name": "Afflicts Kidney or Removes Spleen",
+    "isInstant": false,
+    "afflictableOrgans": [
+      1
+    ],
+    "removableOrgans": [
+      10
+    ],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Removes heart",
+    "action": "hybrid",
+    "type": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 29,
+    "name": "Afflicts Tongue or Removes Teeth",
+    "isInstant": false,
+    "afflictableOrgans": [
+      4
+    ],
+    "removableOrgans": [
+      5
+    ],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Removes heart",
+    "action": "hybrid",
+    "type": "affliction",
+    "isBlockable": true
   }
 ]

@@ -121,6 +121,11 @@ main {
   color: var(--fg-color);
   border: 0.3em solid black;
 }
+[data-type="poison"] {
+  background-image: radial-gradient(var(--clr-gray), black);
+  color: var(--fg-color);
+  border: 0.3em solid var(--clr-light-gray);
+}
 
 .attack-card {
   width: var(--card-width);
@@ -224,14 +229,7 @@ main {
 .player-area .player .name {
   text-transform: capitalize;
 }
-.popup {
-  position: absolute;
-  bottom: calc(var(--card-height) + var(--organ-size) + 10em);
-  left: 50%;
-  translate: -50% 0;
-  display: flex;
-  gap: 1em;
-}
+
 h1 {
   font-size: 18px;
   word-break: break-word;
@@ -307,8 +305,17 @@ h1,
   border-radius: 5px;
 }
 
+.popup {
+  position: absolute;
+  bottom: calc(var(--card-height) + var(--organ-size) + 10em);
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: 1em;
+}
+
 /* popups */
-.popup-afflicatble-organs {
+.popup-afflictable-organs, .popup-removable-organs {
   background-color: var(--clr-gray);
   border-radius: 0.4em;
   /* padding: 0.8em; */
@@ -316,16 +323,20 @@ h1,
   gap: 1em;
 }
 
-.popup-afflicatble-organs > div {
+.popup-afflictable-organs {
+  border-left: 2px solid black;
+}
+
+.popup-afflictable-organs > div, .popup-removable-organs > div {
   margin: 0.8em;
 }
 
-.popup-afflicatble-organs img {
+.popup-afflictable-organs img, .popup-removable-organs img {
   cursor: pointer;
   transition: 200ms;
 }
 
-.popup-afflicatble-organs img:hover {
+.popup-afflictable-organs img:hover, .popup-removable-organs img:hover {
   /* box-shadow: 0 0 10px 1px hsl(0, 0%, 0%); */
   scale: 1.05;
 }

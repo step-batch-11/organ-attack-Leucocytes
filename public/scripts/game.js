@@ -23,10 +23,12 @@ const performBythebook = async ({ player, attackCardID }) => {
 const ACTION_HANDLERS = {
   "chart-mixup": performChartMixup,
   affliction: displayOrgans,
+  remove: displayOrgans,
   Vaccine: playVaccineCard,
   "transplant": displayOrgans,
   "medicine": displayOrgans,
   "by-the-book": performBythebook,
+  "hybrid": displayOrgans,
 };
 
 const attachEventListener = (e, player, opponents, isInstant = false) => {

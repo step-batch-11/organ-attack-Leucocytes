@@ -36,3 +36,16 @@ export const handlePoison = ({ attackerID, organCardID, game }) => {
   game.removeOrgan(attackerID, organCardID);
   return ({ success: true });
 };
+
+export const handleRemoveOrgan = ({ opponentID, organCardID, game }) => {
+  game.removeOrgan(opponentID, organCardID);
+  return ({ success: true });
+};
+
+export const handleHybridAffliction = (
+  { opponentID, organCardID, game, afflictPoints, canRemove },
+) => {
+  if (canRemove) game.removeOrgan(opponentID, organCardID);
+  else game.afflictOrganOfOpponent(opponentID, organCardID, afflictPoints);
+  return ({ success: true });
+};

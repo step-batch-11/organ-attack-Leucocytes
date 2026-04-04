@@ -45,7 +45,7 @@ describe("Testing Player Class", () => {
 
   it("Should have wild card", () => {
     const player = new Player("Vivek", 1);
-    const organCards = [{ isWild: true }];
+    const organCards = [new Organ("wild")];
     player.fillHandWithOrgans(organCards);
 
     assertEquals(player.holdsWild(), true);
