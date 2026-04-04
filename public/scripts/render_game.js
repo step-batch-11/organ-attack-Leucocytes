@@ -3,26 +3,52 @@ import {
   getAfflictableOrgans as getOrganList,
 } from "./utils.js";
 
+const setCardContent = (attackCard, { name, Desc }) => {
+  const attackCardName = attackCard.querySelector("h1");
+  const description = attackCard.querySelector(".card-desc");
+  attackCardName.textContent = name;
+  description.textContent = Desc;
+};
+
+const setCardAttributes = (attackCard, { id, type, isInstant }) => {
+  attackCard.setAttribute("data-id", id);
+  attackCard.setAttribute("data-type", type);
+  attackCard.setAttribute("id", `attack-${id}`);
+  attackCard.setAttribute("is-instant", Number(isInstant));
+};
+
+const checkCardDisabled = (attackCard, cardData, opponents) => {
+  const organsToAttack = getOrganList(opponents, cardData);
+  const typeCheck = !(["bureaucracy", "resistance"].includes(cardData.type));
+
+  if (organsToAttack.length === 0 && typeCheck) {
+    attackCard.classList.add("disabled-card");
+  } else {
+    attackCard.classList.remove("disabled-card");
+  }
+};
+const addFlipEvent = (attackCard) => {
+  const infoBtns = attackCard.querySelectorAll(".info-btn");
+
+  infoBtns.forEach((btn) => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      if (attackCard.classList.contains("disabled-card")) return;
+
+      attackCard.classList.toggle("flip");
+    };
+  });
+};
+
 const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
-  console.log({ attackCards });
   attackCardNodes.forEach((attackCard, i) => {
-    const { name, id, type, isInstant } = attackCards[i];
-    const attackCardName = attackCard.querySelector("h1");
-    attackCardName.textContent = name;
-
-    attackCard.setAttribute("data-id", id);
-    attackCard.setAttribute("data-type", type);
-    attackCard.setAttribute("id", `attack-${id}`);
-    attackCard.setAttribute("is-instant", Number(isInstant));
-
-    const organsToAttack = getOrganList(opponents, attackCards[i]);
-    const typeCheck = !(["bureaucracy", "resistance"].includes(type));
-
-    if (organsToAttack.length === 0 && typeCheck) {
-      attackCard.classList.add("disabled-card");
-    } else {
-      attackCard.classList.remove("disabled-card");
-    }
+    const cardData = attackCards[i];
+    setCardContent(attackCard, cardData);
+    setCardAttributes(attackCard, cardData);
+    checkCardDisabled(attackCard, cardData, opponents);
+    addFlipEvent(attackCard);
   });
 };
 

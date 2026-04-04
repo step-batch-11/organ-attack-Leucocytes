@@ -65,7 +65,11 @@ const manageTurn = async (data) => {
 
   if (self.isMyTurn) {
     [...attackCards].forEach((card) => {
-      card.onclick = (e) => attachEventListener(e, self, opponents);
+      card.onclick = (e) => {
+        if (e.target.closest(".info-btn")) return;
+        if (e.target.closest(".flip-btn")) return;
+        attachEventListener(e, self, opponents);
+      };
     });
   } else {
     attackCards.forEach((card) => card.onclick = () => "");
