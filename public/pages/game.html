@@ -1,56 +1,49 @@
 <!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" href="/assets/favicon/favicon.png" type="image/x-icon" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles/game.css" />
-  <link rel="stylesheet" href="/styles/vaccine.css" />
-  <title>Game</title>
-  <script type="module" src="/scripts/game.js"></script>
-  <template class="opponent-template">
-    <div class="opponent">
-      <div class="avatar">
-        <p class="name"></p>
-      </div>
-    </div>
-  </template>
-
-  <template id="flash-screen-used-on-template">
-    <div class="flash-screen flash-screen-affliction">
-      <div class="actor">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="/assets/favicon/favicon.png"
+      type="image/x-icon"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/game.css" />
+    <link rel="stylesheet" href="/styles/vaccine.css" />
+    <title>Game</title>
+    <script type="module" src="/scripts/game.js"></script>
+    <template class="opponent-template">
+      <div class="opponent">
         <div class="avatar">
           <p class="name"></p>
         </div>
       </div>
-      <div class="attack-card">
-        <h1></h1>
-      </div>
-      <div class="target">
-        <div class="organ"><img /></div>
-        <div class="avatar">
-          <p class="name"></p>
-        </div>
-      </div>
-    </div>
-  </template>
+    </template>
 
-  <template id="flash-screen-used-template">
-    <div class="flash-screen flash-screen-vaccine">
-      <div class="actor">
-        <div class="avatar">
-          <p class="name"></p>
+    <template id="flash-screen-used-on-template">
+      <div class="flash-screen flash-screen-affliction">
+        <div class="actor">
+          <div class="avatar">
+            <p class="name"></p>
+          </div>
+        </div>
+        <div class="attack-card">
+          <h1></h1>
+        </div>
+        <div class="target">
+          <div class="organ"><img /></div>
+          <div class="avatar">
+            <p class="name"></p>
+          </div>
         </div>
       </div>
-      <div class="attack-card">
-        <h1></h1>
-      </div>
-    </div>
-  </template>
+    </template>
 
   <template id="organ-card-template">
     <div class="organ"><img /></div>

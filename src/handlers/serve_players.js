@@ -35,10 +35,10 @@ export const serveGameState = (c) => {
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
 
-  const publiGameState = game.getGameState();
+  const publicGameState = game.getGameState();
 
   const res = getPlayerData(c);
   const { data: playerData } = res;
 
-  return c.json({ ...publiGameState, self: playerData });
+  return c.json({ ...publicGameState, self: playerData });
 };

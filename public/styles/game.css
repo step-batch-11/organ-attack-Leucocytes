@@ -15,6 +15,7 @@
   --clr-gold: hsl(51, 100%, 63%);
   --clr-dark-gray: hsl(0, 0%, 12%);
   --clr-gray: hsl(0, 0%, 30%);
+  --clr-gray-alpha-30: hsla(0, 0%, 30%.0.34);
   --clr-light-gray: hsl(0, 0%, 65%);
   --clr-blue-alpha-30: hsla(189, 100%, 80%, 0.3);
 }
@@ -99,11 +100,18 @@ main {
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
-[data-type="cure"],
-[data-type="resistance"] {
-  background-image: radial-gradient(skyblue, var(--clr-gray));
+[data-type="cure"] {
+  background-image: radial-gradient(
+    hsl(from hsl(197, 65%, 65%) h s calc(l + 20)),
+    hsl(197, 65%, 65%)
+  );
   color: var(--fg-color);
-  border: 0.3em solid white;
+  border: 0.3em solid hsl(0, 0%, 95%);
+}
+[data-type="resistance"] {
+  background-image: radial-gradient(hsl(0, 0%, 95%));
+  color: hsl(197, 65%, 65%);
+  border: 0.3em solid hsl(197, 65%, 65%);
 }
 [data-type="dummy"],
 [data-type="wild"] {
@@ -112,14 +120,14 @@ main {
   border: 0.3em solid var(--clr-light-gray);
 }
 [data-type="instant wild"] {
-  background-image: radial-gradient(yellow, var(--clr-gray));
+  background-image: linear-gradient(var(--clr-red), rgb(255, 180, 95));
   color: var(--fg-color);
-  border: 0.3em solid black;
+  border: 0.3em solid var(--clr-gray);
 }
 [data-type="necrosis"] {
   background-image: radial-gradient(violet, purple);
   color: var(--fg-color);
-  border: 0.3em solid black;
+  border: 0.3em solid var(--clr-gray);
 }
 [data-type="poison"] {
   background-image: radial-gradient(var(--clr-gray), black);
@@ -137,64 +145,63 @@ main {
 }
 
 .card-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.6s;
-    }
-    
-  .attack-card.flip .card-inner {
-      transform: rotateY(180deg);
-    }
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
 
-    .card-front,
-    .card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 0.4em;
-      backface-visibility: hidden;
+.attack-card.flip .card-inner {
+  transform: rotateY(180deg);
+}
 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.4em;
+  backface-visibility: hidden;
 
-      padding: 0.4em;
-      box-sizing: border-box;
-    }
-   
-    .card-back {
-      transform: rotateY(180deg);
-      justify-content: center;
-    }
-    .card-img {
-      width: 90%;
-      height: 60%;
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    .info-btn {
-      position: absolute;
-      left: 5px;
-      bottom: 5px;
+  padding: 0.4em;
+  box-sizing: border-box;
+}
 
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
+.card-back {
+  transform: rotateY(180deg);
+  justify-content: center;
+}
+.card-img {
+  width: 90%;
+  height: 60%;
+}
 
-      border: 1px solid #f7f2d8; ;
-      background:var(--bg-color);
-      color: #f7f2d8;
-      cursor: pointer;
-    }
-    .card-desc {
-      font-size: 20px;
-      text-align: center;
-      word-break: break-word;
-      overflow-wrap: break-word;  
-      overflow: auto;
-    }
+.info-btn {
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
 
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  border: 1px solid #f7f2d8;
+  background: var(--bg-color);
+  color: #f7f2d8;
+  cursor: pointer;
+}
+.card-desc {
+  font-size: 20px;
+  text-align: center;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  overflow: auto;
+}
 
 .disabled-card {
   background: rgb(72, 72, 72);
@@ -233,7 +240,7 @@ h1 {
   font-size: 18px;
   word-break: break-word;
   overflow-wrap: break-word;
-  text-align: center; 
+  text-align: center;
 }
 h1,
 .name {
@@ -314,28 +321,27 @@ h1,
 }
 
 /* popups */
-.popup-afflictable-organs, .popup-removable-organs {
+.popup-removable-organs,
+.popup-afflictable-organs {
   background-color: var(--clr-gray);
   border-radius: 0.4em;
-  /* padding: 0.8em; */
+
+  align-items: center;
   display: flex;
   gap: 1em;
 }
 
-.popup-afflictable-organs {
-  border-left: 2px solid black;
-}
-
-.popup-afflictable-organs > div, .popup-removable-organs > div {
+popup-removable-organs div,
+.popup-afflictable-organs > div {
   margin: 0.8em;
 }
-
-.popup-afflictable-organs img, .popup-removable-organs img {
+popup-removable-organs img,
+.popup-afflictable-organs img {
   cursor: pointer;
   transition: 200ms;
 }
-
-.popup-afflictable-organs img:hover, .popup-removable-organs img:hover {
+popup-removable-organs img:hover,
+.popup-afflictable-organs img:hover {
   /* box-shadow: 0 0 10px 1px hsl(0, 0%, 0%); */
   scale: 1.05;
 }
@@ -359,6 +365,18 @@ h1,
 }
 .flash-screen[data-cardtype="resistance"] {
   background-color: var(--clr-blue-alpha-30);
+}
+.flash-screen[data-cardtype="poison"] {
+  background-color: var(--clr-red-alpha-30);
+}
+.flash-screen[data-cardtype="bureaucracy"] {
+  background-color: var(--clr-gray);
+}
+.flash-screen[data-cardtype="tactical"] {
+  background-color: var(--clr-gray);
+}
+.flash-screen[data-cardtype="wild"] {
+  background-color: var(--clr-gray);
 }
 
 .flash-screen .actor {
@@ -386,4 +404,11 @@ h1,
   position: absolute;
   bottom: 6em;
   left: -3em;
+}
+
+.flash-screen[data-cardtype="poison"] .target::before {
+  content: "REMOVED";
+}
+.flash-screen[data-cardtype="poison"] .actor::after {
+  content: "GOT";
 }

@@ -63,6 +63,11 @@ export const handleAttack = async (c) => {
     return { message: "Invalid action" };
   }
 
+  const target = {};
+  if (action === "poison") {
+    target.targetOrgan = game.getPlayer(attackerID)
+      .organCards.find(({ id }) => id === organCardID);
+  }
   const handler = ACTIONS[action];
   const res = handler({
     attackerID,
@@ -73,12 +78,22 @@ export const handleAttack = async (c) => {
     canRemove,
   });
 
-  const target = {};
-  if (action === "affliction") {
+  registerEvent(
+    { opponentID, target, game, organCardID, action, attackerID, attackCard },
+  );
+
+  return res;
+};
+
+const registerEvent = (
+  { opponentID, target, game, organCardID, action, attackerID, attackCard },
+) => {
+  if (opponentID) {
     target.targetPlayer = game.getPlayer(opponentID);
     target.targetOrgan = target.targetPlayer
       .organCards.find(({ id }) => id === organCardID);
   }
+
   const { targetPlayer, targetOrgan } = target;
 
   const event = {
@@ -92,6 +107,4 @@ export const handleAttack = async (c) => {
   };
 
   game.registerEvent(event);
-
-  return res;
 };

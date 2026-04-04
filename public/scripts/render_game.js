@@ -136,9 +136,11 @@ const setTextContent = (container, selector, content) => {
   container.querySelector(selector).textContent = content;
 };
 
-const afflictionFlashScreen = (actor, target, card) => {
+const scaffoldFlashScreen = (actor, target, card) => {
   const flashScreen = cloneFromTemplate("#flash-screen-used-on-template");
-  flashScreen.dataset["cardtype"] = "affliction";
+
+  flashScreen.dataset["cardtype"] = card.type;
+
   const attackCard = flashScreen.querySelector(".attack-card");
   const targetContainer = flashScreen.querySelector(".target");
   const targetOrgan = targetContainer.querySelector(".organ");
@@ -147,26 +149,41 @@ const afflictionFlashScreen = (actor, target, card) => {
   setTextContent(attackCard, " h1", card.name);
   setTextContent(targetContainer, ".name", target.playerName);
 
+  attackCard.setAttribute("data-type", card.type);
+  return { targetOrgan, flashScreen };
+};
+
+const flashScreenForUsedOnEvent = (actor, target, card) => {
+  const { targetOrgan, flashScreen } = scaffoldFlashScreen(actor, target, card);
+
   renderOrganImage(targetOrgan, target.organName);
-  attackCard.setAttribute("data-type", "affliction");
+  return flashScreen;
+};
+
+const flashScreenForUsedEvent = (actor, target, card) => {
+  const { flashScreen } = scaffoldFlashScreen(actor, target, card);
+  flashScreen.querySelector(".target").remove();
+
+  return flashScreen;
+};
+const flashScreenForUsedOnOrganEvent = (actor, target, card) => {
+  const { targetOrgan, flashScreen } = scaffoldFlashScreen(actor, target, card);
+
+  flashScreen.querySelector(".target .avatar").remove();
+  renderOrganImage(targetOrgan, target.organName);
 
   return flashScreen;
 };
 
-const vaccineFlashScreen = (actor, _target, card) => {
-  const flashScreen = cloneFromTemplate("#flash-screen-used-template");
-  flashScreen.dataset["cardtype"] = "resistance";
-  const attackCard = flashScreen.querySelector(".attack-card");
-
-  setTextContent(flashScreen, ".actor .name", actor);
-  setTextContent(attackCard, "h1", card.name);
-  attackCard.setAttribute("data-type", "resistance");
-
-  return flashScreen;
-};
 const FLASH_SCREENS = {
-  affliction: afflictionFlashScreen,
-  "Vaccine": vaccineFlashScreen,
+  "affliction": flashScreenForUsedOnEvent,
+  "Vaccine": flashScreenForUsedEvent,
+  "poison": flashScreenForUsedOnOrganEvent,
+  "transplant": flashScreenForUsedOnEvent,
+  "medicine": flashScreenForUsedOnOrganEvent,
+  "chart-mixup": flashScreenForUsedEvent,
+  "by-the-book": flashScreenForUsedEvent,
+  "itsAlive": flashScreenForUsedOnOrganEvent,
 };
 
 const renderFlashScreen = ({ name, actor, target, card }) => {
