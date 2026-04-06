@@ -7,13 +7,13 @@ const main = () => {
   const session = {};
   const idGenerator = counter();
   const games = {};
-  const playerIdGenerator = counter();
+  const playerIDGenerator = counter();
   const rooms = { 101: [] };
 
   const app = createApp({
     session,
     idGenerator,
-    playerIdGenerator,
+    playerIDGenerator,
     games,
     rooms,
     shuffle,

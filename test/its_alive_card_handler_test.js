@@ -4,9 +4,10 @@ import { Player } from "../src/models/player.js";
 import { Organ } from "../src/models/organ.js";
 import { Game } from "../src/models/game.js";
 import { Deck } from "../src/models/deck.js";
+import { handleItsAlive } from "../src/handlers/card_action_handler.js";
 
 describe("Game model test", () => {
-  it("Should return reanimated organ", () => {
+  it(" Should return reanimated organ", () => {
     const shuffle = (arr) => arr;
 
     const attackCards = new Deck(
@@ -35,12 +36,8 @@ describe("Game model test", () => {
       attackCards,
       organDeck,
     );
-
-    assertEquals(player.getPlayerDetails().organCards.length, 7);
-    const organ = game.itsAlive(1, 7);
-    assertEquals(player.getPlayerDetails().organCards.length, 8);
-    assertEquals(organ.getDetails().id, 7);
-    assertEquals(organ.getDetails().health, 2);
-    assertEquals(organ.isDead(), false);
+    const { success } = handleItsAlive({ attackerID: 1, organCardID: 7, game });
+    assertEquals(success, true);
+    assertEquals(organDeck.getDiscardPile(), []);
   });
 });

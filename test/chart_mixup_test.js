@@ -9,13 +9,13 @@ import { Deck } from "../src/models/deck.js";
 import { AfflictionHandler } from "../src/models/affliction_handler.js";
 
 describe("Testing ChartMixup", () => {
-  let roomId;
+  let roomID;
   let players;
   let app;
   let game;
 
   beforeEach(() => {
-    roomId = 101;
+    roomID = 101;
     const shuffle = (x) => x;
     const logger = () => (_, next) => {
       return next();
@@ -31,8 +31,8 @@ describe("Testing ChartMixup", () => {
     );
     const organCards = new Deck([{ id: 1, health: 2, isWild: true }], shuffle);
     const idGenerator = counter();
-    const playerIdGenerator = counter();
-    const roomIdGenerator = counter();
+    const playerIDGenerator = counter();
+    const roomIDGenerator = counter();
     const rooms = { 101: [{ name: "chiru", id: 1 }, { name: "kumar", id: 2 }] };
     const games = {};
     players = rooms[101].map(({ name, id }) => new Player(name, id));
@@ -54,8 +54,8 @@ describe("Testing ChartMixup", () => {
     app = createApp({
       session,
       idGenerator,
-      playerIdGenerator,
-      roomIdGenerator,
+      playerIDGenerator,
+      roomIDGenerator,
       rooms,
       shuffle,
       games,
@@ -76,7 +76,7 @@ describe("Testing ChartMixup", () => {
         attackerID: 1,
         attackCardID: 12,
       }),
-      headers: { cookie: `roomID=${roomId}` },
+      headers: { cookie: `roomID=${roomID}` },
     });
 
     assertEquals(response.status, 200);
@@ -99,7 +99,7 @@ describe("Testing ChartMixup", () => {
         attackerID: 1,
         attackCardID: 12,
       }),
-      headers: { cookie: `roomID=${roomId}` },
+      headers: { cookie: `roomID=${roomID}` },
     });
 
     assertEquals(response.status, 400);

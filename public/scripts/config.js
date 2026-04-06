@@ -1,3 +1,0 @@
-export const CARD_TYPES = {
-  VACCINATION: "VACCINATION",
-};

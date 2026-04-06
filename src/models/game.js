@@ -94,7 +94,7 @@ export class Game {
   }
 
   #findPlayer(id) {
-    return this.#players.find((player) => player.getId() === id);
+    return this.#players.find((player) => player.getID() === id);
   }
 
   getAllPlayersDetails() {
@@ -122,19 +122,18 @@ export class Game {
   #isPlayerTurn(id) {
     const player = this.#players[this.#currentPlayer];
     if (player === undefined) return false;
-    return player.getId() === id;
+    return player.getID() === id;
   }
 
   getGameState() {
     const players = this.getAllPlayersDetails();
-    const currentPlayer = this.#players[this.#currentPlayer].getId();
+    const currentPlayer = this.#players[this.#currentPlayer].getID();
     const event = this.#event;
-    console.log("org deck =>>>>>", this.#organsDeck);
+    // console.log("org deck =>>>>>", this.#organsDeck);
 
-    const organDiscardPile = this.#organsDeck.getDiscardPile().map((organ) =>
-      organ.getDetails()
-    );
-    console.log("orgs discard", organDiscardPile);
+    const organDiscardPile = this.#organsDeck
+      .getDiscardPile().map((organ) => organ.getDetails());
+    // console.log("orgs discard", organDiscardPile);
 
     return structuredClone({ players, currentPlayer, event, organDiscardPile });
   }

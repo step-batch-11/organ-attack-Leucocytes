@@ -9,7 +9,7 @@ export class AfflictionHandler {
 
   afflictOrganOfOpponent(opponent, organCardID, afflictPoints) {
     const { organ, isDead } = opponent.afflictOrgan(organCardID, afflictPoints);
-    console.log({ organ, isDead });
+    // console.log({ organ, isDead });
 
     if (isDead) {
       this.#organCards.addToDiscardPile(organ);

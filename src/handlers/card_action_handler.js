@@ -1,18 +1,13 @@
 export const handleNormalAffliction = (
   { opponentID, organCardID, game, afflictPoints },
 ) => {
-  console.log({ opponentID, organCardID, game, afflictPoints });
+  // console.log({ opponentID, organCardID, game, afflictPoints });
   game.afflictOrganOfOpponent(opponentID, organCardID, afflictPoints);
   return ({ success: true });
 };
 
 export const handleChartMixup = ({ game }) => {
   game.chartMixup();
-  return ({ success: true });
-};
-
-export const handleVaccine = ({ attackerID, game }) => {
-  game.applyVaccine(attackerID);
   return ({ success: true });
 };
 
@@ -52,6 +47,11 @@ export const handleHybridAffliction = (
 };
 
 export const handleItsAlive = ({ attackerID, organCardID, game }) => {
-  game.itsAlive(attackerID, organCardID);
-  return { success: true };
+  const organ = game.itsAlive(attackerID, organCardID);
+  return { success: !(organ.isDead()) };
+};
+
+export const handleVaccine = ({ attackerID, game }) => {
+  game.applyVaccine(attackerID);
+  return ({ success: true });
 };

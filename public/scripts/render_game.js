@@ -176,6 +176,8 @@ const flashScreenForUsedOnOrganEvent = (actor, target, card) => {
 };
 
 const FLASH_SCREENS = {
+  "hybrid": flashScreenForUsedOnEvent,
+  "remove": flashScreenForUsedOnEvent,
   "affliction": flashScreenForUsedOnEvent,
   "Vaccine": flashScreenForUsedEvent,
   "poison": flashScreenForUsedOnOrganEvent,

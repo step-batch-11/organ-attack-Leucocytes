@@ -52,10 +52,11 @@ describe("Testing Player Class", () => {
   });
 
   it("Should return player id", () => {
-    const playerId = 1;
-    const player = new Player("Vivek", playerId);
+    const playerID = 1;
+    const player = new Player("Vivek", playerID);
+    console.log(player.get);
 
-    assertEquals(player.getId(), playerId);
+    assertEquals(player.getID(), playerID);
   });
 
   it("Should return player details", () => {

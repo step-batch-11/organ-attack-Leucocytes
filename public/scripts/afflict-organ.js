@@ -1,17 +1,11 @@
-import { renderOpponents } from "./render_game.js";
-import {
-  fetchPlayersData,
-  getAfflictableOrgans,
-  getRemovableOrgans,
-  postJSON,
-} from "./utils.js";
+import { getAfflictableOrgans, getRemovableOrgans, postJSON } from "./utils.js";
 
 const createPopupOrgans = (organs) => {
   return organs.map((organ) => {
     const organCard = document.createElement("div");
     organCard.setAttribute("class", "organ");
     organCard.setAttribute("organ-id", `${organ.id}`);
-    organCard.setAttribute("player-id", `${organ.playerId}`);
+    organCard.setAttribute("player-id", `${organ.playerID}`);
     const organName = organ.name;
     const image = document.createElement("img");
     image.setAttribute("src", `/assets/organs/${organName.toLowerCase()}.png`);

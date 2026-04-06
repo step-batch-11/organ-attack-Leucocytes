@@ -63,7 +63,7 @@ export class Player {
     this.#attackCards.push(attackCard);
   }
 
-  getId() {
+  getID() {
     return this.#id;
   }
 

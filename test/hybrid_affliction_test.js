@@ -10,13 +10,13 @@ import { Dealer } from "../src/models/dealer.js";
 import { Organ } from "../src/models/organ.js";
 
 describe("Testing Hybrid affliction", () => {
-  let roomId;
+  let roomID;
   let players;
   let shuffle;
   let session;
   let idGenerator;
-  let playerIdGenerator;
-  let roomIdGenerator;
+  let playerIDGenerator;
+  let roomIDGenerator;
   let rooms;
   let games;
   let game;
@@ -29,7 +29,7 @@ describe("Testing Hybrid affliction", () => {
   };
 
   beforeEach(() => {
-    roomId = 101;
+    roomID = 101;
     shuffle = (x) => x;
     attackCards = new Deck(
       Array.from(
@@ -57,8 +57,8 @@ describe("Testing Hybrid affliction", () => {
     app = createApp({
       session,
       idGenerator,
-      playerIdGenerator,
-      roomIdGenerator,
+      playerIDGenerator,
+      roomIDGenerator,
       rooms,
       shuffle,
       games,
@@ -66,7 +66,7 @@ describe("Testing Hybrid affliction", () => {
   });
 
   it("should afflict an organ", async () => {
-    players = rooms[roomId].map(({ name, id }) => new Player(name, id));
+    players = rooms[roomID].map(({ name, id }) => new Player(name, id));
     players.map((player) => {
       player.fillHandWithOrgans([new Organ("Heart", 1, 1)]);
       player.fillHandWithAttacks([{
@@ -81,8 +81,8 @@ describe("Testing Hybrid affliction", () => {
 
     session = { "1": "chiru" };
     idGenerator = counter();
-    playerIdGenerator = counter();
-    roomIdGenerator = counter();
+    playerIDGenerator = counter();
+    roomIDGenerator = counter();
     game = new Game(
       players,
       attackCards,
@@ -112,7 +112,7 @@ describe("Testing Hybrid affliction", () => {
   });
 
   it("should remove an organ", async () => {
-    players = rooms[roomId].map(({ name, id }) => new Player(name, id));
+    players = rooms[roomID].map(({ name, id }) => new Player(name, id));
     players.map((player) => {
       player.fillHandWithOrgans([new Organ("Heart", 1, 1)]);
       player.fillHandWithAttacks([{
@@ -127,8 +127,8 @@ describe("Testing Hybrid affliction", () => {
 
     session = { "1": "chiru" };
     idGenerator = counter();
-    playerIdGenerator = counter();
-    roomIdGenerator = counter();
+    playerIDGenerator = counter();
+    roomIDGenerator = counter();
     game = new Game(
       players,
       attackCards,

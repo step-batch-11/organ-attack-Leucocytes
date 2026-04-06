@@ -1,10 +1,10 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
-import { getPlayerId } from "../src/utils.js";
+import { getPlayerID } from "../src/utils.js";
 import { assertEquals } from "@std/assert";
 
-describe("utility: getPlayerId", () => {
+describe("utility: getPlayerID", () => {
   /*
-  getCookie : sessionId roomID
+  getCookie : sessionID roomID
 
   context
     get : session
@@ -42,12 +42,12 @@ describe("utility: getPlayerId", () => {
   });
 
   it("should return mocked playerID: 1", () => {
-    const playerID = getPlayerId(ctx);
+    const playerID = getPlayerID(ctx);
     assertEquals(playerID, 1);
   });
   it("should return mocked playerID: -1", () => {
     cookie = "roomID=1";
-    const playerID = getPlayerId(ctx);
+    const playerID = getPlayerID(ctx);
     assertEquals(playerID, -1);
   });
 });

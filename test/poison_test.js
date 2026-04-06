@@ -10,13 +10,13 @@ import { Dealer } from "../src/models/dealer.js";
 import { Organ } from "../src/models/organ.js";
 
 describe("Testing Necrosis", () => {
-  let roomId;
+  let roomID;
   let players;
   let shuffle;
   let session;
   let idGenerator;
-  let playerIdGenerator;
-  let roomIdGenerator;
+  let playerIDGenerator;
+  let roomIDGenerator;
   let rooms;
   let games;
   let game;
@@ -27,7 +27,7 @@ describe("Testing Necrosis", () => {
   };
 
   beforeEach(() => {
-    roomId = 101;
+    roomID = 101;
     shuffle = (x) => x;
     const attackCards = new Deck(
       Array.from(
@@ -53,7 +53,7 @@ describe("Testing Necrosis", () => {
     rooms = { 101: [{ name: "chiru", id: 1 }, { name: "kumar", id: 2 }] };
     games = {};
 
-    players = rooms[roomId].map(({ name, id }) => new Player(name, id));
+    players = rooms[roomID].map(({ name, id }) => new Player(name, id));
     players.map((player) => {
       player.fillHandWithOrgans([new Organ("Heart", 1, 1)]);
       player.fillHandWithAttacks([{
@@ -69,8 +69,8 @@ describe("Testing Necrosis", () => {
 
     session = { "1": "chiru" };
     idGenerator = counter();
-    playerIdGenerator = counter();
-    roomIdGenerator = counter();
+    playerIDGenerator = counter();
+    roomIDGenerator = counter();
     game = new Game(
       players,
       attackCards,
@@ -85,8 +85,8 @@ describe("Testing Necrosis", () => {
     app = createApp({
       session,
       idGenerator,
-      playerIdGenerator,
-      roomIdGenerator,
+      playerIDGenerator,
+      roomIDGenerator,
       rooms,
       shuffle,
       games,

@@ -2,14 +2,14 @@ import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
 import {
   getPlayerData,
-  getPlayers,
+  handleGetPlayers,
   serveGameState,
 } from "./handlers/serve_players.js";
 import {
   allowLoggedInUser,
   loginHandler,
   redirectLoggedInUser,
-} from "./handlers/login_handler.js";
+} from "./handlers/auth/auth.js";
 import { gameSetup } from "./game_setup.js";
 import { resolveAction } from "./handlers/attack_handler.js";
 
@@ -34,7 +34,7 @@ export const updateGameState = (publicGameState) => {
 export const createApp = ({
   session,
   idGenerator,
-  playerIdGenerator,
+  playerIDGenerator,
   games,
   rooms,
   shuffle,
@@ -47,7 +47,7 @@ export const createApp = ({
     c.set("idGenerator", idGenerator);
     c.set("games", games);
     c.set("shuffle", shuffle);
-    c.set("playerIdGenerator", playerIdGenerator);
+    c.set("playerIDGenerator", playerIDGenerator);
     c.set("rooms", rooms);
     await next();
   });
@@ -67,7 +67,7 @@ export const createApp = ({
     "/game-page",
     serveStatic({ root: "public", path: "/pages/game.html" }),
   );
-  app.get("/get-players", getPlayers);
+  app.get("/get-players", handleGetPlayers);
   app.get("/", allowLoggedInUser);
   app.get("/pages/login.html", redirectLoggedInUser);
   app.get("*", serveStatic({ root: "./public" }));

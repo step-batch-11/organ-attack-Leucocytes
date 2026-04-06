@@ -14,8 +14,8 @@ describe("Testing Normal Affliction", () => {
   let logger;
   let session;
   let idGenerator;
-  let playerIdGenerator;
-  let roomIdGenerator;
+  let playerIDGenerator;
+  let roomIDGenerator;
   let rooms;
   let games;
   let players;
@@ -30,8 +30,8 @@ describe("Testing Normal Affliction", () => {
 
     session = { "1": "chiru" };
     idGenerator = counter();
-    playerIdGenerator = counter();
-    roomIdGenerator = counter();
+    playerIDGenerator = counter();
+    roomIDGenerator = counter();
     rooms = { 101: [{ name: "chiru", id: 1 }, { name: "kumar", id: 2 }] };
     games = {};
     players = rooms[101].map(({ name, id }) => new Player(name, id));
@@ -39,8 +39,8 @@ describe("Testing Normal Affliction", () => {
     app = createApp({
       session,
       idGenerator,
-      playerIdGenerator,
-      roomIdGenerator,
+      playerIDGenerator,
+      roomIDGenerator,
       rooms,
       shuffle,
       games,
@@ -134,7 +134,6 @@ describe("Testing Normal Affliction", () => {
       }),
       headers: { cookie: "roomID=101" },
     });
-    console.log(response);
     assertEquals(await response.json(), { success: true });
   });
 });

@@ -1,31 +1,20 @@
 import { renderGame } from "./render_game.js";
-import { performChartMixup } from "./perform_chart_mixup.js";
-import { fetchPlayersData, postJSON } from "./utils.js";
+import {
+  performByTheBook,
+  performChartMixup,
+  performVaccine,
+} from "./non_afflictions.js";
+import { fetchPlayersData } from "./utils.js";
 import { displayOrgans } from "./afflict-organ.js";
 
-const getCardId = (attackCard) => Number(attackCard.dataset.id);
-
-const playVaccineCard = async ({ e, player, attackCardID }) => {
-  const body = { attackerID: player.id, attackCardID };
-  const { success } = await postJSON("/attack", body);
-
-  if (success) {
-    const organsArea = document.querySelector(".organs");
-    organsArea.dataset.vaccine = 2;
-  }
-};
-
-const performByTheBook = async ({ player, attackCardID }) => {
-  const body = { attackerID: player.id, attackCardID };
-  const { success } = await postJSON("/attack", body);
-};
+const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
 const ACTION_HANDLERS = {
   "chart-mixup": performChartMixup,
   "by-the-book": performByTheBook,
+  "Vaccine": performVaccine,
   "affliction": displayOrgans,
   "remove": displayOrgans,
-  "Vaccine": playVaccineCard,
   "transplant": displayOrgans,
   "medicine": displayOrgans,
   "hybrid": displayOrgans,
@@ -40,7 +29,7 @@ const attachEventListener = (
   organDiscardPile,
 ) => {
   const attackCardElement = e.target.closest(".attack-card");
-  const attackCardID = getCardId(attackCardElement);
+  const attackCardID = getCardID(attackCardElement);
   console.log(attackCardID);
   const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
   ACTION_HANDLERS[attackCard.action]({
@@ -55,8 +44,8 @@ const attachEventListener = (
 
 const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
 
-const manageTurn = async (data) => {
-  const { self, players, event, organDiscardPile } = data;
+const manageTurn = async (gameState) => {
+  const { self, players, event, organDiscardPile } = gameState;
   console.log("org discard pile", organDiscardPile);
 
   const opponents = players.filter(({ id }) => id !== self.id);
@@ -77,10 +66,12 @@ const manageTurn = async (data) => {
   const attackCards = document.querySelectorAll(".player-area .attack-card");
 
   if (self.isMyTurn) {
-    [...attackCards].forEach((card) => {
+    attackCards.forEach((card) => {
       card.onclick = (e) => {
-        if (e.target.closest(".info-btn")) return;
-        if (e.target.closest(".flip-btn")) return;
+        if (e.target.closest(".info-btn") || e.target.closest(".flip-btn")) {
+          return;
+        }
+
         attachEventListener(e, self, opponents, false, organDiscardPile);
       };
     });
@@ -88,9 +79,9 @@ const manageTurn = async (data) => {
     attackCards.forEach((card) => card.onclick = () => "");
   }
 
-  const instantCards = [...document.querySelectorAll(".attack-card")].filter(
-    (card) => Number(card.getAttribute("is-instant")) === 1,
-  );
+  const instantCards = [...document.querySelectorAll(".attack-card")]
+    .filter((card) => Number(card.getAttribute("is-instant")) === 1);
+
   instantCards.forEach((card) => {
     card.onclick = (e) => attachEventListener(e, self, opponents, true);
   });
@@ -107,7 +98,15 @@ const poll = async () => {
 };
 
 window.onload = async () => {
-  const playerData = await fetchPlayersData();
-  await manageTurn(playerData);
+  const players = await fetchPlayersData();
+
+  if (players.status === false) {
+    window.location.href = "/";
+    return;
+  }
+
+  await manageTurn(players);
+  //redirect because there is no room so for safeguarding
+  // it to redirect to the main page for login;
   poll();
 };

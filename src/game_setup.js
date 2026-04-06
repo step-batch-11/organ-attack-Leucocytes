@@ -14,7 +14,7 @@ export const gameSetup = async (ctx) => {
   const rooms = ctx.get("rooms");
   const { roomID } = await ctx.req.json();
 
-  if (!(roomID in rooms)) return ctx.json({ message: "Invalid roomId" }, 400);
+  if (!(roomID in rooms)) return ctx.json({ message: "Invalid roomID" }, 400);
 
   const players = rooms[roomID].map(({ name, id }) => new Player(name, id));
   const attackCards = new Deck(attacks.default, shuffle);
@@ -37,6 +37,7 @@ export const gameSetup = async (ctx) => {
   );
   game.dealCards();
   game.setFirstPlayer();
+
   games[roomID] = game;
 
   return ctx.json(game.getAllPlayersDetails(), 201);

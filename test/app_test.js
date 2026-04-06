@@ -10,9 +10,9 @@ describe("tests for app", () => {
   describe("/login", () => {
     let session;
     let idGenerator;
-    let playerIdGenerator;
+    let playerIDGenerator;
     let app;
-    let roomIdGenerator;
+    let roomIDGenerator;
     let rooms;
     let games;
     const shuffle = (x) => x;
@@ -20,15 +20,15 @@ describe("tests for app", () => {
     beforeEach(() => {
       session = { "1": "chiru" };
       idGenerator = counter();
-      playerIdGenerator = counter();
-      roomIdGenerator = counter();
+      playerIDGenerator = counter();
+      roomIDGenerator = counter();
       rooms = { 101: [] };
       games = {};
       app = createApp({
         session,
         idGenerator,
-        playerIdGenerator,
-        roomIdGenerator,
+        playerIDGenerator,
+        roomIDGenerator,
         rooms,
         shuffle,
         games,
@@ -104,9 +104,7 @@ describe("tests for app", () => {
 
     it("should return index page if cookie is there", async () => {
       const response = await app.request("/", {
-        headers: new Headers({
-          "Cookie": "sessionID=1",
-        }),
+        headers: new Headers({ "Cookie": "sessionID=1" }),
       });
       const contentType = response.headers.get("content-type");
       response.text();
@@ -134,7 +132,7 @@ describe("tests for app", () => {
       assertEquals(contentType, "text/html; charset=utf-8");
     });
 
-    it("app should send players data and roomId", async () => {
+    it("app should send players data and roomID", async () => {
       const formData = new FormData();
       formData.append("username", "user1");
       const response1ToAddUser = await app.request("/login", {
@@ -158,10 +156,14 @@ describe("tests for app", () => {
       const contentType = response.headers.get("content-type");
       assertEquals(response.status, 200);
       assertEquals(contentType, "application/json");
+
       const body = await response.json();
-      assertEquals(body.status, 200);
-      assertEquals(body["roomID"], "101");
-      assertEquals(body.players.length, 1);
+      assertEquals(body, {
+        players: [{ id: 1, name: "user1", type: "host" }],
+        myID: 1,
+        roomID: "101",
+        redirectPath: "",
+      });
     });
 
     it("app should redirect to game page when it get max players (ex :2)", async () => {
@@ -184,10 +186,15 @@ describe("tests for app", () => {
         headers: { cookie: "sessionID=1;roomID=101" },
       });
       const body = await response.json();
-      assertEquals(body.status, 302);
-      assertEquals(body.redirectPath, "/game-page");
-      assertEquals(body.players.length, 2);
-      assertEquals(body.myId, 1);
+      assertEquals(body, {
+        players: [
+          { id: 1, name: "user1", type: "host" },
+          { id: 2, name: "user2", type: "non-host" },
+        ],
+        myID: 1,
+        roomID: "101",
+        redirectPath: "/game-page",
+      });
     });
   });
   describe("get: /game-state test", () => {
@@ -222,7 +229,18 @@ describe("tests for app", () => {
       const res = await app.request("/game-state", { headers });
       const body = await res.json();
 
-      assertEquals(body, { self: 1, data: "dummy game state" });
+      assertEquals(body, { self: 1, data: "dummy game state", status: true });
+    });
+    it("should return a failing status as game does not exist ", async () => {
+      const headers = new Headers();
+      headers.append("Cookie", "sessionID=3; roomID=104");
+      const res = await app.request("/game-state", { headers });
+      const body = await res.json();
+
+      assertEquals(body, {
+        message: "Game not found",
+        status: false,
+      });
     });
   });
 });
