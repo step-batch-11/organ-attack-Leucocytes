@@ -34,7 +34,7 @@ const triggerGameSetup = async (amIHost, roomID) => {
       clearInterval(initLobbyIntervalID);
       if (!countdownStarted) {
         await triggerGameSetup(amIHost(players, myID), roomID);
-        const lobbyCountdown = 10;
+        const lobbyCountdown = 3;
         await renderTimeOut(lobbyCountdown);
         window.location.href = redirectPath;
       }

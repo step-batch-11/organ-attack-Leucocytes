@@ -1,29 +1,18 @@
 import { getCookie } from "hono/cookie";
-import {
-  handleBythebook,
-  handleChartMixup,
-  handleHybridAffliction,
-  handleItsAlive,
-  handleMedicine,
-  handleNormalAffliction,
-  handlePoison,
-  handleRemoveOrgan,
-  handleTransplant,
-  handleVaccine,
-} from "./card_action_handler.js";
+import * as handlers from "./card_action_handler.js";
 
 import { updateGameState } from "../app.js";
 const ACTIONS = {
-  transplant: handleTransplant,
-  affliction: handleNormalAffliction,
-  "chart-mixup": handleChartMixup,
-  Vaccine: handleVaccine,
-  medicine: handleMedicine,
-  "by-the-book": handleBythebook,
-  "poison": handlePoison,
-  "remove": handleRemoveOrgan,
-  "hybrid": handleHybridAffliction,
-  itsAlive: handleItsAlive,
+  transplant: handlers.handleTransplant,
+  affliction: handlers.handleNormalAffliction,
+  "chart-mixup": handlers.handleChartMixup,
+  Vaccine: handlers.handleVaccine,
+  medicine: handlers.handleMedicine,
+  "by-the-book": handlers.handleBythebook,
+  "poison": handlers.handlePoison,
+  "remove": handlers.handleRemoveOrgan,
+  "hybrid": handlers.handleHybridAffliction,
+  itsAlive: handlers.handleItsAlive,
 };
 
 export const resolveAction = async (c) => {

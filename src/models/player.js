@@ -12,6 +12,7 @@ export class Player {
     this.#organCards = [];
     this.#type = type;
     this.#vaccinePoints = 0;
+    this.sleepCount = 0;
   }
   isVaccinated() {
     return this.#vaccinePoints > 0;
@@ -107,5 +108,14 @@ export class Player {
       card.type === "affliction" || card.action === "common-cold"
     );
     return cards;
+  }
+  isSleeping() {
+    return this.sleepCount > 0;
+  }
+  applySleep(sleepPoints = 0) {
+    this.sleepCount += sleepPoints;
+  }
+  decreaseSleep() {
+    this.sleepCount -= 1;
   }
 }

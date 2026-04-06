@@ -1,3 +1,5 @@
+import { TurnManager } from "./turn_manager.js";
+
 export class Game {
   #players;
   #attacksDeck;
@@ -6,23 +8,35 @@ export class Game {
   #afflictionHandler;
   #currentPlayer;
   #event;
+  #turnManager;
 
-  constructor(players, attackCards, organCards, dealer, afflictionHandler) {
+  constructor(
+    players,
+    attackCards,
+    organCards,
+    dealer,
+    afflictionHandler,
+    turnManager = new TurnManager(),
+  ) {
     this.#players = players;
     this.#attacksDeck = attackCards;
     this.#organsDeck = organCards;
     this.#dealer = dealer;
     this.#afflictionHandler = afflictionHandler;
     this.#event = {};
+    this.#turnManager = turnManager;
   }
 
   #passTurn() {
-    this.#currentPlayer = ++this.#currentPlayer % this.#players.length;
+    this.#currentPlayer = this.#turnManager.passTurn();
+    /*  ++this.#currentPlayer % this.#players.length */
   }
 
   setFirstPlayer() {
     this.#currentPlayer = this.#players
       .findIndex((player) => player.holdsWild());
+
+    this.#turnManager.setTurn(this.#currentPlayer);
     return this.#currentPlayer;
   }
 

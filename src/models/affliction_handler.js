@@ -9,7 +9,6 @@ export class AfflictionHandler {
 
   afflictOrganOfOpponent(opponent, organCardID, afflictPoints) {
     const { organ, isDead } = opponent.afflictOrgan(organCardID, afflictPoints);
-    // console.log({ organ, isDead });
 
     if (isDead) {
       this.#organCards.addToDiscardPile(organ);
@@ -17,9 +16,8 @@ export class AfflictionHandler {
   }
 
   #doesEffectAnyOwnOrgan(attackCard, organCards) {
-    return organCards.some(({ id }) =>
-      attackCard.afflictableOrgans.includes(id)
-    );
+    return organCards
+      .some(({ id }) => attackCard.afflictableOrgans.includes(id));
   }
 
   refillAttackCard(attacker) {

@@ -388,5 +388,18 @@
     "action": "itsAlive",
     "type": "tactical",
     "isBlockable": true
+  },
+  {
+    "id": 31,
+    "name": "Sedate",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Causes extreme sleep for two turn",
+    "action": "sedate",
+    "type": "tactical",
+    "isBlockable": false
   }
 ]

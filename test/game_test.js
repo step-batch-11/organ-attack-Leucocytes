@@ -153,7 +153,11 @@ describe("Game model test", () => {
       const attackCards = new Deck(
         Array.from(
           { length: 10 },
-          (_, i) => ({ name: `a${i + 1}`, afflictableOrgans: [] }),
+          (_, i) => ({
+            name: `a${i + 1}`,
+            afflictableOrgans: [],
+            removableOrgans: [],
+          }),
         ),
         shuffle,
       );
@@ -195,7 +199,11 @@ describe("Game model test", () => {
       const attackCards = new Deck(
         Array.from(
           { length: 10 },
-          (_, i) => ({ name: `a${i + 1}`, afflictableOrgans: [] }),
+          (_, i) => ({
+            name: `a${i + 1}`,
+            afflictableOrgans: [],
+            removableOrgans: [],
+          }),
         ),
         shuffle,
       );
@@ -224,7 +232,11 @@ describe("Game model test", () => {
         player1Attacks,
         Array.from(
           { length: 5 },
-          (_, i) => ({ name: `a${10 - i}`, afflictableOrgans: [] }),
+          (_, i) => ({
+            name: `a${10 - i}`,
+            afflictableOrgans: [],
+            removableOrgans: [],
+          }),
         ),
       );
       assertEquals(
@@ -239,9 +251,17 @@ describe("Game model test", () => {
         .getPlayerDetails();
       const attackCardsExp = Array.from(
         { length: 4 },
-        (_, i) => ({ name: `a${5 - i}`, afflictableOrgans: [] }),
+        (_, i) => ({
+          name: `a${5 - i}`,
+          afflictableOrgans: [],
+          removableOrgans: [],
+        }),
       );
-      attackCardsExp.push({ name: "a1", afflictableOrgans: [] });
+      attackCardsExp.push({
+        name: "a1",
+        afflictableOrgans: [],
+        removableOrgans: [],
+      });
       assertEquals(
         player2Attacks,
         attackCardsExp,
