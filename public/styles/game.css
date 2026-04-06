@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
 }
+
 :root {
   --bg-color: hsl(0, 0%, 15%);
   --bg-gradient: radial-gradient(var(--bg-color), black);
@@ -27,6 +28,7 @@ body {
   color: var(--fg-color);
   height: 100vh;
 }
+
 main {
   height: 100vh;
   display: flex;
@@ -55,9 +57,11 @@ main {
   background-size: 100%;
   background-repeat: no-repeat;
 }
-.organ[data-affliction="1"] > img {
+
+.organ[data-affliction="1"]>img {
   filter: brightness(60%);
 }
+
 .organ img {
   font-size: 14px;
 
@@ -81,54 +85,62 @@ main {
   justify-content: center;
   gap: 1em;
 }
+
 .attack-cards {
   display: flex;
   gap: 1em;
 }
+
 [data-type="affliction"] {
   background-image: radial-gradient(var(--clr-red), var(--clr-dark-red));
   color: var(--clr-gold);
   border: 0.3em solid var(--clr-red);
 }
+
 [data-type="bureaucracy"] {
   background-image: radial-gradient(var(--clr-gray), var(--clr-dark-gray));
   color: var(--clr-gold);
   border: 0.3em solid var(--clr-gold);
 }
+
 [data-type="tactical"] {
   background-image: radial-gradient(var(--clr-gray), var(--clr-gray));
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
+
 [data-type="cure"] {
-  background-image: radial-gradient(
-    hsl(from hsl(197, 65%, 65%) h s calc(l + 20)),
-    hsl(197, 65%, 65%)
-  );
+  background-image: radial-gradient(hsl(from hsl(197, 65%, 65%) h s calc(l + 20)),
+      hsl(197, 65%, 65%));
   color: var(--fg-color);
   border: 0.3em solid hsl(0, 0%, 95%);
 }
+
 [data-type="resistance"] {
   background-image: radial-gradient(hsl(0, 0%, 95%));
   color: hsl(197, 65%, 65%);
   border: 0.3em solid hsl(197, 65%, 65%);
 }
+
 [data-type="dummy"],
 [data-type="wild"] {
   background-image: radial-gradient(yellowgreen, var(--clr-gray));
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
+
 [data-type="instant wild"] {
   background-image: linear-gradient(var(--clr-red), rgb(255, 180, 95));
   color: var(--fg-color);
   border: 0.3em solid var(--clr-gray);
 }
+
 [data-type="necrosis"] {
   background-image: radial-gradient(violet, purple);
   color: var(--fg-color);
   border: 0.3em solid var(--clr-gray);
 }
+
 [data-type="poison"] {
   background-image: radial-gradient(var(--clr-gray), black);
   color: var(--fg-color);
@@ -176,6 +188,7 @@ main {
   transform: rotateY(180deg);
   justify-content: center;
 }
+
 .card-img {
   width: 90%;
   height: 60%;
@@ -195,6 +208,7 @@ main {
   color: #f7f2d8;
   cursor: pointer;
 }
+
 .card-desc {
   font-size: 20px;
   text-align: center;
@@ -214,10 +228,12 @@ main {
   box-shadow: 0 0 10px 1px hsl(0, 0%, 0%);
   scale: 1.03;
 }
+
 .organs {
   gap: 1em;
   display: flex;
 }
+
 .player-area .player {
   position: relative;
   right: -30em;
@@ -242,11 +258,13 @@ h1 {
   overflow-wrap: break-word;
   text-align: center;
 }
+
 h1,
 .name {
   font-family: "Nerko One";
   letter-spacing: 1px;
 }
+
 /* opponent */
 
 .opponent-area {
@@ -263,15 +281,19 @@ h1,
 .opponent:nth-child(1) {
   grid-area: opp-1;
 }
+
 .opponent:nth-child(2) {
   grid-area: opp-2;
 }
+
 .opponent:nth-child(3) {
   grid-area: opp-3;
 }
+
 .opponent:nth-child(4) {
   grid-area: opp-4;
 }
+
 .opponent:nth-child(5) {
   grid-area: opp-5;
 }
@@ -283,6 +305,7 @@ h1,
   padding: 1em;
   height: min-content;
 }
+
 .highlight-avatar {
   box-shadow: 0px 0px 0px 5px var(--clr-gold);
 }
@@ -296,119 +319,4 @@ h1,
     radial-gradient(circle at 50% 30%, rgb(72, 72, 72) 30%, transparent 30%),
     radial-gradient(circle at 50% 100%, rgb(72, 72, 72) 50%, transparent 50%),
     linear-gradient(#fff, #fff);
-}
-
-.flash-screen .name,
-.opponent .name {
-  text-transform: capitalize;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  text-align: center;
-  background-color: #272727;
-  border-radius: 5px;
-}
-
-.popup {
-  position: absolute;
-  bottom: calc(var(--card-height) + var(--organ-size) + 10em);
-  left: 50%;
-  translate: -50% 0;
-  display: flex;
-  gap: 1em;
-}
-
-/* popups */
-.popup-removable-organs,
-.popup-afflictable-organs {
-  background-color: var(--clr-gray);
-  border-radius: 0.4em;
-
-  align-items: center;
-  display: flex;
-  gap: 1em;
-}
-
-popup-removable-organs div,
-.popup-afflictable-organs > div {
-  margin: 0.8em;
-}
-popup-removable-organs img,
-.popup-afflictable-organs img {
-  cursor: pointer;
-  transition: 200ms;
-}
-popup-removable-organs img:hover,
-.popup-afflictable-organs img:hover {
-  /* box-shadow: 0 0 10px 1px hsl(0, 0%, 0%); */
-  scale: 1.05;
-}
-
-/* flash screen */
-.flash-screen-container {
-  position: absolute;
-  bottom: calc(var(--card-height) + var(--organ-size) + 18em);
-  left: 50%;
-  translate: -50% 0%;
-}
-
-.flash-screen {
-  border-radius: 0.4em;
-  display: flex;
-  padding: 1em;
-  gap: 5em;
-}
-.flash-screen[data-cardtype="affliction"] {
-  background-color: var(--clr-red-alpha-30);
-}
-.flash-screen[data-cardtype="resistance"] {
-  background-color: var(--clr-blue-alpha-30);
-}
-.flash-screen[data-cardtype="poison"] {
-  background-color: var(--clr-red-alpha-30);
-}
-.flash-screen[data-cardtype="bureaucracy"] {
-  background-color: var(--clr-gray);
-}
-.flash-screen[data-cardtype="tactical"] {
-  background-color: var(--clr-gray);
-}
-.flash-screen[data-cardtype="wild"] {
-  background-color: var(--clr-gray);
-}
-
-.flash-screen .actor {
-  position: relative;
-}
-.flash-screen .actor::after {
-  content: "USED";
-  position: absolute;
-  top: 2em;
-  right: -3em;
-}
-
-.flash-screen .target {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 1em;
-}
-.flash-screen .attack-card {
-  margin-block: 2em;
-}
-.flash-screen .target::before {
-  content: "ON";
-  position: absolute;
-  bottom: 6em;
-  left: -3em;
-}
-
-.flash-screen[data-cardtype="poison"] .target::before {
-  content: "REMOVED";
-}
-.flash-screen[data-cardtype="poison"] .actor::after {
-  content: "GOT";
 }

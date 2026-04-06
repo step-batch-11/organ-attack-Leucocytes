@@ -1,24 +1,21 @@
 import { renderGame } from "./render_game.js";
-import {
-  performByTheBook,
-  performChartMixup,
-  performVaccine,
-} from "./non_afflictions.js";
+import * as NA from "./action_handlers/non_afflictions.js";
 import { fetchPlayersData } from "./utils.js";
-import { displayOrgans } from "./afflict-organ.js";
+import { displayOpponents, displayOrgans } from "./afflict-organ.js";
 
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
 const ACTION_HANDLERS = {
-  "chart-mixup": performChartMixup,
-  "by-the-book": performByTheBook,
-  "Vaccine": performVaccine,
+  "chart-mixup": NA.performChartMixup,
+  "by-the-book": NA.performByTheBook,
+  "Vaccine": NA.performVaccine,
   "affliction": displayOrgans,
   "remove": displayOrgans,
   "transplant": displayOrgans,
   "medicine": displayOrgans,
   "hybrid": displayOrgans,
   "itsAlive": displayOrgans,
+  "sedate": displayOpponents,
 };
 
 const attachEventListener = (

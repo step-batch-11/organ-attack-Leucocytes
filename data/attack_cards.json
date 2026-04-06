@@ -401,5 +401,18 @@
     "action": "sedate",
     "type": "tactical",
     "isBlockable": false
+  },
+  {
+    "id": 32,
+    "name": "Necrosis 🔥 ",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 2,
+    "Desc": "Removes an organ",
+    "action": "affliction",
+    "type": "necrosis",
+    "isBlockable": true
   }
 ]

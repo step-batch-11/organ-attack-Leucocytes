@@ -16,6 +16,8 @@
     />
     <link rel="stylesheet" href="/styles/game.css" />
     <link rel="stylesheet" href="/styles/vaccine.css" />
+    <link rel="stylesheet" href="/styles/popup.css" />
+    <link rel="stylesheet" href="/styles/flash_screen.css" />
     <title>Game</title>
     <script type="module" src="/scripts/game.js"></script>
     <template class="opponent-template">
@@ -45,89 +47,88 @@
       </div>
     </template>
 
-  <template id="organ-card-template">
-    <div class="organ"><img /></div>
-  </template>
-</head>
+    <template id="organ-card-template">
+      <div class="organ"><img /></div>
+    </template>
+  </head>
 
-<body>
-  <main>
-    <div class="opponent-area"></div>
+  <body>
+    <main>
+      <div class="opponent-area"></div>
 
-    <div class="player-area">
-      <div class="attack-cards">
-        <div class="attack-card">
-          <div class="card-inner">
-            <div class="card-front">
-              <button class="info-btn">i</button>
-              <h1></h1>
+      <div class="player-area">
+        <div class="attack-cards">
+          <div class="attack-card">
+            <div class="card-inner">
+              <div class="card-front">
+                <button class="info-btn">i</button>
+                <h1></h1>
+              </div>
+              <div class="card-back">
+                <button class="info-btn">i</button>
+                <div class="card-desc"></div>
+              </div>
             </div>
-            <div class="card-back">
-              <button class="info-btn">i</button>
-              <div class="card-desc"></div>
+          </div>
+          <div class="attack-card">
+            <div class="card-inner">
+              <div class="card-front">
+                <button class="info-btn">i</button>
+                <h1></h1>
+              </div>
+              <div class="card-back">
+                <button class="info-btn">i</button>
+                <div class="card-desc"></div>
+              </div>
+            </div>
+          </div>
+          <div class="attack-card">
+            <div class="card-inner">
+              <div class="card-front">
+                <button class="info-btn">i</button>
+                <h1></h1>
+              </div>
+              <div class="card-back">
+                <button class="info-btn">i</button>
+                <div class="card-desc"></div>
+              </div>
+            </div>
+          </div>
+          <div class="attack-card">
+            <div class="card-inner">
+              <div class="card-front">
+                <button class="info-btn">i</button>
+                <h1></h1>
+              </div>
+              <div class="card-back">
+                <button class="info-btn">i</button>
+                <div class="card-desc"></div>
+              </div>
+            </div>
+          </div>
+          <div class="attack-card">
+            <div class="card-inner">
+              <div class="card-front">
+                <button class="info-btn">i</button>
+                <h1></h1>
+              </div>
+              <div class="card-back">
+                <button class="info-btn">i</button>
+                <div class="card-desc"></div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="attack-card">
-          <div class="card-inner">
-            <div class="card-front">
-              <button class="info-btn">i</button>
-              <h1></h1>
-            </div>
-            <div class="card-back">
-              <button class="info-btn">i</button>
-              <div class="card-desc"></div>
-            </div>
-          </div>
-        </div>
-        <div class="attack-card">
-          <div class="card-inner">
-            <div class="card-front">
-              <button class="info-btn">i</button>
-              <h1></h1>
-            </div>
-            <div class="card-back">
-              <button class="info-btn">i</button>
-              <div class="card-desc"></div>
-            </div>
-          </div>
-        </div>
-        <div class="attack-card">
-          <div class="card-inner">
-            <div class="card-front">
-              <button class="info-btn">i</button>
-              <h1></h1>
-            </div>
-            <div class="card-back">
-              <button class="info-btn">i</button>
-              <div class="card-desc"></div>
-            </div>
-          </div>
-        </div>
-        <div class="attack-card">
-          <div class="card-inner">
-            <div class="card-front">
-              <button class="info-btn">i</button>
-              <h1></h1>
-            </div>
-            <div class="card-back">
-              <button class="info-btn">i</button>
-              <div class="card-desc"></div>
-            </div>
-          </div>
+
+        <div class="organs"></div>
+
+        <div class="player">
+          <div class="avatar"></div>
+          <p class="name">Template</p>
         </div>
       </div>
-
-      <div class="organs"></div>
-
-      <div class="player">
-        <div class="avatar"></div>
-        <p class="name">Template</p>
-      </div>
-    </div>
-    <div class="popup"></div>
-    <div class="flash-screen-container"></div>
-  </main>
-</body>
-
+      <div class="popup"></div>
+      <div class="flash-screen-container"></div>
+    </main>
+  </body>
 </html>

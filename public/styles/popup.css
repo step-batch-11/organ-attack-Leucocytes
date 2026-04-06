@@ -1,0 +1,36 @@
+.popup {
+  position: absolute;
+  bottom: calc(var(--card-height) + var(--organ-size) + 10em);
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: 1em;
+}
+
+
+.popup-removable,
+.popup-afflictable {
+  background-color: var(--clr-gray);
+  border-radius: 0.4em;
+
+  align-items: center;
+  display: flex;
+  gap: 1em;
+}
+
+popup-removable div,
+.popup-afflictable>div {
+  margin: 0.8em;
+}
+
+popup-removable img,
+.popup-afflictable img {
+  cursor: pointer;
+  transition: 200ms;
+}
+
+popup-removable img:hover,
+.popup-afflictable img:hover {
+  /* box-shadow: 0 0 10px 1px hsl(0, 0%, 0%); */
+  scale: 1.05;
+}

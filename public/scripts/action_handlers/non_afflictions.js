@@ -1,5 +1,5 @@
-import { clearPopup } from "./afflict-organ.js";
-import { postJSON } from "./utils.js";
+import { clearPopup } from "../afflict-organ.js";
+import { postJSON } from "../utils.js";
 
 export const performChartMixup = async ({ player, attackCardID }) => {
   clearPopup();
