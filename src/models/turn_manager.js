@@ -6,11 +6,11 @@ export class TurnManager {
   #playerCount;
   #turn;
 
-  constructor(players = [new Player()], pioneer) {
+  constructor(players = [new Player()], pioneerIndex) {
     this.#players = players;
     this.#next = 1;
     this.#playerCount = this.#players.length;
-    this.#turn = pioneer;
+    this.#turn = pioneerIndex;
   }
 
   setTurn(pioneer = 0) {
@@ -31,6 +31,7 @@ export class TurnManager {
 
   #getNextPlayer() {
     const count = (this.#turn + 1) % this.#playerCount;
+
     return this.#players[count];
   }
 }

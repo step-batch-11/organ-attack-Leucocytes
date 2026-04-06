@@ -20,18 +20,14 @@ export const clearPopup = () => {
 };
 
 const performAttack = async (
-  _e,
   attackCardID,
   player,
   isInstant,
   canRemove,
   organ,
 ) => {
-  console.log({ organ });
-
   const organCardID = Number(organ.getAttribute("organ-id"));
   const opponentID = Number(organ.getAttribute("player-id"));
-  console.log(organCardID, opponentID, "HERE");
 
   const body = {
     attackCardID,
@@ -72,7 +68,7 @@ const createPopupFragment = (
   container.append(...organs);
   container.addEventListener("click", async (e) => {
     const organ = e.target.closest(".organ");
-    performAttack(e, attackCardID, player, isInstant, canRemove, organ);
+    performAttack(attackCardID, player, isInstant, canRemove, organ);
   });
   document.querySelector(".popup").append(container);
 };
@@ -91,10 +87,9 @@ export const displayOrgans = (
     "poison": player.organCards,
     "itsAlive": organDiscardPile,
   };
-  console.log(attackCard);
 
   const organCards = getOrgansToDisplay(cards, attackCard, opponents);
-  console.log(organCards, attackCard.action);
+
   if (attackCard.action in cards) {
     const container = document.createElement("div");
     container.setAttribute("class", "popup-afflictable");
@@ -105,7 +100,7 @@ export const displayOrgans = (
     container.append(...organs);
     container.addEventListener("click", async (e) => {
       const organ = e.target.closest(".organ");
-      performAttack(e, attackCardID, player, isInstant, false, organ);
+      performAttack(attackCardID, player, isInstant, false, organ);
     });
     document.querySelector(".popup").append(container);
   } else {
@@ -128,16 +123,27 @@ export const displayOrgans = (
   }
 };
 
+const createPopupPlayers = (collection) => {
+  return collection.map((item) => {
+    const icon = document.createElement("div");
+    icon.setAttribute("class", "organ");
+    icon.setAttribute("player-id", `${item.id}`);
+    // const playerName = item.name;
+    const image = document.createElement("img");
+    image.setAttribute("src", `/assets/organs/${"undefined"}.png`);
+    icon.append(image);
+    return icon;
+  });
+};
+
 export const displayOpponents = ({ player, opponents, attackCardID }) => {
-  const attackCard = player.attackCards
-    .find(({ id }) => id === attackCardID);
+  const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
 
   clearPopup();
 
   const cards = {
     "sedate": opponents,
   };
-  console.log(attackCard);
 
   if (attackCard.action in cards) {
     const container = document.createElement("div");
@@ -145,22 +151,14 @@ export const displayOpponents = ({ player, opponents, attackCardID }) => {
 
     const opponentsAvatar = cards[attackCard.action];
 
-    const organs = createPopup(opponentsAvatar);
-    container.append(...organs);
+    const players = createPopupPlayers(opponentsAvatar);
+    container.append(...players);
     container.addEventListener("click", async (e) => {
-      const organ = e.target.closest(".organ");
-      performAttack(e, organ, attackCardID, player, false, false);
+      const playerAvatar = e.target.closest(".organ");
+
+      performAttack(attackCardID, player, false, false, playerAvatar);
     });
 
     document.querySelector(".popup").append(container);
-  } else {
-    createPopupFragment(
-      opponents,
-      attackCard,
-      attackCardID,
-      player,
-      false,
-      false,
-    );
   }
 };

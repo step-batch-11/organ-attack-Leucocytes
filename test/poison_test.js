@@ -65,12 +65,11 @@ describe("Testing Necrosis", () => {
     });
     const dealer = new Dealer(attackCards, organCards, players);
 
-    const afflictionHandler = new AfflictionHandler(attackCards, organCards);
-
     session = { "1": "chiru" };
     idGenerator = counter();
     playerIDGenerator = counter();
     roomIDGenerator = counter();
+    const afflictionHandler = new AfflictionHandler(attackCards, organCards);
     game = new Game(
       players,
       attackCards,
@@ -92,6 +91,7 @@ describe("Testing Necrosis", () => {
       games,
     }, logger);
   });
+
   it("Should discard all non affliction cards of all players", async () => {
     const res = await app.request("/attack", {
       method: "post",

@@ -97,6 +97,7 @@ export class Player {
       attackCards: [...this.#attackCards],
       organCards: [...this.#organCards.map((organ) => organ.getDetails())],
       vaccinePoints: this.#vaccinePoints,
+      // sleepCount: this.sleepCount,
     };
   }
 
@@ -114,8 +115,10 @@ export class Player {
   }
   applySleep(sleepPoints = 0) {
     this.sleepCount += sleepPoints;
+    return this.sleepCount;
   }
   decreaseSleep() {
     this.sleepCount -= 1;
+    return this.sleepCount;
   }
 }

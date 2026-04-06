@@ -7,6 +7,7 @@ import { counter } from "../src/utils.js";
 import { Dealer } from "../src/models/dealer.js";
 import { Deck } from "../src/models/deck.js";
 import { AfflictionHandler } from "../src/models/affliction_handler.js";
+import { TurnManager } from "../src/models/turn_manager.js";
 
 describe("Testing ChartMixup", () => {
   let roomID;
@@ -40,13 +41,14 @@ describe("Testing ChartMixup", () => {
     const dealer = new Dealer(attackCards, organCards, players);
 
     const afflictionHandler = new AfflictionHandler(attackCards, organCards);
-
+    const turnManager = new TurnManager(players, 1);
     game = new Game(
       players,
       attackCards,
       organCards,
       dealer,
       afflictionHandler,
+      turnManager,
     );
     games[101] = game;
     game.dealCards();

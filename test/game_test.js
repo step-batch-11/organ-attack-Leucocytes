@@ -5,6 +5,7 @@ import { Player } from "../src/models/player.js";
 import { Dealer } from "../src/models/dealer.js";
 import { Deck } from "../src/models/deck.js";
 import { Organ } from "../src/models/organ.js";
+import { TurnManager } from "../src/models/turn_manager.js";
 
 describe("Game model test", () => {
   describe("* GetPlayers test", () => {
@@ -103,7 +104,7 @@ describe("Game model test", () => {
         new Player("Shivang", 1),
         new Player("Samiran", 1),
       ];
-
+      const players = [player1, player2];
       const attackCards = new Deck(
         Array.from(
           { length: 10 },
@@ -114,6 +115,7 @@ describe("Game model test", () => {
       const organCards = new Deck([{ id: 1 }], shuffle);
 
       const dealer = new Dealer(attackCards, organCards, [player1, player2]);
+      const turnManager = new TurnManager(players, 1);
 
       const game = new Game(
         [player1, player2],
@@ -121,6 +123,8 @@ describe("Game model test", () => {
         organCards,
         dealer,
         (deck) => deck,
+        {},
+        turnManager,
       );
 
       game.dealCards();

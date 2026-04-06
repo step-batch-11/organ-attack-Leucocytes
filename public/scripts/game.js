@@ -27,7 +27,7 @@ const attachEventListener = (
 ) => {
   const attackCardElement = e.target.closest(".attack-card");
   const attackCardID = getCardID(attackCardElement);
-  console.log(attackCardID);
+
   const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
   ACTION_HANDLERS[attackCard.action]({
     player,
@@ -43,7 +43,6 @@ const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
 
 const manageTurn = async (gameState) => {
   const { self, players, event, organDiscardPile } = gameState;
-  console.log("org discard pile", organDiscardPile);
 
   const opponents = players.filter(({ id }) => id !== self.id);
   await renderGame({ self, players, event });

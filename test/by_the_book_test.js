@@ -8,6 +8,7 @@ import { Deck } from "../src/models/deck.js";
 import { AfflictionHandler } from "../src/models/affliction_handler.js";
 import { Dealer } from "../src/models/dealer.js";
 import { Organ } from "../src/models/organ.js";
+import { TurnManager } from "../src/models/turn_manager.js";
 
 describe("Testing By the book", () => {
   let roomID;
@@ -69,12 +70,14 @@ describe("Testing By the book", () => {
     idGenerator = counter();
     playerIDGenerator = counter();
     roomIDGenerator = counter();
+    const turnManager = new TurnManager(players, 1);
     game = new Game(
       players,
       attackCards,
       organCards,
       dealer,
       afflictionHandler,
+      turnManager,
     );
     // game.dealCards();
     game.setFirstPlayer();
@@ -90,6 +93,7 @@ describe("Testing By the book", () => {
       games,
     }, logger);
   });
+
   it("Should discard all non affliction cards of all players", async () => {
     const res = await app.request("/attack", {
       method: "post",

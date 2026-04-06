@@ -19,7 +19,6 @@ const startCountdown = (waitingSpan, resolve, seconds) => {
 
   const intervalID = setInterval(() => {
     timeLeft -= MS_1000;
-    console.log({ timeLeft });
 
     updateCountdown(waitingSpan, timeLeft);
 

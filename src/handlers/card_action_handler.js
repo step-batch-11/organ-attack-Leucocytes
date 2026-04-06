@@ -1,7 +1,8 @@
 export const handleNormalAffliction = (
   { opponentID, organCardID, game, afflictPoints },
 ) => {
-  // console.log({ opponentID, organCardID, game, afflictPoints });
+  //
+
   game.afflictOrganOfOpponent(opponentID, organCardID, afflictPoints);
   return ({ success: true });
 };
@@ -54,4 +55,10 @@ export const handleItsAlive = ({ attackerID, organCardID, game }) => {
 export const handleVaccine = ({ attackerID, game }) => {
   game.applyVaccine(attackerID);
   return ({ success: true });
+};
+
+export const handleSedate = ({ opponentID, game }) => {
+  const sleepCount = game.applySedate(opponentID);
+
+  return { success: sleepCount > 0 };
 };

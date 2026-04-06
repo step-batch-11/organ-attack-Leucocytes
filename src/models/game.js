@@ -27,9 +27,8 @@ export class Game {
     this.#turnManager = turnManager;
   }
 
-  #passTurn() {
+  passTurn() {
     this.#currentPlayer = this.#turnManager.passTurn();
-    /*  ++this.#currentPlayer % this.#players.length */
   }
 
   setFirstPlayer() {
@@ -47,7 +46,7 @@ export class Game {
   discardAttackCard(attackerID, attackCardID, isInstant) {
     const attacker = this.#findPlayer(attackerID);
     if (!isInstant) {
-      this.#passTurn();
+      // passTurn();
     }
     return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
   }
@@ -143,11 +142,11 @@ export class Game {
     const players = this.getAllPlayersDetails();
     const currentPlayer = this.#players[this.#currentPlayer].getID();
     const event = this.#event;
-    // console.log("org deck =>>>>>", this.#organsDeck);
+    //
 
     const organDiscardPile = this.#organsDeck
       .getDiscardPile().map((organ) => organ.getDetails());
-    // console.log("orgs discard", organDiscardPile);
+    //
 
     return structuredClone({ players, currentPlayer, event, organDiscardPile });
   }
@@ -162,5 +161,15 @@ export class Game {
     organ.reAnimate();
     player.addOrgan(organ);
     return organ;
+  }
+
+  applySedate(playerID) {
+    const sleepPoints = 2;
+    const playerToSedate = this.#players
+      .find((player) => player.getID() === playerID);
+    if (playerToSedate === undefined) {
+      return -1;
+    }
+    return playerToSedate.applySleep(sleepPoints);
   }
 }

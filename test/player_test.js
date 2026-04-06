@@ -54,7 +54,6 @@ describe("Testing Player Class", () => {
   it("Should return player id", () => {
     const playerID = 1;
     const player = new Player("Vivek", playerID);
-    console.log(player.get);
 
     assertEquals(player.getID(), playerID);
   });

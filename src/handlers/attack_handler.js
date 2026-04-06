@@ -13,6 +13,7 @@ const ACTIONS = {
   "remove": handlers.handleRemoveOrgan,
   "hybrid": handlers.handleHybridAffliction,
   itsAlive: handlers.handleItsAlive,
+  "sedate": handlers.handleSedate,
 };
 
 export const resolveAction = async (c) => {
@@ -41,6 +42,7 @@ export const handleAttack = async (c) => {
 
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
+
   const attackCard = game.discardAttackCard(
     attackerID,
     attackCardID,
@@ -57,7 +59,9 @@ export const handleAttack = async (c) => {
     target.targetOrgan = game.getPlayer(attackerID)
       .organCards.find(({ id }) => id === organCardID);
   }
+
   const handler = ACTIONS[action];
+
   const res = handler({
     attackerID,
     opponentID,
@@ -66,6 +70,8 @@ export const handleAttack = async (c) => {
     afflictPoints,
     canRemove,
   });
+
+  game.passTurn();
 
   registerEvent(
     { opponentID, target, game, organCardID, action, attackerID, attackCard },
