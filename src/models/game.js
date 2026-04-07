@@ -43,11 +43,9 @@ export class Game {
     this.#dealer.dealCards();
   }
 
-  discardAttackCard(attackerID, attackCardID, isInstant) {
+  discardAttackCard(attackerID, attackCardID) {
     const attacker = this.#findPlayer(attackerID);
-    if (!isInstant) {
-      // passTurn();
-    }
+
     return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
   }
 

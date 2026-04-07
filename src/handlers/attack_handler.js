@@ -43,11 +43,8 @@ export const handleAttack = async (c) => {
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
 
-  const attackCard = game.discardAttackCard(
-    attackerID,
-    attackCardID,
-    isInstant,
-  );
+  const attackCard = game.discardAttackCard(attackerID, attackCardID);
+
   const { action, afflictPoints } = attackCard;
 
   if (!(action in ACTIONS)) {
@@ -71,10 +68,20 @@ export const handleAttack = async (c) => {
     canRemove,
   });
 
-  game.passTurn();
+  if (!isInstant) {
+    game.passTurn();
+  }
 
   registerEvent(
-    { opponentID, target, game, organCardID, action, attackerID, attackCard },
+    {
+      opponentID,
+      target,
+      game,
+      organCardID,
+      action,
+      attackerID,
+      attackCard,
+    },
   );
 
   return res;
