@@ -57,7 +57,8 @@ export class Player {
   removeAttackCard(attackCardID) {
     const attackIndex = this.#attackCards
       .findIndex(({ id }) => id === attackCardID);
-    return (this.#attackCards.splice(attackIndex, 1))[0];
+    const card = this.#attackCards.splice(attackIndex, 1);
+    return card[0];
   }
 
   refillHand(attackCard) {
@@ -110,13 +111,16 @@ export class Player {
     );
     return cards;
   }
+
   isSleeping() {
     return this.sleepCount > 0;
   }
+
   applySleep(sleepPoints = 0) {
     this.sleepCount += sleepPoints;
     return this.sleepCount;
   }
+
   decreaseSleep() {
     this.sleepCount -= 1;
     return this.sleepCount;

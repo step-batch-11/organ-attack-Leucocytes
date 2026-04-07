@@ -28,29 +28,50 @@
       </div>
     </template>
 
-    <template id="flash-screen-used-on-template">
-      <div class="flash-screen flash-screen-affliction">
-        <div class="actor">
-          <div class="avatar">
-            <p class="name"></p>
-          </div>
-        </div>
-        <div class="attack-card">
-          <h1></h1>
-        </div>
-        <div class="target">
-          <div class="organ"><img /></div>
-          <div class="avatar">
-            <p class="name"></p>
-          </div>
+  <template id="flash-screen-used-on-template">
+    <div class="flash-screen">
+      <div class="actor">
+        <div class="avatar">
+          <p class="name"></p>
         </div>
       </div>
-    </template>
+      <div class="attack-card">
+        <h1></h1>
+      </div>
+      <div class="target">
+        <div class="organ"><img /></div>
+        <div class="avatar">
+          <p class="name"></p>
+        </div>
+      </div>
+    </div>
+  </template>
 
-    <template id="organ-card-template">
-      <div class="organ"><img /></div>
-    </template>
-  </head>
+  <template id="organ-card-template">
+    <div class="organ"><img /></div>
+  </template>
+
+  <template class="clinical-audit-popup">
+    <div class="popup-players">
+      <div class="clinical-popup">
+        <div class="header">
+          <div class="avatar">
+            <p class="name"></p>
+          </div>
+          <div class="skip">
+            <button class="skip-btn">Skip</button>
+          </div>
+        </div>
+        <div class="attack-cards"></div>
+        <div class="footer">
+          <button>
+            <img src="assets/icons/next.svg" alt="svg">
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+</head>
 
   <body>
     <main>

@@ -2,6 +2,7 @@ import { getCookie } from "hono/cookie";
 import * as handlers from "./card_action_handler.js";
 
 import { updateGameState } from "../app.js";
+
 const ACTIONS = {
   transplant: handlers.handleTransplant,
   affliction: handlers.handleNormalAffliction,
@@ -109,4 +110,27 @@ const registerEvent = (
   };
 
   game.registerEvent(event);
+};
+
+export const handleOpponentAudit = async (c) => {
+  const { opponentID, attackCardID } = await c.req.json();
+  const roomID = getCookie(c, "roomID");
+  const games = c.get("games");
+  const game = games[roomID];
+  game.audit(opponentID, Number(attackCardID));
+
+  const gameState = game.getGameState();
+
+  updateGameState(gameState);
+
+  return c.json({ success: true }, 200);
+};
+
+export const handleRefillSelfPostAudit = async (c) => {
+  const { playerID, attackCardID } = await c.req.json();
+  const roomID = getCookie(c, "roomID");
+  const games = c.get("games");
+  const game = games[roomID];
+  game.discardAttackCard(playerID, attackCardID, true);
+  return c.json({ success: true }, 200);
 };

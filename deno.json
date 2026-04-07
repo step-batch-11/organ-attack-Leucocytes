@@ -3,7 +3,7 @@
     "dev": "deno run -A --watch --env-file=.env main.js",
     "test:watch": "deno test -A --watch",
     "test": "deno test -A",
-    "test:coverage": "deno test -A --coverage ",
+    "test:coverage": "deno test -A --coverage --reporter=dot",
     "coverage:detailed": {
       "command": "deno coverage --detailed",
       "dependencies": ["test:coverage"]

@@ -38,10 +38,9 @@ export class Deck {
   getCardFromDiscardPile(id) {
     const card = this.#discardPile.find((card) => card.getID() === id);
 
-    if (card === undefined) return {};
+    if (card === undefined) return -1;
 
     this.#discardPile = this.#discardPile.filter((card) => card.getID() !== id);
-    // card.reAnimate();
     return card;
   }
 }

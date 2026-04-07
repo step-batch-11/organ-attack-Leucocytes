@@ -16,20 +16,20 @@ const ACTION_HANDLERS = {
   "hybrid": displayOrgans,
   "itsAlive": displayOrgans,
   "sedate": displayOpponents,
+  "clinical-audit": NA.displayOpponentsHands,
 };
 
-const attachEventListener = (
-  e,
+const attachEventListener = async (
+  event,
   player,
   opponents,
   isInstant = false,
   organDiscardPile,
 ) => {
-  const attackCardElement = e.target.closest(".attack-card");
+  const attackCardElement = event.target.closest(".attack-card");
   const attackCardID = getCardID(attackCardElement);
-
   const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
-  ACTION_HANDLERS[attackCard.action]({
+  await ACTION_HANDLERS[attackCard.action]({
     player,
     opponents,
     attackCardID,
@@ -63,12 +63,9 @@ const manageTurn = async (gameState) => {
 
   if (self.isMyTurn) {
     attackCards.forEach((card) => {
-      card.onclick = (e) => {
-        if (e.target.closest(".info-btn") || e.target.closest(".flip-btn")) {
-          return;
-        }
-
-        attachEventListener(e, self, opponents, false, organDiscardPile);
+      card.onclick = (event) => {
+        if (event.target.closest(".info-btn")) return;
+        attachEventListener(event, self, opponents, false, organDiscardPile);
       };
     });
   } else {
@@ -79,7 +76,7 @@ const manageTurn = async (gameState) => {
     .filter((card) => Number(card.getAttribute("is-instant")) === 1);
 
   instantCards.forEach((card) => {
-    card.onclick = (e) => attachEventListener(e, self, opponents, true);
+    card.onclick = (event) => attachEventListener(event, self, opponents, true);
   });
 };
 

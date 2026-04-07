@@ -30,4 +30,15 @@ describe("tests for sedate", () => {
     game.passTurn();
     assertEquals(playerToSedate.sleepCount, 0);
   });
+
+  it("should return -1 for wrong playerID", () => {
+    const players = [
+      new Player("user-1", 1, "non-host"),
+      new Player("user-2", 2, "non-host"),
+    ];
+    const turnManager = new TurnManager(players, 1);
+    const game = new Game(players, [], [], {}, {}, turnManager);
+    const sleepCount = game.applySedate(100);
+    assertEquals(sleepCount, -1);
+  });
 });

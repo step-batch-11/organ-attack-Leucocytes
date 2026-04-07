@@ -11,8 +11,12 @@ import {
   redirectLoggedInUser,
 } from "./handlers/auth/auth.js";
 import { gameSetup } from "./game_setup.js";
-import { resolveAction } from "./handlers/attack_handler.js";
-
+import {
+  handleOpponentAudit,
+  handleRefillSelfPostAudit,
+  resolveAction,
+} from "./handlers/attack_handler.js";
+import { serveOpponentHand } from "./handlers/serve_opponents_hands.js";
 const waitingList = new Set();
 
 export const updateGameState = (publicGameState) => {
@@ -55,6 +59,9 @@ export const createApp = ({
   app.post("/setup-game", gameSetup);
   app.post("/login", loginHandler);
   app.post("/attack", resolveAction);
+  app.post("/opponent-hands", serveOpponentHand);
+  app.post("/audit", handleOpponentAudit);
+  app.post("/refillSelfPostAudit", handleRefillSelfPostAudit);
 
   app.get("/poll", (c) => {
     return new Promise((resolve) => {

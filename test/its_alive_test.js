@@ -43,4 +43,38 @@ describe("Game model test", () => {
     assertEquals(organ.getDetails().health, 2);
     assertEquals(organ.isDead(), false);
   });
+
+  it("Should return -1 for wrong organ", () => {
+    const shuffle = (arr) => arr;
+
+    const attackCards = new Deck(
+      Array.from(
+        { length: 10 },
+        (_, i) => ({ id: i + 1, type: "affliction" }),
+      ),
+      shuffle,
+    );
+
+    const organCards = [
+      new Organ("wild", 10, 4, 4),
+      ...Array.from(
+        { length: 7 },
+        (_, i) => (new Organ("hello", i + 1, 1, 2)),
+      ),
+    ];
+
+    const player = new Player("user1", 1, "non-host");
+    player.fillHandWithOrgans(organCards);
+    const organDeck = new Deck(organCards);
+    organDeck.addToDiscardPile(organDeck.getCard());
+
+    const game = new Game(
+      [player],
+      attackCards,
+      organDeck,
+    );
+
+    const organ = game.itsAlive(1, 200);
+    assertEquals(organ, -1);
+  });
 });

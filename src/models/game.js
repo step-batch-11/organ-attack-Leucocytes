@@ -2,7 +2,7 @@ import { TurnManager } from "./turn_manager.js";
 
 export class Game {
   #players;
-  #attacksDeck;
+  #attackDeck;
   #organsDeck;
   #dealer;
   #afflictionHandler;
@@ -19,7 +19,7 @@ export class Game {
     turnManager = new TurnManager(),
   ) {
     this.#players = players;
-    this.#attacksDeck = attackCards;
+    this.#attackDeck = attackCards;
     this.#organsDeck = organCards;
     this.#dealer = dealer;
     this.#afflictionHandler = afflictionHandler;
@@ -61,13 +61,13 @@ export class Game {
   #discardAllAttackCards() {
     this.#players.forEach((player) => {
       const attackCards = player.discardAllAttackCards();
-      attackCards.forEach((card) => this.#attacksDeck.addToDiscardPile(card));
+      attackCards.forEach((card) => this.#attackDeck.addToDiscardPile(card));
     });
   }
 
   chartMixup() {
     this.#discardAllAttackCards();
-    this.#attacksDeck.refillDrawingPile();
+    this.#attackDeck.refillDrawingPile();
     this.#dealer.dealAttackCards();
   }
 
@@ -92,10 +92,17 @@ export class Game {
     this.#players.forEach((player) => {
       const cards = player.getNonAfflictedCards();
       cards.forEach((card) => {
-        this.#attacksDeck.addToDiscardPile(card);
+        this.#attackDeck.addToDiscardPile(card);
         this.#afflictionHandler.refillAttackCard(player);
       });
     });
+  }
+
+  audit(playerID, attackCardID) {
+    const player = this.#findPlayer(playerID);
+    const discardedCard = player.removeAttackCard(attackCardID);
+    this.#attackDeck.addToDiscardPile(discardedCard);
+    this.#afflictionHandler.refillAttackCard(player);
   }
 
   removeOrgan(playerID, organCardID) {
@@ -140,11 +147,9 @@ export class Game {
     const players = this.getAllPlayersDetails();
     const currentPlayer = this.#players[this.#currentPlayer].getID();
     const event = this.#event;
-    //
 
     const organDiscardPile = this.#organsDeck
       .getDiscardPile().map((organ) => organ.getDetails());
-    //
 
     return structuredClone({ players, currentPlayer, event, organDiscardPile });
   }
@@ -156,6 +161,7 @@ export class Game {
   itsAlive(attackerID, organCardID) {
     const player = this.#findPlayer(attackerID);
     const organ = this.#organsDeck.getCardFromDiscardPile(organCardID);
+    if (organ === -1) return -1;
     organ.reAnimate();
     player.addOrgan(organ);
     return organ;

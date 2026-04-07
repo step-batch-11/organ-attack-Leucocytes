@@ -8,7 +8,7 @@ const setupWaitingMessage = (waitingSpan, seconds) => {
   waitingSpan.textContent = `${seconds} seconds to begin the game`;
 };
 
-const MS_1000 = 1000;
+const MS_1000 = 100;
 
 const updateCountdown = (waitingSpan, time) => {
   waitingSpan.textContent = `${time / MS_1000} seconds to begin the game`;

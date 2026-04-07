@@ -270,7 +270,7 @@
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 0,
-    "Desc": "Can afflict any organ",
+    "Desc": "Removes one affliction from one organ",
     "action": "medicine",
     "type": "cure",
     "isBlockable": true
@@ -314,13 +314,14 @@
     "type": "poison",
     "isBlockable": true
   },
-
   {
     "id": 26,
     "name": "Removes Heart",
     "isInstant": false,
     "afflictableOrgans": [],
-    "removableOrgans": [7],
+    "removableOrgans": [
+      7
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Removes heart",
@@ -390,6 +391,19 @@
     "isBlockable": true
   },
   {
+    "id": 3,
+    "name": "it's Alive",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "can bring back any dead organ",
+    "action": "itsAlive",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
     "id": 31,
     "name": "Sedate",
     "isInstant": false,
@@ -400,6 +414,19 @@
     "Desc": "Causes extreme sleep for two turn",
     "action": "sedate",
     "type": "tactical",
+    "isBlockable": true
+  },
+  {
+    "id": 50,
+    "name": "Clinical audit",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "see all opponents' hands and may discard one attack card from each",
+    "action": "clinical-audit",
+    "type": "bureaucracy",
     "isBlockable": false
   },
   {

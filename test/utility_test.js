@@ -3,16 +3,6 @@ import { getPlayerID } from "../src/utils.js";
 import { assertEquals } from "@std/assert";
 
 describe("utility: getPlayerID", () => {
-  /*
-  getCookie : sessionID roomID
-
-  context
-    get : session
-    get : rooms
-
-  session : {sessionID: playername}
-  rooms : {roomID: players}
-   */
   let ctx;
   let rooms;
   let cookie;
