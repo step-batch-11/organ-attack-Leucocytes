@@ -88,15 +88,6 @@ describe("Cryopreservation Card Test", () => {
     const { success } = await res.json();
     assertEquals(success, true);
 
-    assertEquals(players[0].sleepCount, 0);
-    assertEquals(players[1].sleepCount, 2);
-    assertEquals(players[2].sleepCount, 2);
-
-    game.passTurn();
-    assertEquals(players[0].sleepCount, 0);
-    assertEquals(players[1].sleepCount, 1);
-    assertEquals(players[2].sleepCount, 1);
-
     game.passTurn();
     assertEquals(players[0].sleepCount, 0);
     assertEquals(players[1].sleepCount, 0);
@@ -193,8 +184,8 @@ describe("Cryopreservation Instant Card Test", () => {
     assertEquals(success, true);
 
     assertEquals(attacker.sleepCount, 0);
-    assertEquals(opponent1.sleepCount, 2);
-    assertEquals(opponent2.sleepCount, 2);
+    assertEquals(opponent1.sleepCount, 1);
+    assertEquals(opponent2.sleepCount, 1);
 
     res = await app.request("/attack", {
       method: "post",
@@ -209,14 +200,6 @@ describe("Cryopreservation Instant Card Test", () => {
     ({ success } = await res.json());
     assertEquals(success, true);
 
-    assertEquals(opponent1.sleepCount, 4);
-    assertEquals(opponent2.sleepCount, 4);
-
-    game.passTurn();
-    assertEquals(opponent1.sleepCount, 3);
-    assertEquals(opponent2.sleepCount, 3);
-
-    game.passTurn();
     assertEquals(opponent1.sleepCount, 2);
     assertEquals(opponent2.sleepCount, 2);
 

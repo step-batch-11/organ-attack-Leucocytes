@@ -31,7 +31,6 @@ export const resolveAction = async (ctx, gameController) => {
 
    */
   const body = await ctx.req.json();
-  // const { attackerID, attackCardID, isInstant, organCardID, opponentID } = body;
 
   const roomID = getCookie(ctx, "roomID");
   const game = ctx.get("games")[roomID];

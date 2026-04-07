@@ -64,9 +64,9 @@ export const handleSedate = ({ opponentID, game }) => {
 };
 
 export const handleNarcolepsy = ({ opponentID, game }) => {
-  const sleepCount = game.applyNarcolepsy(opponentID);
+  game.applyNarcolepsy(opponentID);
 
-  return { success: sleepCount > 0 };
+  return { success: true };
 };
 
 export const handleCryopreservation = ({ attackerID, game }) => {

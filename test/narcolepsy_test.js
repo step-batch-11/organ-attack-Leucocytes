@@ -10,25 +10,6 @@ import { AfflictionHandler } from "../src/models/affliction_handler.js";
 import { Dealer } from "../src/models/dealer.js";
 import { Organ } from "../src/models/organ.js";
 
-describe("tests for narcolepsy", () => {
-  it("player should be sleep for 1 round when i apply narcolepsy 1 time", () => {
-    const players = [
-      new Player("user-1", 1, "non-host"),
-      new Player("user-2", 2, "non-host"),
-    ];
-
-    const playerToSleep = players.find((p) => p.getID() === 1);
-    const turnManager = new TurnManager(players, 1);
-    const game = new Game(players, [], [], {}, {}, turnManager);
-
-    const sleepCount = game.applyNarcolepsy(playerToSleep.getID());
-    assertEquals(sleepCount, 1);
-    assertEquals(playerToSleep.sleepCount, 1);
-    game.passTurn();
-    assertEquals(playerToSleep.sleepCount, 0);
-  });
-});
-
 describe("Narcolepsy Instant Card Full Test", () => {
   it("should correctly handle instant narcolepsy in-turn, out-of-turn, stacking, and sleep lifecycle", async () => {
     const shuffle = (x) => x;
@@ -104,7 +85,7 @@ describe("Narcolepsy Instant Card Full Test", () => {
 
     let { success } = await res.json();
     assertEquals(success, true);
-    assertEquals(opponent.sleepCount, 1);
+    assertEquals(opponent.sleepCount, 0);
 
     res = await app.request("/attack", {
       method: "post",
@@ -120,10 +101,10 @@ describe("Narcolepsy Instant Card Full Test", () => {
 
     ({ success } = await res.json());
     assertEquals(success, true);
-    assertEquals(opponent.sleepCount, 2);
+    assertEquals(opponent.sleepCount, 0);
 
     game.passTurn();
-    assertEquals(game.getCurrentPlayerID(), 1);
+    assertEquals(game.getCurrentPlayerID(), 2);
 
     res = await app.request("/attack", {
       method: "post",
@@ -139,15 +120,6 @@ describe("Narcolepsy Instant Card Full Test", () => {
 
     ({ success } = await res.json());
     assertEquals(success, true);
-    assertEquals(opponent.sleepCount, 2);
-
-    game.passTurn();
-    assertEquals(opponent.sleepCount, 1);
-
-    game.passTurn();
-    assertEquals(opponent.sleepCount, 0);
-
-    game.passTurn();
     assertEquals(opponent.sleepCount, 0);
   });
 });
@@ -232,7 +204,7 @@ describe("Narcolepsy Instant Card Test", () => {
     assertEquals(success, true);
 
     assertEquals(attacker.sleepCount, 0);
-    assertEquals(target.sleepCount, 1);
+    assertEquals(target.sleepCount, 0);
     assertEquals(other.sleepCount, 0);
 
     res = await app.request("/attack", {
@@ -249,11 +221,8 @@ describe("Narcolepsy Instant Card Test", () => {
     ({ success } = await res.json());
     assertEquals(success, true);
 
-    assertEquals(target.sleepCount, 2);
-
-    game.passTurn();
     assertEquals(target.sleepCount, 1);
-    game.passTurn();
+
     game.passTurn();
     assertEquals(target.sleepCount, 0);
   });

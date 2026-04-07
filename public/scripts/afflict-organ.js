@@ -132,12 +132,12 @@ export const displayOrgans = (
 const createPopupPlayers = (collection) => {
   return collection.map((item) => {
     const icon = document.createElement("div");
-    icon.setAttribute("class", "organ");
+    icon.setAttribute("id", "icon-popup-player");
+    // icon.classList.add( "avatar");
     icon.setAttribute("player-id", `${item.id}`);
-    // const playerName = item.name;
-    const image = document.createElement("img");
-    image.setAttribute("src", `/assets/organs/${"undefined"}.png`);
-    icon.append(image);
+    icon.setAttribute("class", "organ");
+    icon.textContent = item.name;
+
     return icon;
   });
 };
@@ -147,15 +147,9 @@ export const displayOpponents = ({ player, opponents, attackCardID }) => {
 
   clearPopup();
 
-  // const cards = {
-  //   "sedate": opponents,
-  // };
-
-  // if (attackCard.action in cards) {
   const container = document.createElement("div");
   container.setAttribute("class", "popup-afflictable");
 
-  // const opponentsAvatar = cards[attackCard.action];
   const opponentsAvatar = opponents;
 
   const players = createPopupPlayers(opponentsAvatar);
@@ -167,5 +161,4 @@ export const displayOpponents = ({ player, opponents, attackCardID }) => {
   });
 
   document.querySelector(".popup").append(container);
-  // }
 };

@@ -44,7 +44,6 @@ export class Game {
 
   discardAttackCard(attackerID, attackCardID) {
     const attacker = this.#findPlayer(attackerID);
-
     return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
   }
 
@@ -189,17 +188,22 @@ export class Game {
     return playerToSedate.applySleep(sleepPoints);
   }
 
-  applyNarcolepsy(playerID) {
+  applyNarcolepsy(playerToSleepID) {
     const sleepPoints = 1;
     const playerToSleep = this.#players
-      .find((player) => player.getID() === playerID);
+      .find((player) => player.getID() === playerToSleepID);
     if (playerToSleep === undefined) {
       return -1;
     }
-    return playerToSleep.applySleep(sleepPoints);
+    const currPlayerID = this.getCurrentPlayerID();
+    if (currPlayerID !== playerToSleepID) {
+      playerToSleep.applySleep(sleepPoints);
+    }
   }
   applyCryopreservation(attackerID) {
-    const sleepPoints = 2;
+    const currPlayerID = this.getCurrentPlayerID();
+    const sleepPoints = (currPlayerID !== attackerID) ? 1 : 2;
+
     for (const player of this.#players) {
       if (player.getID() !== attackerID) {
         player.applySleep(sleepPoints);

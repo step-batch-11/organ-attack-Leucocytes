@@ -45,10 +45,9 @@ export const handleAttack = async (c) => {
     opponentID,
     attackCardID,
     organCardID,
-    isInstant,
+    _isInstant,
     canRemove,
   } = await c.req.json();
-  console.log("here");
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
 
@@ -78,8 +77,7 @@ export const handleAttack = async (c) => {
     afflictPoints,
     canRemove,
   });
-  const isTypeSleep = ["narcolepsy", "cryopreservation"].includes(action);
-  if (!isInstant || (isTypeSleep && attackerID !== game.getCurrentPlayerID())) {
+  if (!attackCard.isInstant || (attackerID !== game.getCurrentPlayerID())) {
     game.passTurn();
   }
 

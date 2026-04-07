@@ -11,7 +11,6 @@ export default class GameController {
     { attackerID, attackCardID, isInstant, organCardID, opponentID },
     game,
   ) {
-    // need to be moved
     const card = game
       .discardAttackCard(attackerID, attackCardID, isInstant);
 

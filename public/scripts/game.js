@@ -77,6 +77,7 @@ const manageTurn = async (gameState) => {
 
   const instantCards = [...document.querySelectorAll(".attack-card")]
     .filter((card) => Number(card.getAttribute("is-instant")) === 1);
+
   if (self.isSleeping) {
     instantCards.forEach((card) => card.onclick = () => "");
     return;
@@ -106,7 +107,5 @@ window.onload = async () => {
   }
 
   await manageTurn(players);
-  //redirect because there is no room so for safeguarding
-  // it to redirect to the main page for login;
   poll();
 };

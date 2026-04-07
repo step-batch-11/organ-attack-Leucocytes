@@ -234,6 +234,32 @@
     "isBlockable": true
   },
   {
+    "id": 21,
+    "name": "Instant Wild 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "Can afflict any organ",
+    "action": "affliction",
+    "type": "instant wild",
+    "isBlockable": true
+  },
+  {
+    "id": 21,
+    "name": "Instant Wild 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "Can afflict any organ",
+    "action": "affliction",
+    "type": "instant wild",
+    "isBlockable": true
+  },
+  {
     "id": 22,
     "name": "Medicine",
     "isInstant": false,
@@ -377,7 +403,7 @@
   },
   {
     "id": 50,
-    "name": "Clinical audit 🔥",
+    "name": "Clinical audit 🔥 ",
     "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -414,19 +440,6 @@
     "isBlockable": true
   },
   {
-    "id": 34,
-    "name": "Cryopreservation 🔥",
-    "isInstant": true,
-    "afflictableOrgans": [],
-    "removableOrgans": [],
-    "isWild": false,
-    "afflictPoints": 0,
-    "Desc": "Causes extreme sleep for next two turns for every player except the player who owns this card",
-    "action": "cryopreservation",
-    "type": "tactical",
-    "isBlockable": true
-  },
-  {
     "id": 53,
     "name": "Research",
     "isInstant": false,
@@ -451,5 +464,18 @@
     "action": "research",
     "type": "bureaucracy",
     "isBlockable": false
+  },
+  {
+    "id": 34,
+    "name": "Cryopreservation 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Causes extreme sleep for next two turns for every player except the player who owns this card",
+    "action": "cryopreservation",
+    "type": "tactical",
+    "isBlockable": true
   }
 ]

@@ -29,7 +29,6 @@ const triggerGameSetup = async (amIHost, roomID) => {
     if (response.status === 302) {
       if (redirectPath === "/") {
         window.location.href = redirectPath;
-        //if trying to access the game-page without valid credential
       }
 
       clearInterval(initLobbyIntervalID);
