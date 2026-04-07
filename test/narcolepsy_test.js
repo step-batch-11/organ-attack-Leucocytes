@@ -88,8 +88,6 @@ describe("Narcolepsy Instant Card Full Test", () => {
       () => (_, next) => next(),
     );
 
-    global.updateGameState = () => {};
-
     const opponent = players.find((p) => p.getID() === 2);
 
     let res = await app.request("/attack", {

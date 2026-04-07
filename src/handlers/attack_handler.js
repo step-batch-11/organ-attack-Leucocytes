@@ -21,7 +21,7 @@ const ACTIONS = {
 
 export const resolveAction = async (c) => {
   const res = await handleAttack(c);
-  
+
   /**
    * create new handle attack: pass as variable not ctx
    * pull normal affliction into it
@@ -79,7 +79,7 @@ export const handleAttack = async (c) => {
     canRemove,
   });
   const isTypeSleep = ["narcolepsy", "cryopreservation"].includes(action);
-  if (!isInstant ||(isTypeSleep && attackerID !== game.getCurrentPlayerID())) {
+  if (!isInstant || (isTypeSleep && attackerID !== game.getCurrentPlayerID())) {
     game.passTurn();
   }
 

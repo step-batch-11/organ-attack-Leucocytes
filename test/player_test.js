@@ -72,7 +72,7 @@ describe("Testing Player Class", () => {
       organCards,
       attackCards,
       vaccinePoints,
-      isSleeping : false
+      isSleeping: false,
     });
   });
 

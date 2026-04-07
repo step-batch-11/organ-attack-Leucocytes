@@ -205,7 +205,7 @@ describe("Testing Sedate", () => {
         opponentID: 2,
         attackCardID: 1,
         organCardID: 1,
-        isInstant: false
+        isInstant: false,
       }),
       headers: { cookie: "roomID=101" },
     });

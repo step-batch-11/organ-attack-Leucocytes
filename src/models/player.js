@@ -102,7 +102,7 @@ export class Player {
       attackCards: [...this.#attackCards],
       organCards: [...this.#organCards.map((organ) => organ.getDetails())],
       vaccinePoints: this.#vaccinePoints,
-      isSleeping : this.isSleeping()
+      isSleeping: this.isSleeping(),
     };
   }
 

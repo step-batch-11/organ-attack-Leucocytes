@@ -39,7 +39,7 @@ describe("Game setup tests", () => {
       organCards: [],
       isMyTurn: false,
       vaccinePoints: 0,
-      isSleeping:false
+      isSleeping: false,
     }];
     const playerDetails = await gameSetup(ctx);
 

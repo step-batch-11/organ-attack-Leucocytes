@@ -72,7 +72,6 @@ export const displayOpponentsHands = async (
   await postJSON("/refillSelfPostAudit", { playerID: player.id, attackCardID });
 };
 export const performCryopreservation = async ({ player, attackCardID }) => {
-  const body = { attackerID: player.id, attackCardID, isInstant:true };
+  const body = { attackerID: player.id, attackCardID, isInstant: true };
   await postJSON("/attack", body);
 };
-
