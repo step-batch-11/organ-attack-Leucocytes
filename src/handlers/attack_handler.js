@@ -17,6 +17,7 @@ const ACTIONS = {
   "sedate": handlers.handleSedate,
   "narcolepsy": handlers.handleNarcolepsy,
   "cryopreservation": handlers.handleCryopreservation,
+  "common-cold": handlers.handleCommonCold,
 };
 
 export const resolveAction = async (c) => {
@@ -73,6 +74,7 @@ export const handleAttack = async (c) => {
     attackerID,
     opponentID,
     organCardID,
+    attackCardID,
     game,
     afflictPoints,
     canRemove,

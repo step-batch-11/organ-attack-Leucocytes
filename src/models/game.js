@@ -223,4 +223,17 @@ export class Game {
   addToDiscardPile(card) {
     this.#attackDeck.addToDiscardPile(card);
   }
+
+  exchangeCard(attackerID, attackCardID, opponentID) {
+    const attacker = this.#findPlayer(attackerID);
+    const opponent = this.#findPlayer(opponentID);
+
+    const randomCardId = Math.floor(Math.random() * 5);
+
+    const commonColdCard = attacker.removeAttackCard(attackCardID);
+    const opponentCard = opponent.removeAttackCard(null, randomCardId);
+
+    attacker.refillHand(opponentCard);
+    opponent.refillHand(commonColdCard);
+  }
 }

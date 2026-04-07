@@ -59,8 +59,8 @@ export class Player {
     return { organ, isDead: organ.isDead() };
   }
 
-  removeAttackCard(attackCardID) {
-    const attackIndex = this.#attackCards
+  removeAttackCard(attackCardID, index) {
+    const attackIndex = index || this.#attackCards
       .findIndex(({ id }) => id === attackCardID);
     const card = this.#attackCards.splice(attackIndex, 1);
     return card[0];

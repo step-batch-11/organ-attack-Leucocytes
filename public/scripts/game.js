@@ -19,6 +19,7 @@ const ACTION_HANDLERS = {
   "sedate": displayOpponents,
   "clinical-audit": NA.displayOpponentsHands,
   "narcolepsy": displayOpponents,
+  "common-cold": displayOpponents,
   "cryopreservation": NA.performCryopreservation,
   "research": displayAttackDeckDiscardPile,
 };

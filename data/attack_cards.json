@@ -477,5 +477,18 @@
     "action": "cryopreservation",
     "type": "tactical",
     "isBlockable": true
+  },
+  {
+    "id": 90,
+    "name": "Common Cold",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Get a card from any one of the opponent and pass the common cold to them",
+    "action": "common-cold",
+    "type": "tactical",
+    "isBlockable": true
   }
 ]

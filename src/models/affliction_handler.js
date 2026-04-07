@@ -49,13 +49,14 @@ export class AfflictionHandler {
 
   discardAttackCard(attacker, attackCardID) {
     const attackCard = attacker.removeAttackCard(attackCardID);
-    const cardTypes = ["its-alive", "transplant"];
+    const cardTypes = ["its-alive", "transplant", "common-cold"];
 
     if (!cardTypes.includes(attackCard.action)) {
       this.#attackCards.addToDiscardPile(attackCard);
     }
 
-    this.refillAttackCard(attacker);
+    if (attackCard.action === "common-cold") attacker.refillHand(attackCard);
+    else this.refillAttackCard(attacker);
 
     return attackCard;
   }

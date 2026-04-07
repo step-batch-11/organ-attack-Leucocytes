@@ -74,3 +74,11 @@ export const handleCryopreservation = ({ attackerID, game }) => {
 
   return result;
 };
+
+export const handleCommonCold = (
+  { attackerID, attackCardID, opponentID, game },
+) => {
+  game.exchangeCard(attackerID, attackCardID, opponentID);
+
+  return ({ success: true });
+};
