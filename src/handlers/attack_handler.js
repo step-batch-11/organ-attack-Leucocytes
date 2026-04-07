@@ -142,6 +142,8 @@ export const handleRefillSelfPostAudit = async (c) => {
   const games = c.get("games");
   const game = games[roomID];
   game.discardAttackCard(playerID, attackCardID, true);
+  const gameState = game.getGameState();
+  updateGameState(gameState);
   return c.json({ success: true }, 200);
 };
 

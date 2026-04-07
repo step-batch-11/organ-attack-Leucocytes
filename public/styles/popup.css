@@ -34,3 +34,7 @@ popup-removable img:hover,
   /* box-shadow: 0 0 10px 1px hsl(0, 0%, 0%); */
   scale: 1.05;
 }
+.popup .attack-card.active {
+  transform: scale(1.1);
+  transition: 0.3s;
+}

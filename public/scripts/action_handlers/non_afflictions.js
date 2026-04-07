@@ -43,34 +43,68 @@ const createAttackCardNodes = (opponentAttackCards) =>
     return attackCardNode;
   });
 
-const displayOpponentHand = async (opponentID) => {
-  clearPopup();
-  const opponentHand = await postJSON("/opponent-hands", { opponentID });
-  const clinicalAuditPopup = cloneFromTemplate(".clinical-audit-popup");
-  const popup = document.querySelector(".popup");
-  const opponentAttackCards = opponentHand.attackCards;
-  const attackCards = clinicalAuditPopup.querySelector(".attack-cards");
-  const attackCardNodes = createAttackCardNodes(opponentAttackCards);
-  attackCards.append(...attackCardNodes);
-  popup.append(clinicalAuditPopup);
+const highlight = (attackCards) => {
+  attackCards.querySelectorAll(".attack-card").forEach((card) => {
+    card.onclick = () => {
+      document
+        .querySelectorAll(".attack-card")
+        .forEach((c) => c.classList.remove("active"));
 
-  attackCards.onclick = async (e) => {
-    const attackCardID = e.target.getAttribute("data-id");
-    clearPopup();
-    await postJSON("/audit", { attackCardID, opponentID });
-  };
+      card.classList.add("active");
+    };
+  });
+};
+
+const displayOpponentHand = (opponentID, opponentIDs) => {
+  return new Promise(async (resolve) => {
+    const opponentHand = await postJSON("/opponent-hands", { opponentID });
+    const clinicalAuditPopup = cloneFromTemplate(".clinical-audit-popup");
+    const popup = document.querySelector(".popup");
+
+    const attackCards = clinicalAuditPopup.querySelector(".attack-cards");
+    const attackCardNodes = createAttackCardNodes(opponentHand.attackCards);
+    attackCards.append(...attackCardNodes);
+    popup.append(clinicalAuditPopup);
+    let selectedAttackCardID = null;
+
+    attackCards.onclick = (e) => {
+      selectedAttackCardID = e
+        .target
+        .closest(".attack-card")
+        .getAttribute("data-id");
+    };
+
+    highlight(attackCards);
+
+    const nextBtn = popup.querySelector(".next-btn");
+    nextBtn.onclick = async () => {
+      if (!selectedAttackCardID) return;
+
+      clearPopup();
+
+      await postJSON("/audit", {
+        attackCardID: selectedAttackCardID,
+        opponentID,
+      });
+
+      if (opponentIDs.length === 0) resolve();
+      else {
+        await displayOpponentHand(opponentIDs.shift(), opponentIDs);
+        resolve();
+      }
+    };
+  });
 };
 
 export const displayOpponentsHands = async (
   { player, opponents, attackCardID },
 ) => {
+  clearPopup();
   const opponentIDs = opponents.map((opponent) => opponent.id);
-  opponentIDs.forEach(async (opponentID) => {
-    await displayOpponentHand(opponentID);
-  });
-
+  await displayOpponentHand(opponentIDs.shift(), opponentIDs);
   await postJSON("/refillSelfPostAudit", { playerID: player.id, attackCardID });
 };
+
 export const performCryopreservation = async ({ player, attackCardID }) => {
   const body = { attackerID: player.id, attackCardID, isInstant: true };
   await postJSON("/attack", body);
