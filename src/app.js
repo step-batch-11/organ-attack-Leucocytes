@@ -1,6 +1,5 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { gameSetup } from "./game_setup.js";
 import { serveOpponentHand } from "./handlers/serve_opponents_hands.js";
 import {
   resolveAction as resolveActionV2,
@@ -14,6 +13,8 @@ import {
 import {
   getPlayerData,
   handleGetPlayers,
+  handleResearch,
+  serveAttackCardPile,
   serveGameState,
 } from "./handlers/serve_players.js";
 import {
@@ -21,6 +22,7 @@ import {
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers/auth/auth.js";
+import { gameSetup } from "./game_setup.js";
 
 const waitingList = new Set();
 
@@ -70,6 +72,7 @@ export const createApp = ({
   app.post("/refillSelfPostAudit", handleRefillSelfPostAudit);
   app.post("/action", (ctx) => resolveActionV2(ctx, gameController));
   app.post("/turn-end", (ctx) => resolveActionsOnTurnEnd(ctx, gameController));
+  app.post("/research", handleResearch);
 
   app.get("/poll", (c) => {
     return new Promise((resolve) => {
@@ -77,6 +80,7 @@ export const createApp = ({
     });
   });
 
+  app.get("/discard-pile", serveAttackCardPile);
   app.get("/game-state", serveGameState);
   app.get(
     "/game-page",

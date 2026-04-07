@@ -104,6 +104,13 @@ export class Game {
     this.#afflictionHandler.refillAttackCard(player);
   }
 
+  research(playerID, selectedCardID, researchCardID) {
+    const player = this.#findPlayer(playerID);
+    player.removeAttackCard(researchCardID);
+    const selectedCard = this.#attackDeck.getCardByID(selectedCardID);
+    player.refillHand(selectedCard);
+  }
+
   removeOrgan(playerID, organCardID) {
     const player = this.#findPlayer(playerID);
     const organ = player.removeOrgan(organCardID);
@@ -147,7 +154,6 @@ export class Game {
   getGameState() {
     const currentPlayerID = this.#players[this.#currentPlayer].getID();
     const event = this.#event;
-
     const organDiscardPile = this.#organsDeck
       .getDiscardPile().map((organ) => organ.getDetails());
 
@@ -204,5 +210,13 @@ export class Game {
 
   getCurrentPlayerID() {
     return this.#players[this.#currentPlayer].getID();
+  }
+
+  getDiscardAttackCards() {
+    return [...this.#attackDeck.getDiscardPile()];
+  }
+
+  addToDiscardPile(card) {
+    this.#attackDeck.addToDiscardPile(card);
   }
 }

@@ -2,6 +2,7 @@ import { renderGame } from "./render_game.js";
 import * as NA from "./action_handlers/non_afflictions.js";
 import { fetchPlayersData } from "./utils.js";
 import { displayOpponents, displayOrgans } from "./afflict-organ.js";
+import { displayAttackDeckDiscardPile } from "./discard_pile.js";
 
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
@@ -19,6 +20,7 @@ const ACTION_HANDLERS = {
   "clinical-audit": NA.displayOpponentsHands,
   "narcolepsy": displayOpponents,
   "cryopreservation": NA.performCryopreservation,
+  "research": displayAttackDeckDiscardPile,
 };
 
 const attachEventListener = async (

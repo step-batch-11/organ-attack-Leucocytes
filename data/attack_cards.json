@@ -425,5 +425,31 @@
     "action": "cryopreservation",
     "type": "tactical",
     "isBlockable": true
+  },
+  {
+    "id": 53,
+    "name": "Research",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Reseach from the discarded attack cards and get the cards",
+    "action": "research",
+    "type": "bureaucracy",
+    "isBlockable": false
+  },
+  {
+    "id": 54,
+    "name": "Research 🔥 ",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Reseach from the discarded attack cards and get the cards",
+    "action": "research",
+    "type": "bureaucracy",
+    "isBlockable": false
   }
 ]

@@ -10,10 +10,10 @@ export class Dealer {
   }
 
   #doesEffectAnyOwnOrgan(attackCard, organCards) {
-    return organCards.some(({ id }) =>
-      attackCard.afflictableOrgans.includes(id) ||
-      attackCard.removableOrgans.includes(id)
-    );
+    return organCards.some(({ id }) => {
+      return attackCard.afflictableOrgans.includes(id) ||
+        attackCard.removableOrgans.includes(id);
+    });
   }
 
   #dealOrganCards() {

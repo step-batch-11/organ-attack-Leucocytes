@@ -144,3 +144,19 @@ export const handleRefillSelfPostAudit = async (c) => {
   game.discardAttackCard(playerID, attackCardID, true);
   return c.json({ success: true }, 200);
 };
+
+export const handleResearch = async (c) => {
+  const { playerID, researchID, selectedCardID } = await c.req.json();
+  const roomID = getCookie(c, "roomID");
+  const games = c.get("games");
+  const game = games[roomID];
+
+  game.research(playerID, selectedCardID, researchID);
+  try {
+    const gameState = game.getGameState();
+    updateGameState(gameState);
+  } catch {
+    return c.json({ success: false }, 400);
+  }
+  return c.json({ success: true }, 200);
+};

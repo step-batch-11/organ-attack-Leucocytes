@@ -14,6 +14,7 @@ export class Player {
     this.#vaccinePoints = 0;
     this.sleepCount = 0;
   }
+
   isVaccinated() {
     return this.#vaccinePoints > 0;
   }
