@@ -15,10 +15,13 @@ const ACTIONS = {
   "hybrid": handlers.handleHybridAffliction,
   itsAlive: handlers.handleItsAlive,
   "sedate": handlers.handleSedate,
+  "narcolepsy": handlers.handleNarcolepsy,
+  "cryopreservation": handlers.handleCryopreservation,
 };
 
 export const resolveAction = async (c) => {
   const res = await handleAttack(c);
+  
   /**
    * create new handle attack: pass as variable not ctx
    * pull normal affliction into it
@@ -45,12 +48,14 @@ export const handleAttack = async (c) => {
     isInstant,
     canRemove,
   } = await c.req.json();
-
+  console.log("here");
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
 
-  const attackCard = game.discardAttackCard(attackerID, attackCardID);
-
+  const attackCard = game.discardAttackCard(
+    attackerID,
+    attackCardID,
+  );
   const { action, afflictPoints } = attackCard;
 
   if (!(action in ACTIONS)) {
@@ -73,8 +78,8 @@ export const handleAttack = async (c) => {
     afflictPoints,
     canRemove,
   });
-
-  if (!isInstant) {
+  const isTypeSleep = ["narcolepsy", "cryopreservation"].includes(action);
+  if (!isInstant ||(isTypeSleep && attackerID !== game.getCurrentPlayerID())) {
     game.passTurn();
   }
 

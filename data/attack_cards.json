@@ -350,19 +350,6 @@
     "isBlockable": true
   },
   {
-    "id": 3,
-    "name": "it's Alive",
-    "isInstant": false,
-    "afflictableOrgans": [],
-    "removableOrgans": [],
-    "isWild": false,
-    "afflictPoints": 0,
-    "Desc": "can bring back any dead organ",
-    "action": "itsAlive",
-    "type": "tactical",
-    "isBlockable": true
-  },
-  {
     "id": 31,
     "name": "Sedate",
     "isInstant": false,
@@ -411,6 +398,32 @@
     "Desc": "Blocks anything that does not say 'COULD NOT BE BLOCKED'",
     "action": "immunity-boost",
     "type": "resistance",
+    "isBlockable": true
+  },
+  {
+    "id": 33,
+    "name": "Narcolepsy 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Causes extreme sleep for next one turn",
+    "action": "narcolepsy",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
+    "id": 34,
+    "name": "Cryopreservation 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Causes extreme sleep for next two turns for every player except the player who owns this card",
+    "action": "cryopreservation",
+    "type": "tactical",
     "isBlockable": true
   }
 ]

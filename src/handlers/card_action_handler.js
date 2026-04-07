@@ -1,6 +1,5 @@
-export const handleNormalAffliction = (
-  { opponentID, organCardID, game, afflictPoints },
-) => {
+
+export const handleNormalAffliction = (  { opponentID, organCardID, game, afflictPoints }) => {
   //
 
   game.afflictOrganOfOpponent(opponentID, organCardID, afflictPoints);
@@ -62,3 +61,16 @@ export const handleSedate = ({ opponentID, game }) => {
 
   return { success: sleepCount > 0 };
 };
+
+export const handleNarcolepsy = ({ opponentID, game }) => {;
+  
+  const sleepCount = game.applyNarcolepsy(opponentID);
+  
+  return { success: sleepCount > 0 }; 
+}
+
+export const handleCryopreservation = ({ attackerID, game }) => {
+  const result = game.applyCryopreservation(attackerID);
+
+  return result; 
+}

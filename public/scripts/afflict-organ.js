@@ -147,24 +147,25 @@ export const displayOpponents = ({ player, opponents, attackCardID }) => {
 
   clearPopup();
 
-  const cards = {
-    "sedate": opponents,
-  };
+  // const cards = {
+  //   "sedate": opponents,
+  // };
 
-  if (attackCard.action in cards) {
-    const container = document.createElement("div");
-    container.setAttribute("class", "popup-afflictable");
+  // if (attackCard.action in cards) {
+  const container = document.createElement("div");
+  container.setAttribute("class", "popup-afflictable");
 
-    const opponentsAvatar = cards[attackCard.action];
+  // const opponentsAvatar = cards[attackCard.action];
+  const opponentsAvatar = opponents;
 
-    const players = createPopupPlayers(opponentsAvatar);
-    container.append(...players);
-    container.addEventListener("click", async (e) => {
-      const playerAvatar = e.target.closest(".organ");
+  const players = createPopupPlayers(opponentsAvatar);
+  container.append(...players);
+  container.addEventListener("click", async (e) => {
+    const playerAvatar = e.target.closest(".organ");
 
-      performAttack(attackCardID, player, false, false, playerAvatar);
-    });
+    performAttack(attackCardID, player, false, false, playerAvatar);
+  });
 
-    document.querySelector(".popup").append(container);
-  }
+  document.querySelector(".popup").append(container);
+  // }
 };

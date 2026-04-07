@@ -20,6 +20,7 @@ export class TurnManager {
   passTurn() {
     while (this.#getNextPlayer().isSleeping()) {
       this.#getNextPlayer().decreaseSleep();
+
       this.#turn += this.#next;
       this.#turn = this.#turn % this.#playerCount;
     }

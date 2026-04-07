@@ -34,7 +34,6 @@ export class Game {
   setFirstPlayer() {
     this.#currentPlayer = this.#players
       .findIndex((player) => player.holdsWild());
-
     this.#turnManager.setTurn(this.#currentPlayer);
     return this.#currentPlayer;
   }
@@ -117,13 +116,15 @@ export class Game {
 
   getAllPlayersDetails() {
     return this.#players.map((player) => {
-      const { name, id, organCards, vaccinePoints } = player.getPlayerDetails();
+      const { name, id, organCards, vaccinePoints, isSleeping } = player
+        .getPlayerDetails();
       return {
         name,
         id,
         organCards,
         isMyTurn: this.#isPlayerTurn(id),
         vaccinePoints,
+        isSleeping,
       };
     });
   }
@@ -144,14 +145,19 @@ export class Game {
   }
 
   getGameState() {
-    const players = this.getAllPlayersDetails();
-    const currentPlayer = this.#players[this.#currentPlayer].getID();
+    const currentPlayerID = this.#players[this.#currentPlayer].getID();
     const event = this.#event;
 
     const organDiscardPile = this.#organsDeck
       .getDiscardPile().map((organ) => organ.getDetails());
 
-    return structuredClone({ players, currentPlayer, event, organDiscardPile });
+    const players = this.getAllPlayersDetails();
+    return structuredClone({
+      players,
+      currentPlayer: currentPlayerID,
+      event,
+      organDiscardPile,
+    });
   }
 
   registerEvent(event) {
@@ -175,5 +181,28 @@ export class Game {
       return -1;
     }
     return playerToSedate.applySleep(sleepPoints);
+  }
+
+  applyNarcolepsy(playerID) {
+    const sleepPoints = 1;
+    const playerToSleep = this.#players
+      .find((player) => player.getID() === playerID);
+    if (playerToSleep === undefined) {
+      return -1;
+    }
+    return playerToSleep.applySleep(sleepPoints);
+  }
+  applyCryopreservation(attackerID) {
+    const sleepPoints = 2;
+    for (const player of this.#players) {
+      if (player.getID() !== attackerID) {
+        player.applySleep(sleepPoints);
+      }
+    }
+    return { success: true };
+  }
+
+  getCurrentPlayerID() {
+    return this.#players[this.#currentPlayer].getID();
   }
 }

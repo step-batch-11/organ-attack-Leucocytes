@@ -186,6 +186,9 @@ const FLASH_SCREENS = {
   "chart-mixup": flashScreenForUsedEvent,
   "by-the-book": flashScreenForUsedEvent,
   "itsAlive": flashScreenForUsedOnOrganEvent,
+  "sedate": flashScreenForUsedOnEvent,
+  "narcolepsy": flashScreenForUsedOnEvent,
+  "cryopreservation":flashScreenForUsedOnEvent,
 };
 
 const renderFlashScreen = ({ name, actor, target, card } = {}) => {

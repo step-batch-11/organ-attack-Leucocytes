@@ -3,6 +3,7 @@ import * as NA from "./action_handlers/non_afflictions.js";
 import { fetchPlayersData } from "./utils.js";
 import { displayOpponents, displayOrgans } from "./afflict-organ.js";
 
+
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
 const ACTION_HANDLERS = {
@@ -17,6 +18,8 @@ const ACTION_HANDLERS = {
   "itsAlive": displayOrgans,
   "sedate": displayOpponents,
   "clinical-audit": NA.displayOpponentsHands,
+  "narcolepsy": displayOpponents,
+  "cryopreservation": NA.performCryopreservation,
 };
 
 const attachEventListener = async (
@@ -43,12 +46,12 @@ const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
 
 const manageTurn = async (gameState) => {
   const { self, players, event, organDiscardPile } = gameState;
-
+  
   const opponents = players.filter(({ id }) => id !== self.id);
   await renderGame({ self, players, event });
-
+  
   const poisonCard = findPoisonCard(self.attackCards);
-
+  
   if (poisonCard !== undefined) {
     displayOrgans({
       player: self,
@@ -58,10 +61,9 @@ const manageTurn = async (gameState) => {
     });
     return;
   }
-
   const attackCards = document.querySelectorAll(".player-area .attack-card");
-
-  if (self.isMyTurn) {
+  
+  if (self.isMyTurn && !self.isSleeping) {
     attackCards.forEach((card) => {
       card.onclick = (event) => {
         if (event.target.closest(".info-btn")) return;
@@ -72,8 +74,14 @@ const manageTurn = async (gameState) => {
     attackCards.forEach((card) => card.onclick = () => "");
   }
 
+  
+  
   const instantCards = [...document.querySelectorAll(".attack-card")]
-    .filter((card) => Number(card.getAttribute("is-instant")) === 1);
+  .filter((card) => Number(card.getAttribute("is-instant")) === 1);
+  if (self.isSleeping) {
+    instantCards.forEach(card => card.onclick = () => "");
+    return;
+  } ;
 
   instantCards.forEach((card) => {
     card.onclick = (event) => attachEventListener(event, self, opponents, true);
