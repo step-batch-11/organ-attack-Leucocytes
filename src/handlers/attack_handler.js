@@ -19,6 +19,11 @@ const ACTIONS = {
 
 export const resolveAction = async (c) => {
   const res = await handleAttack(c);
+  /**
+   * create new handle attack: pass as variable not ctx
+   * pull normal affliction into it
+   * handle immunity boost using action controller
+   */
 
   if (!res.success) return c.json({ message: res.message }, 400);
 

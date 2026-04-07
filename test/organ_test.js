@@ -16,21 +16,21 @@ describe("organ class", () => {
       });
     });
 
-    it(" Afflict", () => {
+    it("Afflict", () => {
       organ.afflict(1);
       assertEquals(organ.getDetails().health, 1);
     });
 
-    it(" Cure", () => {
+    it("Cure", () => {
       organ.heal();
       assertEquals(organ.getDetails().health, 3);
     });
 
-    it(" Is wild", () => {
+    it("Is wild", () => {
       assertEquals(organ.isWild(), true);
     });
 
-    it(" Is dead", () => {
+    it("Is dead", () => {
       assertEquals(organ.isDead(), false);
     });
   });

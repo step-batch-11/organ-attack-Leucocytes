@@ -188,7 +188,7 @@ const FLASH_SCREENS = {
   "itsAlive": flashScreenForUsedOnOrganEvent,
 };
 
-const renderFlashScreen = ({ name, actor, target, card }) => {
+const renderFlashScreen = ({ name, actor, target, card } = {}) => {
   document.querySelector(".flash-screen-container > div ")?.remove();
 
   if (!(name in FLASH_SCREENS)) {
@@ -200,28 +200,11 @@ const renderFlashScreen = ({ name, actor, target, card }) => {
   }
 };
 
-// for testing......
-const mockEventData = {
-  name: "idle",
-  actor: "Player1",
-  target: {
-    playerName: "player2",
-    organName: "Teeth",
-  },
-  card: {
-    name: "Scalding coffee",
-    isInstant: false,
-    "isWild": false,
-    "Desc": "Scalding coffee affecting organs",
-    "type": "affliction",
-  },
-};
-
 export const renderGame = async (gameState) => {
   const { event, players, self } = gameState;
   const opponents = players.filter(({ id }) => id !== self.id);
 
   renderOpponents(opponents);
   renderMyCards(self, opponents);
-  renderFlashScreen(event || mockEventData);
+  renderFlashScreen(event);
 };

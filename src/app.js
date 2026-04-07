@@ -1,5 +1,16 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
+import { gameSetup } from "./game_setup.js";
+import { serveOpponentHand } from "./handlers/serve_opponents_hands.js";
+import {
+  resolveAction as resolveActionV2,
+  resolveActionsOnTurnEnd,
+} from "./handlers/action_resolver.js";
+import {
+  handleOpponentAudit,
+  handleRefillSelfPostAudit,
+  resolveAction,
+} from "./handlers/attack_handler.js";
 import {
   getPlayerData,
   handleGetPlayers,
@@ -10,13 +21,7 @@ import {
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers/auth/auth.js";
-import { gameSetup } from "./game_setup.js";
-import {
-  handleOpponentAudit,
-  handleRefillSelfPostAudit,
-  resolveAction,
-} from "./handlers/attack_handler.js";
-import { serveOpponentHand } from "./handlers/serve_opponents_hands.js";
+
 const waitingList = new Set();
 
 export const updateGameState = (publicGameState) => {
@@ -42,6 +47,7 @@ export const createApp = ({
   games,
   rooms,
   shuffle,
+  gameController,
 }, logger) => {
   const app = new Hono();
   app.use(logger());
@@ -62,6 +68,8 @@ export const createApp = ({
   app.post("/opponent-hands", serveOpponentHand);
   app.post("/audit", handleOpponentAudit);
   app.post("/refillSelfPostAudit", handleRefillSelfPostAudit);
+  app.post("/action", (ctx) => resolveActionV2(ctx, gameController));
+  app.post("/turn-end", (ctx) => resolveActionsOnTurnEnd(ctx, gameController));
 
   app.get("/poll", (c) => {
     return new Promise((resolve) => {

@@ -18,6 +18,10 @@ export class Player {
     return this.#vaccinePoints > 0;
   }
 
+  isAlive() {
+    return this.#organCards.length > 0;
+  }
+
   applyVaccine() {
     this.#vaccinePoints += 2;
   }

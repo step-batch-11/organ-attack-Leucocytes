@@ -41,6 +41,12 @@ const performAttack = async (
   clearPopup();
 
   await postJSON("/attack", body);
+  /**
+   * DO NOT REMOVE
+   * await postJSON("/action", body);
+   * need it for immunity boost
+   * it's the future!!!
+   */
 };
 
 const getOrgansToDisplay = (cards, attackCard, opponents) => {
