@@ -157,8 +157,6 @@ describe("Handle research ", () => {
       }),
       headers: { cookie: "roomID=101" },
     });
-    console.log();
-
     assertEquals(response.status, 200);
     assertEquals((await response.json()).success, true);
   });

@@ -14,6 +14,7 @@ const ACTION_HANDLERS = {
   "remove": displayOrgans,
   "transplant": displayOrgans,
   "medicine": displayOrgans,
+  "medical-miracle": displayOrgans,
   "hybrid": displayOrgans,
   "itsAlive": displayOrgans,
   "sedate": displayOpponents,

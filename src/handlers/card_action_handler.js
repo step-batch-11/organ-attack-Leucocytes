@@ -22,6 +22,15 @@ export const handleMedicine = ({ attackerID, organCardID, game }) => {
   return ({ success: true });
 };
 
+export const handleMedicalMiracle = ({ attackerID, organCardIDs, game }) => {
+  console.log({ organCardIDs, attackerID }, "here");
+
+  organCardIDs.forEach((organCardID) => {
+    game.healOrgan(attackerID, organCardID);
+  });
+  return ({ success: true });
+};
+
 export const handleBythebook = ({ game }) => {
   game.bythebook();
   return ({ success: true });

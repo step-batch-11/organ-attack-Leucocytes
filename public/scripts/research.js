@@ -533,7 +533,6 @@ const addEventListener = (popup, cards) => {
       const filterdeCards = cards.filter(({ type }) =>
         selectedTypes.includes(type)
       );
-      console.log(selectedTypes);
       const renderedCards = renderFilteredCards(filterdeCards);
       const leftPanel = popup.querySelector("#left-panel");
       leftPanel.replaceChildren(...renderedCards);

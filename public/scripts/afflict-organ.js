@@ -90,6 +90,9 @@ export const displayOrgans = (
     "medicine": player.organCards.filter(({ health, maxHealth }) =>
       health !== maxHealth
     ),
+    "medical-miracle": player.organCards.filter(({ health, maxHealth }) =>
+      health !== maxHealth
+    ),
     "poison": player.organCards,
     "itsAlive": organDiscardPile,
   };
@@ -104,10 +107,28 @@ export const displayOrgans = (
 
     const organs = createPopup(organCards);
     container.append(...organs);
-    container.addEventListener("click", async (e) => {
-      const organ = e.target.closest(".organ");
-      performAttack(attackCardID, player, isInstant, false, organ);
-    });
+    if (attackCard.action === "medical-miracle") {
+      const selectedCards = [];
+      container.addEventListener("click", async (e) => {
+        const organ = e.target.closest(".organ");
+        const organID = Number(organ.getAttribute("organ-id"));
+        if (!selectedCards.includes(organID)) selectedCards.push(organID);
+        {
+          clearPopup();
+          await postJSON("/attack", {
+            attackerID: player.id,
+            attackCardID,
+            organCardIDs: selectedCards,
+          });
+        }
+      });
+      console.log("not working");
+    } else {
+      container.addEventListener("click", async (e) => {
+        const organ = e.target.closest(".organ");
+        performAttack(attackCardID, player, isInstant, false, organ);
+      });
+    }
     document.querySelector(".popup").append(container);
   } else {
     createPopupFragment(
@@ -133,7 +154,6 @@ const createPopupPlayers = (collection) => {
   return collection.map((item) => {
     const icon = document.createElement("div");
     icon.setAttribute("id", "icon-popup-player");
-    // icon.classList.add( "avatar");
     icon.setAttribute("player-id", `${item.id}`);
     icon.setAttribute("class", "organ");
     icon.textContent = item.name;

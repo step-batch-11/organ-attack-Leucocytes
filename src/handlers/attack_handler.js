@@ -9,6 +9,7 @@ const ACTIONS = {
   "chart-mixup": handlers.handleChartMixup,
   Vaccine: handlers.handleVaccine,
   medicine: handlers.handleMedicine,
+  "medical-miracle": handlers.handleMedicalMiracle,
   "by-the-book": handlers.handleBythebook,
   poison: handlers.handlePoison,
   remove: handlers.handleRemoveOrgan,
@@ -51,6 +52,7 @@ export const handleAttack = async (c) => {
     // _isInstant,
     canRemove,
     selectedCardID,
+    organCardIDs,
   } = await c.req.json();
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
@@ -83,6 +85,7 @@ export const handleAttack = async (c) => {
     afflictPoints,
     canRemove,
     selectedCardID,
+    organCardIDs,
   });
   const banana = [33, 34].includes(attackCardID);
   if (banana && attackerID !== game.getCurrentPlayerID()) {

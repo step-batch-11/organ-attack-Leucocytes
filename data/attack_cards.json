@@ -490,5 +490,18 @@
     "action": "common-cold",
     "type": "tactical",
     "isBlockable": true
+  },
+  {
+    "id": 56,
+    "name": "Medical Miracle",
+    "isInstant": false,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Removes one affliction from two organ",
+    "action": "medical-miracle",
+    "type": "cure",
+    "isBlockable": true
   }
 ]

@@ -7,7 +7,6 @@ const amIHost = (players, myID) => {
 };
 
 const triggerGameSetup = async (amIHost, roomID) => {
-  console.log({ roomID });
   if (amIHost) {
     await fetch("/setup-game", {
       method: "POST",
