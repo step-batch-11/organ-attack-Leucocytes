@@ -21,6 +21,7 @@ const ACTIONS = {
   "common-cold": handlers.handleCommonCold,
   "clinical-audit": handlers.handleRefillSelfPostAudit,
   research: handlers.handleResearch,
+  "situs-inversus": handlers.handleSitusInversus,
 };
 
 export const resolveAction = async (c) => {
@@ -87,8 +88,8 @@ export const handleAttack = async (c) => {
     selectedCardID,
     organCardIDs,
   });
-  const banana = [33, 34].includes(attackCardID);
-  if (banana && attackerID !== game.getCurrentPlayerID()) {
+  const isSleepCard = [33, 34].includes(attackCardID);
+  if (isSleepCard && attackerID !== game.getCurrentPlayerID()) {
     game.passTurn();
   }
 

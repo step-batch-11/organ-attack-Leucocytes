@@ -23,6 +23,7 @@ const ACTION_HANDLERS = {
   "clinical-audit": NA.displayOpponentsHands,
   "cryopreservation": NA.performCryopreservation,
   "research": displayAttackDeckDiscardPile,
+  "situs-inversus": NA.performSitusInversus,
 };
 
 const attachEventListener = async (

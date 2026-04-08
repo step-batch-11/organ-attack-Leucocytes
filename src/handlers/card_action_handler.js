@@ -103,3 +103,10 @@ export const handleRefillSelfPostAudit = (
   game.discardAttackCard(attackerID, attackCardID, true);
   return { success: true };
 };
+
+export const handleSitusInversus = ({ game }) => {
+  game.exchangeHeartAndLungs();
+  game.changeOrderOfPlay();
+
+  return ({ success: true });
+};

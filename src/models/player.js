@@ -78,6 +78,12 @@ export class Player {
     return this.#organCards.some((organ) => organ.isWild());
   }
 
+  hasOrgan(name) {
+    return this.#organCards.some((organ) =>
+      organ.getDetails().name.toLowerCase() === name
+    );
+  }
+
   addOrgan(organ) {
     this.#organCards.push(organ);
   }

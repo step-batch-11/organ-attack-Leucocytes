@@ -36,7 +36,6 @@ export class Dealer {
   dealAttackCards() {
     this.#attackCards.shuffleCards();
     const limit = 5;
-
     this.#players.forEach((player) => {
       const attackCards = [];
       const { organCards } = player.getPlayerDetails();

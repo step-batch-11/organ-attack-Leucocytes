@@ -36,183 +36,183 @@ describe("tests for sedate", () => {
     game.passTurn();
     assertEquals(playerToSedate.sleepCount, 0);
   });
+});
 
-  describe("Testing Sedate", () => {
-    it("should apply sedate and make opponent sleep for 2 turns", async () => {
-      const shuffle = (x) => x;
+describe("Testing Sedate", () => {
+  it("should apply sedate and make opponent sleep for 2 turns", async () => {
+    const shuffle = (x) => x;
 
-      // Sedate attack cards
-      const attackCards = new Deck(
-        [
-          {
-            id: 1,
-            action: "sedate",
-            type: "tactical",
-            afflictableOrgans: [],
-          },
-        ],
-        shuffle,
-      );
-
-      const organCards = new Deck(
-        [new Organ("Heart", 1, 1)],
-        shuffle,
-      );
-
-      const players = [
-        new Player("p1", 1),
-        new Player("p2", 2),
-      ];
-
-      // Give players required cards
-      players.forEach((player) => {
-        player.fillHandWithOrgans([new Organ("Heart", 1, 1)]);
-        player.fillHandWithAttacks([
-          {
-            id: 1,
-            action: "sedate",
-            afflictableOrgans: [],
-          },
-        ]);
-      });
-
-      const dealer = new Dealer(attackCards, organCards, players);
-      const afflictionHandler = new AfflictionHandler(attackCards, organCards);
-      const turnManager = new TurnManager(players, 1);
-
-      const game = new Game(
-        players,
-        attackCards,
-        organCards,
-        dealer,
-        afflictionHandler,
-        turnManager,
-      );
-
-      game.setFirstPlayer();
-
-      const rooms = { 101: players };
-      const games = { 101: game };
-
-      const app = createApp({
-        session: { "1": "p1" },
-        idGenerator: counter(),
-        playerIDGenerator: counter(),
-        roomIDGenerator: counter(),
-        rooms,
-        shuffle,
-        games,
-      }, () => (_, next) => next());
-
-      const res = await app.request("/attack", {
-        method: "post",
-        body: JSON.stringify({
-          attackerID: 1,
-          opponentID: 2,
-          attackCardID: 1,
-          organCardID: 1,
-          isInstant: false,
-        }),
-        headers: { cookie: "roomID=101" },
-      });
-
-      assertEquals(res.status, 200);
-
-      const { success } = await res.json();
-      assertEquals(success, true);
-
-      const opponent = players.find((p) => p.getID() === 2);
-      assertEquals(opponent.sleepCount, 2);
-    });
-
-    it("should apply sedate, decrement sleep over turns, and wake up correctly", async () => {
-      const shuffle = (x) => x;
-
-      const attackCards = new Deck(
-        [{
+    // Sedate attack cards
+    const attackCards = new Deck(
+      [
+        {
           id: 1,
           action: "sedate",
           type: "tactical",
           afflictableOrgans: [],
-        }],
-        shuffle,
-      );
+        },
+      ],
+      shuffle,
+    );
 
-      const organCards = new Deck(
-        [new Organ("Heart", 1, 1)],
-        shuffle,
-      );
+    const organCards = new Deck(
+      [new Organ("Heart", 1, 1)],
+      shuffle,
+    );
 
-      const players = [
-        new Player("p1", 1),
-        new Player("p2", 2),
-      ];
+    const players = [
+      new Player("p1", 1),
+      new Player("p2", 2),
+    ];
 
-      players.forEach((player) => {
-        player.fillHandWithOrgans([new Organ("Heart", 1, 1)]);
-        player.fillHandWithAttacks([{
+    // Give players required cards
+    players.forEach((player) => {
+      player.fillHandWithOrgans([new Organ("Heart", 1, 1)]);
+      player.fillHandWithAttacks([
+        {
           id: 1,
           action: "sedate",
           afflictableOrgans: [],
-        }]);
-      });
-
-      const dealer = new Dealer(attackCards, organCards, players);
-      const afflictionHandler = new AfflictionHandler(attackCards, organCards);
-      const turnManager = new TurnManager(players, 1);
-
-      const game = new Game(
-        players,
-        attackCards,
-        organCards,
-        dealer,
-        afflictionHandler,
-        turnManager,
-      );
-
-      game.setFirstPlayer();
-
-      const rooms = { 101: players };
-      const games = { 101: game };
-
-      const app = createApp({
-        session: { "1": "p1" },
-        idGenerator: counter(),
-        playerIDGenerator: counter(),
-        roomIDGenerator: counter(),
-        rooms,
-        shuffle,
-        games,
-      }, () => (_, next) => next());
-
-      // Apply Sedate
-      const res = await app.request("/attack", {
-        method: "post",
-        body: JSON.stringify({
-          attackerID: 1,
-          opponentID: 2,
-          attackCardID: 1,
-          organCardID: 1,
-          isInstant: false,
-        }),
-        headers: { cookie: "roomID=101" },
-      });
-
-      const { success } = await res.json();
-      assertEquals(success, true);
-
-      const opponent = players.find((p) => p.getID() === 2);
-
-      // Initial sleep
-      assertEquals(opponent.sleepCount, 2);
-
-      // After 1st turn
-      game.passTurn();
-      assertEquals(opponent.sleepCount, 1);
-
-      // After 2nd turn (wake up)
-      game.passTurn();
-      assertEquals(opponent.sleepCount, 0);
+        },
+      ]);
     });
+
+    const dealer = new Dealer(attackCards, organCards, players);
+    const afflictionHandler = new AfflictionHandler(attackCards, organCards);
+    const turnManager = new TurnManager(players, 1);
+
+    const game = new Game(
+      players,
+      attackCards,
+      organCards,
+      dealer,
+      afflictionHandler,
+      turnManager,
+    );
+
+    game.setFirstPlayer();
+
+    const rooms = { 101: players };
+    const games = { 101: game };
+
+    const app = createApp({
+      session: { "1": "p1" },
+      idGenerator: counter(),
+      playerIDGenerator: counter(),
+      roomIDGenerator: counter(),
+      rooms,
+      shuffle,
+      games,
+    }, () => (_, next) => next());
+
+    const res = await app.request("/attack", {
+      method: "post",
+      body: JSON.stringify({
+        attackerID: 1,
+        opponentID: 2,
+        attackCardID: 1,
+        organCardID: 1,
+        isInstant: false,
+      }),
+      headers: { cookie: "roomID=101" },
+    });
+
+    assertEquals(res.status, 200);
+
+    const { success } = await res.json();
+    assertEquals(success, true);
+
+    const opponent = players.find((p) => p.getID() === 2);
+    assertEquals(opponent.sleepCount, 2);
+  });
+
+  it("should apply sedate, decrement sleep over turns, and wake up correctly", async () => {
+    const shuffle = (x) => x;
+
+    const attackCards = new Deck(
+      [{
+        id: 1,
+        action: "sedate",
+        type: "tactical",
+        afflictableOrgans: [],
+      }],
+      shuffle,
+    );
+
+    const organCards = new Deck(
+      [new Organ("Heart", 1, 1)],
+      shuffle,
+    );
+
+    const players = [
+      new Player("p1", 1),
+      new Player("p2", 2),
+    ];
+
+    players.forEach((player) => {
+      player.fillHandWithOrgans([new Organ("Heart", 1, 1)]);
+      player.fillHandWithAttacks([{
+        id: 1,
+        action: "sedate",
+        afflictableOrgans: [],
+      }]);
+    });
+
+    const dealer = new Dealer(attackCards, organCards, players);
+    const afflictionHandler = new AfflictionHandler(attackCards, organCards);
+    const turnManager = new TurnManager(players, 1);
+
+    const game = new Game(
+      players,
+      attackCards,
+      organCards,
+      dealer,
+      afflictionHandler,
+      turnManager,
+    );
+
+    game.setFirstPlayer();
+
+    const rooms = { 101: players };
+    const games = { 101: game };
+
+    const app = createApp({
+      session: { "1": "p1" },
+      idGenerator: counter(),
+      playerIDGenerator: counter(),
+      roomIDGenerator: counter(),
+      rooms,
+      shuffle,
+      games,
+    }, () => (_, next) => next());
+
+    // Apply Sedate
+    const res = await app.request("/attack", {
+      method: "post",
+      body: JSON.stringify({
+        attackerID: 1,
+        opponentID: 2,
+        attackCardID: 1,
+        organCardID: 1,
+        isInstant: false,
+      }),
+      headers: { cookie: "roomID=101" },
+    });
+
+    const { success } = await res.json();
+    assertEquals(success, true);
+
+    const opponent = players.find((p) => p.getID() === 2);
+
+    // Initial sleep
+    assertEquals(opponent.sleepCount, 2);
+
+    // After 1st turn
+    game.passTurn();
+    assertEquals(opponent.sleepCount, 1);
+
+    // After 2nd turn (wake up)
+    game.passTurn();
+    assertEquals(opponent.sleepCount, 0);
   });
 });

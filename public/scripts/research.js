@@ -510,10 +510,8 @@ const addFlipEvent = (attackCard) => {
 const renderFilteredCards = (attackCards) => {
   const renderedCards = attackCards.map((attackCard) => {
     const attackCardNode = cloneFromTemplate("#attack-cards");
-    console.log(attackCardNode);
     setCardContent(attackCardNode, attackCard);
     setCardAttributes(attackCardNode, attackCard);
-    // checkCardDisabled(attackCardNode, cardData, opponents);
     addFlipEvent(attackCardNode);
     return attackCardNode;
   });
