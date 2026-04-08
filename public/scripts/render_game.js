@@ -189,6 +189,9 @@ const FLASH_SCREENS = {
   "sedate": flashScreenForUsedOnEvent,
   "narcolepsy": flashScreenForUsedOnEvent,
   "cryopreservation": flashScreenForUsedOnEvent,
+  "clinical-audit": flashScreenForUsedEvent,
+  "research": flashScreenForUsedEvent,
+  "medical-miracle": flashScreenForUsedEvent,
 };
 
 const renderFlashScreen = ({ name, actor, target, card } = {}) => {
