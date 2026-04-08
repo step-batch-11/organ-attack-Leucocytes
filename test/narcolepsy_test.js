@@ -13,14 +13,12 @@ import { Organ } from "../src/models/organ.js";
 describe("Narcolepsy Instant Card Full Test", () => {
   it("should correctly handle instant narcolepsy in-turn, out-of-turn, stacking, and sleep lifecycle", async () => {
     const shuffle = (x) => x;
-
     const attackCards = new Deck([
       { id: 1, action: "narcolepsy", type: "tactical", afflictableOrgans: [] },
       { id: 2, action: "narcolepsy", type: "tactical", afflictableOrgans: [] },
     ], shuffle);
 
     const organCards = new Deck([new Organ("Heart", 1, 1)], shuffle);
-
     const players = [new Player("p1", 1), new Player("p2", 2)];
 
     const wildOrgan = new Organ("Wild", 1, 2);
@@ -120,7 +118,7 @@ describe("Narcolepsy Instant Card Full Test", () => {
 
     ({ success } = await res.json());
     assertEquals(success, true);
-    assertEquals(opponent.sleepCount, 0);
+    assertEquals(opponent.sleepCount, 1);
   });
 });
 

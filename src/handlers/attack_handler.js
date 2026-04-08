@@ -10,9 +10,9 @@ const ACTIONS = {
   Vaccine: handlers.handleVaccine,
   medicine: handlers.handleMedicine,
   "by-the-book": handlers.handleBythebook,
-  "poison": handlers.handlePoison,
-  "remove": handlers.handleRemoveOrgan,
-  "hybrid": handlers.handleHybridAffliction,
+  poison: handlers.handlePoison,
+  remove: handlers.handleRemoveOrgan,
+  hybrid: handlers.handleHybridAffliction,
   itsAlive: handlers.handleItsAlive,
   "sedate": handlers.handleSedate,
   "narcolepsy": handlers.handleNarcolepsy,
@@ -46,7 +46,7 @@ export const handleAttack = async (c) => {
     opponentID,
     attackCardID,
     organCardID,
-    _isInstant,
+    // _isInstant,
     canRemove,
   } = await c.req.json();
   const roomID = getCookie(c, "roomID");
@@ -63,6 +63,7 @@ export const handleAttack = async (c) => {
   }
 
   const target = {};
+
   if (action === "poison") {
     target.targetOrgan = game.getPlayer(attackerID)
       .organCards.find(({ id }) => id === organCardID);
@@ -79,7 +80,12 @@ export const handleAttack = async (c) => {
     afflictPoints,
     canRemove,
   });
-  if (!attackCard.isInstant || (attackerID !== game.getCurrentPlayerID())) {
+  const banana = [33, 34].includes(attackCardID);
+  if (banana && attackerID !== game.getCurrentPlayerID()) {
+    game.passTurn();
+  }
+
+  if (!attackCard.isInstant) {
     game.passTurn();
   }
 

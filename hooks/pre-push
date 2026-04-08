@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-deno test -A
+deno test -A --reporter=dot
 
 echo "------------------* All test passed ! *--------------------------"
 

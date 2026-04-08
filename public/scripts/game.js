@@ -17,9 +17,9 @@ const ACTION_HANDLERS = {
   "hybrid": displayOrgans,
   "itsAlive": displayOrgans,
   "sedate": displayOpponents,
-  "clinical-audit": NA.displayOpponentsHands,
   "narcolepsy": displayOpponents,
   "common-cold": displayOpponents,
+  "clinical-audit": NA.displayOpponentsHands,
   "cryopreservation": NA.performCryopreservation,
   "research": displayAttackDeckDiscardPile,
 };
@@ -48,7 +48,6 @@ const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
 
 const manageTurn = async (gameState) => {
   const { self, players, event, organDiscardPile } = gameState;
-
   const opponents = players.filter(({ id }) => id !== self.id);
   await renderGame({ self, players, event });
 
@@ -80,7 +79,7 @@ const manageTurn = async (gameState) => {
     .filter((card) => Number(card.getAttribute("is-instant")) === 1);
 
   if (self.isSleeping) {
-    instantCards.forEach((card) => card.onclick = () => "");
+    instantCards.forEach((card) => card.onclick = () => {});
     return;
   }
 

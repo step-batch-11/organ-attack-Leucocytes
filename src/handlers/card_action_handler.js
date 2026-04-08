@@ -1,8 +1,6 @@
 export const handleNormalAffliction = (
   { opponentID, organCardID, game, afflictPoints },
 ) => {
-  //
-
   game.afflictOrganOfOpponent(opponentID, organCardID, afflictPoints);
   return ({ success: true });
 };

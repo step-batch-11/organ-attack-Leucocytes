@@ -13,11 +13,11 @@ deno lint
 
 echo "------------------* All lint passed ! *--------------------------"
 
-deno test -A
+deno test -A --reporter=dot
 
 echo "------------------* All test passed ! *--------------------------"
 
-deno test --coverage -A 
+deno test --coverage -A --reporter=dot
 
 echo "------------------* All lines covered ! *--------------------------"
 

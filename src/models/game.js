@@ -195,14 +195,14 @@ export class Game {
     if (playerToSleep === undefined) {
       return -1;
     }
-    const currPlayerID = this.getCurrentPlayerID();
-    if (currPlayerID !== playerToSleepID) {
-      playerToSleep.applySleep(sleepPoints);
-    }
+    // const currPlayerID = this.getCurrentPlayerID();
+    // if (currPlayerID !== playerToSleepID) {
+    playerToSleep.applySleep(sleepPoints);
+    // }
   }
   applyCryopreservation(attackerID) {
-    const currPlayerID = this.getCurrentPlayerID();
-    const sleepPoints = (currPlayerID !== attackerID) ? 1 : 2;
+    // const currPlayerID = this.getCurrentPlayerID();
+    const sleepPoints = /*  (currPlayerID !== attackerID) ? 1 :  */ 2;
 
     for (const player of this.#players) {
       if (player.getID() !== attackerID) {

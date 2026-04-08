@@ -28,7 +28,6 @@ export const resolveAction = async (ctx, gameController) => {
     },
     card: attackCard,
   };
-
    */
   const body = await ctx.req.json();
 
