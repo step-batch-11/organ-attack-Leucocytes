@@ -262,6 +262,6 @@ export class Game {
   }
 
   changeOrderOfPlay() {
-    this.#players.reverse();
+    this.#turnManager.changeDirection();
   }
 }

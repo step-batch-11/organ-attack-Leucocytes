@@ -16,28 +16,33 @@ export class TurnManager {
   setTurn(pioneer = 0) {
     this.#turn = pioneer;
   }
+  changeDirection() {
+    this.#next = this.#next === 1 ? -1 : 1;
+  }
+  #getNextIndex() {
+    return (this.#turn + this.#next + this.#playerCount) % this.#playerCount;
+  }
+
+  #getNextPlayer() {
+    return this.#players[this.#getNextIndex()];
+  }
 
   passTurn() {
     const currPlayer = this.#players[this.#turn];
+
     if (currPlayer.isSleeping()) {
       currPlayer.decreaseSleep();
     }
 
-    while (this.#getNextPlayer().isSleeping()) {
-      this.#getNextPlayer().decreaseSleep();
+    let nextIndex = this.#getNextIndex();
 
-      this.#turn += this.#next;
-      this.#turn = this.#turn % this.#playerCount;
+    while (this.#players[nextIndex].isSleeping()) {
+      this.#players[nextIndex].decreaseSleep();
+      this.#turn = nextIndex;
+      nextIndex = this.#getNextIndex();
     }
 
-    this.#turn += this.#next;
-    this.#turn = this.#turn % this.#playerCount;
+    this.#turn = nextIndex;
     return this.#turn;
-  }
-
-  #getNextPlayer() {
-    const count = (this.#turn + 1) % this.#playerCount;
-
-    return this.#players[count];
   }
 }
