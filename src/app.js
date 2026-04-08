@@ -4,7 +4,6 @@ import { serveOpponentHand } from "./handlers/serve_opponents_hands.js";
 import { gameSetup } from "./game_setup.js";
 import {
   resolveAction as resolveActionV2,
-  resolveActionsOnTurnEnd,
 } from "./handlers/action_resolver.js";
 import {
   handleOpponentAudit,
@@ -69,7 +68,6 @@ export const createApp = ({
   app.post("/opponent-hands", serveOpponentHand);
   app.post("/audit", handleOpponentAudit);
   app.post("/action", (ctx) => resolveActionV2(ctx, gameController));
-  app.post("/turn-end", (ctx) => resolveActionsOnTurnEnd(ctx, gameController));
 
   app.get("/poll", (c) => {
     return new Promise((resolve) => waitingList.add({ resolve, c }));

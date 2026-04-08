@@ -1,22 +1,33 @@
 export default class GameController {
   #actionController;
-  constructor(actionController) {
+  #timer;
+  constructor(actionController, timer) {
     if (typeof actionController !== "object") {
       throw new Error("GameController requires valid ActionController");
     }
     this.#actionController = actionController;
+    this.#timer = timer;
   }
 
   constructAction(
     { attackerID, attackCardID, isInstant, organCardID, opponentID },
     game,
   ) {
-    const card = game.discardAttackCard(attackerID, attackCardID, isInstant);
+    // needs to be moved
+    const card = game
+      .discardAttackCard(attackerID, attackCardID, isInstant);
 
     const { action } = card;
-    const actor = game.getPlayer(attackerID);
-    const targetPlayer = game.getPlayer(opponentID);
 
+    const actor = game.getPlayer(attackerID);
+
+    const targetPlayer = opponentID ? game.getPlayer(opponentID) : "";
+
+    console.log("if there is no error it should print", {
+      attackCardID,
+      attackerID,
+      isInstant,
+    });
     return {
       name: action.toUpperCase().split("-").join("_"),
       actor,
@@ -30,11 +41,28 @@ export default class GameController {
       throw new Error("requires a action to play a card");
     }
 
-    return this.#actionController.add(action);
+    const res = this.#actionController.add(action);
+    if (!res.success) throw new Error(res.message);
+
+    return this.#timer.start();
   }
 
+  #applyAction(game, action) {
+    // has to call different cards action accordingly(needs validation)
+    console.log(action);
+    const { target } = action;
+    const opponentID = target.player.id;
+    const organCardID = target.organID;
+
+    return game.afflictOrganOfOpponent(opponentID, organCardID);
+    // ---
+  }
   #applyActions(game, actions) {
-    actions.forEach((action) => game.apply(action));
+    actions.forEach((action) => {
+      this.#applyAction(game, action);
+    });
+    // should be rich in validation
+    game.passTurn();
   }
 
   resolveAction(game) {

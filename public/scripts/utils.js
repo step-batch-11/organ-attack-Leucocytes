@@ -42,3 +42,10 @@ export const fetchPlayersData = () => {
       return mockData;
     });
 };
+
+export const setOrganImage = (organ, name) => {
+  const image = organ.querySelector("img");
+  image.setAttribute("src", `/assets/organs/${String(name).toLowerCase()}.png`);
+  image.setAttribute("alt", name);
+  image.setAttribute("title", name);
+};

@@ -5,18 +5,20 @@ import { shuffle } from "@std/random";
 import GameController from "./src/controllers/game_controller.js";
 import ActionController from "./src/controllers/action_controller.js";
 import ActionStack from "./src/models/action_stack.js";
+import Timer from "./src/models/timer.js";
 
 const main = () => {
   const session = {};
   const games = {};
   const rooms = { 101: [] };
+  const timer = new Timer(5000);
 
   const idGenerator = counter();
   const playerIDGenerator = counter();
 
   const actionStack = new ActionStack();
   const actionController = new ActionController(actionStack);
-  const gameController = new GameController(actionController);
+  const gameController = new GameController(actionController, timer);
 
   const generators = { idGenerator, playerIDGenerator };
   const appUtils = { session, games, rooms, shuffle, gameController };

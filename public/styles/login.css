@@ -66,6 +66,7 @@ input:focus {
 }
 
 button {
+  cursor: pointer;
   font-family: "Nerko one", fantasy;
   font-size: 18px;
   border: none;

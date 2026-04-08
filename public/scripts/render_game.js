@@ -11,11 +11,12 @@ const setCardContent = (attackCard, { name, Desc }) => {
   description.textContent = Desc;
 };
 
-const setCardAttributes = (attackCard, { id, type, isInstant }) => {
+const setCardAttributes = (attackCard, { id, type, isInstant, action }) => {
   attackCard.setAttribute("data-id", id);
   attackCard.setAttribute("data-type", type);
+  attackCard.setAttribute("data-action", action);
   attackCard.setAttribute("id", `attack-${id}`);
-  attackCard.setAttribute("is-instant", Number(isInstant));
+  attackCard.setAttribute("is-instant", Number(isInstant)); // it should be data-isinstant
 };
 
 const checkCardDisabled = (attackCard, cardData, opponents) => {
@@ -166,6 +167,7 @@ const flashScreenForUsedEvent = (actor, target, card) => {
 
   return flashScreen;
 };
+
 const flashScreenForUsedOnOrganEvent = (actor, target, card) => {
   const { targetOrgan, flashScreen } = scaffoldFlashScreen(actor, target, card);
 
@@ -180,6 +182,7 @@ const FLASH_SCREENS = {
   "remove": flashScreenForUsedOnEvent,
   "affliction": flashScreenForUsedOnEvent,
   "Vaccine": flashScreenForUsedEvent,
+  "immunity-boost": flashScreenForUsedEvent,
   "poison": flashScreenForUsedOnOrganEvent,
   "transplant": flashScreenForUsedOnEvent,
   "medicine": flashScreenForUsedOnOrganEvent,
@@ -206,10 +209,11 @@ const renderFlashScreen = ({ name, actor, target, card } = {}) => {
   }
 };
 
-export const renderGame = async (gameState) => {
-  const { event, players, self } = gameState;
+export const renderGame = () => {
+  const gameState = window.gameState;
+  const { event, players, self } = gameState.snapshot();
   const opponents = players.filter(({ id }) => id !== self.id);
-
+  console.log("event", event);
   renderOpponents(opponents);
   renderMyCards(self, opponents);
   renderFlashScreen(event);

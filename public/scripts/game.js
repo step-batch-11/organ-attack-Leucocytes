@@ -3,6 +3,8 @@ import * as NA from "./action_handlers/non_afflictions.js";
 import { fetchPlayersData } from "./utils.js";
 import { displayOpponents, displayOrgans } from "./afflict-organ.js";
 import { displayAttackDeckDiscardPile } from "./discard_pile.js";
+import { setupEventListeners } from "./listeners/setup_event_listeners.js";
+import GameState from "./game_state.js";
 
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
@@ -36,6 +38,7 @@ const attachEventListener = async (
   const attackCardElement = event.target.closest(".attack-card");
   const attackCardID = getCardID(attackCardElement);
   const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
+  if (!(attackCard.action in ACTION_HANDLERS)) return;
   await ACTION_HANDLERS[attackCard.action]({
     player,
     opponents,
@@ -49,9 +52,9 @@ const attachEventListener = async (
 const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
 
 const manageTurn = async (gameState) => {
-  const { self, players, event, organDiscardPile } = gameState;
+  const { self, players, organDiscardPile } = gameState;
   const opponents = players.filter(({ id }) => id !== self.id);
-  await renderGame({ self, players, event });
+  renderGame();
 
   const poisonCard = findPoisonCard(self.attackCards);
 
@@ -94,7 +97,7 @@ const poll = async () => {
   const res = await fetch("/poll");
   if (res.status === 200) {
     const gameState = await res.json();
-
+    window.gameState.update(gameState);
     await manageTurn(gameState);
   }
   poll();
@@ -107,6 +110,10 @@ window.onload = async () => {
     window.location.href = "/";
     return;
   }
+  console.log(players);
+
+  window.gameState = new GameState(players);
+  setupEventListeners();
 
   await manageTurn(players);
   poll();

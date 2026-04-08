@@ -443,6 +443,7 @@ popup-removable-organs img:hover,
   padding: 2em;
 }
 
+/* clinical audit */
 .clinical-popup {
   display: flex;
   flex-direction: column;

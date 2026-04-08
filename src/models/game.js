@@ -151,6 +151,10 @@ export class Game {
     return player.getID() === id;
   }
 
+  markEventDone() {
+    this.#event.resolved = true;
+  }
+
   getGameState() {
     const currentPlayerID = this.#players[this.#currentPlayer].getID();
     const event = this.#event;
