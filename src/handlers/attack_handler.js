@@ -18,6 +18,8 @@ const ACTIONS = {
   "narcolepsy": handlers.handleNarcolepsy,
   "cryopreservation": handlers.handleCryopreservation,
   "common-cold": handlers.handleCommonCold,
+  "clinical-audit": handlers.handleRefillSelfPostAudit,
+  research: handlers.handleResearch,
 };
 
 export const resolveAction = async (c) => {
@@ -48,6 +50,7 @@ export const handleAttack = async (c) => {
     organCardID,
     // _isInstant,
     canRemove,
+    selectedCardID,
   } = await c.req.json();
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
@@ -79,6 +82,7 @@ export const handleAttack = async (c) => {
     game,
     afflictPoints,
     canRemove,
+    selectedCardID,
   });
   const banana = [33, 34].includes(attackCardID);
   if (banana && attackerID !== game.getCurrentPlayerID()) {
@@ -139,32 +143,5 @@ export const handleOpponentAudit = async (c) => {
 
   updateGameState(gameState);
 
-  return c.json({ success: true }, 200);
-};
-
-export const handleRefillSelfPostAudit = async (c) => {
-  const { playerID, attackCardID } = await c.req.json();
-  const roomID = getCookie(c, "roomID");
-  const games = c.get("games");
-  const game = games[roomID];
-  game.discardAttackCard(playerID, attackCardID, true);
-  const gameState = game.getGameState();
-  updateGameState(gameState);
-  return c.json({ success: true }, 200);
-};
-
-export const handleResearch = async (c) => {
-  const { playerID, researchID, selectedCardID } = await c.req.json();
-  const roomID = getCookie(c, "roomID");
-  const games = c.get("games");
-  const game = games[roomID];
-
-  game.research(playerID, selectedCardID, researchID);
-  try {
-    const gameState = game.getGameState();
-    updateGameState(gameState);
-  } catch {
-    return c.json({ success: false }, 400);
-  }
   return c.json({ success: true }, 200);
 };

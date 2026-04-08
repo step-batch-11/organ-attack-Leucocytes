@@ -95,10 +95,10 @@ const addListener = async (popup, cards, researchID, playerID) => {
 
     clearPopup();
 
-    return await postJSON("/research", {
-      researchID,
+    return await postJSON("/attack", {
+      attackCardID: researchID,
       selectedCardID,
-      playerID,
+      attackerID: playerID,
     });
   };
 };

@@ -102,7 +102,7 @@ export const displayOpponentsHands = async (
   clearPopup();
   const opponentIDs = opponents.map((opponent) => opponent.id);
   await displayOpponentHand(opponentIDs.shift(), opponentIDs);
-  await postJSON("/refillSelfPostAudit", { playerID: player.id, attackCardID });
+  await postJSON("/attack", { attackerID: player.id, attackCardID });
 };
 
 export const performCryopreservation = async ({ player, attackCardID }) => {

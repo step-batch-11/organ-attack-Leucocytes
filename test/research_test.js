@@ -148,11 +148,11 @@ describe("Handle research ", () => {
 
   it("should handle the reseach", async () => {
     game.addToDiscardPile({ id: 2, name: "transplant" });
-    const response = await app.request("/research", {
+    const response = await app.request("/attack", {
       method: "post",
       body: JSON.stringify({
-        playerID: 1,
-        researchID: 1,
+        attackerId: 1,
+        attackerID: 1,
         selectedCardID: 2,
       }),
       headers: { cookie: "roomID=101" },

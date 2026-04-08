@@ -1,6 +1,5 @@
 import { getCookie } from "hono/cookie";
 import { getPlayerID } from "../utils.js";
-import { updateGameState } from "../app.js";
 
 export const handleGetPlayers = (c) => {
   const rooms = c.get("rooms");
@@ -75,19 +74,4 @@ export const serveAttackCardPile = (c) => {
   const games = c.get("games");
   const game = games[roomID];
   return c.json(game.getDiscardAttackCards());
-};
-
-export const handleResearch = async (c) => {
-  const { playerID, selectedCardID, researchID } = await c.req.json();
-  const roomID = getCookie(c, "roomID");
-  const games = c.get("games");
-  const game = games[roomID];
-  game.research(playerID, selectedCardID, researchID);
-  game.passTurn();
-
-  const gameState = game.getGameState();
-
-  updateGameState(gameState);
-
-  return c.json({ success: true }, 200);
 };

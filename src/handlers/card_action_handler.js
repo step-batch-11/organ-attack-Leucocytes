@@ -80,3 +80,17 @@ export const handleCommonCold = (
 
   return ({ success: true });
 };
+
+export const handleResearch = (
+  { attackCardID, attackerID, selectedCardID, game },
+) => {
+  game.research(attackerID, selectedCardID, attackCardID);
+  return { success: true };
+};
+
+export const handleRefillSelfPostAudit = (
+  { attackCardID, attackerID, game },
+) => {
+  game.discardAttackCard(attackerID, attackCardID, true);
+  return { success: true };
+};

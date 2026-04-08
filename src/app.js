@@ -7,13 +7,11 @@ import {
 } from "./handlers/action_resolver.js";
 import {
   handleOpponentAudit,
-  handleRefillSelfPostAudit,
   resolveAction,
 } from "./handlers/attack_handler.js";
 import {
   getPlayerData,
   handleGetPlayers,
-  handleResearch,
   serveAttackCardPile,
   serveGameState,
 } from "./handlers/serve_players.js";
@@ -69,10 +67,8 @@ export const createApp = ({
   app.post("/attack", resolveAction);
   app.post("/opponent-hands", serveOpponentHand);
   app.post("/audit", handleOpponentAudit);
-  app.post("/refillSelfPostAudit", handleRefillSelfPostAudit);
   app.post("/action", (ctx) => resolveActionV2(ctx, gameController));
   app.post("/turn-end", (ctx) => resolveActionsOnTurnEnd(ctx, gameController));
-  app.post("/research", handleResearch);
 
   app.get("/poll", (c) => {
     return new Promise((resolve) => {
