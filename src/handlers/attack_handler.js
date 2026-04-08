@@ -85,8 +85,8 @@ export const handleAttack = async (c) => {
     canRemove,
     selectedCardID,
   });
-  const banana = [33, 34].includes(attackCardID);
-  if (banana && attackerID !== game.getCurrentPlayerID()) {
+  const isSleepCard = [33, 34].includes(attackCardID);
+  if (isSleepCard && attackerID !== game.getCurrentPlayerID()) {
     game.passTurn();
   }
 

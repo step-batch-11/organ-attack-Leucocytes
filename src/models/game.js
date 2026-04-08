@@ -245,8 +245,12 @@ export class Game {
   }
 
   exchangeHeartAndLungs() {
-    const playerWithHeart = this.#players.find((player) => player.hasOrgan("heart"));
-    const playerWithLungs = this.#players.find((player) => player.hasOrgan("lungs"));
+    const playerWithHeart = this.#players.find((player) =>
+      player.hasOrgan("heart")
+    );
+    const playerWithLungs = this.#players.find((player) =>
+      player.hasOrgan("lungs")
+    );
     if (playerWithHeart !== undefined && playerWithLungs !== undefined) {
       this.#swapOrgans(playerWithHeart, playerWithLungs);
     }
