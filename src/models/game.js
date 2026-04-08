@@ -236,4 +236,23 @@ export class Game {
     attacker.refillHand(opponentCard);
     opponent.refillHand(commonColdCard);
   }
+
+  #swapOrgans(playerWithHeart, playerWithLungs) {
+    const heart = playerWithHeart.removeOrgan(7); // Have to change magic numbers
+    const lungs = playerWithLungs.removeOrgan(13);
+    playerWithHeart.addOrgan(lungs);
+    playerWithLungs.addOrgan(heart);
+  }
+
+  exchangeHeartAndLungs() {
+    const playerWithHeart = this.#players.find((player) => player.hasOrgan("heart"));
+    const playerWithLungs = this.#players.find((player) => player.hasOrgan("lungs"));
+    if (playerWithHeart !== undefined && playerWithLungs !== undefined) {
+      this.#swapOrgans(playerWithHeart, playerWithLungs);
+    }
+  }
+
+  changeOrderOfPlay() {
+    this.#players.reverse();
+  }
 }

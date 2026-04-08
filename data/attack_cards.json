@@ -490,5 +490,18 @@
     "action": "common-cold",
     "type": "tactical",
     "isBlockable": true
+  },
+  {
+    "id": 91,
+    "name": "Situs Inversus 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 0,
+    "Desc": "Swaps both heart and lungs if exists and reverses the order of play",
+    "action": "situs-inversus",
+    "type": "tactical",
+    "isBlockable": true
   }
 ]

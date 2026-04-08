@@ -20,6 +20,7 @@ const ACTIONS = {
   "common-cold": handlers.handleCommonCold,
   "clinical-audit": handlers.handleRefillSelfPostAudit,
   research: handlers.handleResearch,
+  "situs-inversus": handlers.handleSitusInversus,
 };
 
 export const resolveAction = async (c) => {

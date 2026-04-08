@@ -109,3 +109,6 @@ export const performCryopreservation = async ({ player, attackCardID }) => {
   const body = { attackerID: player.id, attackCardID, isInstant: true };
   await postJSON("/attack", body);
 };
+
+export const performSitusInversus = async ({ player, attackCardID }) =>
+  await postJSON("/attack", { attackerID: player.id, attackCardID });
