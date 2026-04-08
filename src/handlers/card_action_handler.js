@@ -23,8 +23,6 @@ export const handleMedicine = ({ attackerID, organCardID, game }) => {
 };
 
 export const handleMedicalMiracle = ({ attackerID, organCardIDs, game }) => {
-  console.log({ organCardIDs, attackerID }, "here");
-
   organCardIDs.forEach((organCardID) => {
     game.healOrgan(attackerID, organCardID);
   });

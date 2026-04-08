@@ -109,6 +109,7 @@ export const displayOrgans = (
       const selectedCards = [];
       container.addEventListener("click", async (e) => {
         const organ = e.target.closest(".organ");
+        organ.setAttribute("data-selected", "true");
         const organID = Number(organ.getAttribute("organ-id"));
         if (!selectedCards.includes(organID)) selectedCards.push(organID);
         if (selectedCards.length === 2) {
@@ -120,7 +121,6 @@ export const displayOrgans = (
           });
         }
       });
-      console.log("not working");
     } else {
       container.addEventListener("click", async (e) => {
         const organ = e.target.closest(".organ");
