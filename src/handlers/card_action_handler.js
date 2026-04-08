@@ -51,6 +51,7 @@ export const handleHybridAffliction = (
 ) => {
   if (canRemove) game.removeOrgan(opponentID, organCardID);
   else game.afflictOrganOfOpponent(opponentID, organCardID, afflictPoints);
+
   return ({ success: true });
 };
 

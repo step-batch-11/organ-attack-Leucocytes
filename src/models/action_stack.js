@@ -12,14 +12,17 @@ export default class ActionStack {
     this.#stack.push(action);
     return { success: true };
   }
+
   peek() {
     return this.#stack.at(-1);
   }
+
   flush() {
-    const result = this.#stack;
+    const result = [...this.#stack];
     this.#stack = [];
     return result;
   }
+
   consume() {
     return this.#stack.pop();
   }

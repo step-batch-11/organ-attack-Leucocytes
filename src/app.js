@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
 import { serveOpponentHand } from "./handlers/serve_opponents_hands.js";
+import { gameSetup } from "./game_setup.js";
 import {
   resolveAction as resolveActionV2,
   resolveActionsOnTurnEnd,
@@ -20,7 +21,6 @@ import {
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers/auth/auth.js";
-import { gameSetup } from "./game_setup.js";
 
 const waitingList = new Set();
 
@@ -36,6 +36,7 @@ export const updateGameState = (publicGameState) => {
     const gameState = { ...publicGameState, self: playerData };
     resolve(c.json(gameState));
   }
+
   waitingList.clear();
   return;
 };
@@ -71,9 +72,7 @@ export const createApp = ({
   app.post("/turn-end", (ctx) => resolveActionsOnTurnEnd(ctx, gameController));
 
   app.get("/poll", (c) => {
-    return new Promise((resolve) => {
-      waitingList.add({ resolve, c });
-    });
+    return new Promise((resolve) => waitingList.add({ resolve, c }));
   });
 
   app.get("/discard-pile", serveAttackCardPile);

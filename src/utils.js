@@ -7,7 +7,9 @@ export const counter = () => {
 
 export const getPlayerID = (c) => {
   const sessionID = getCookie(c, "sessionID");
+
   if (sessionID === undefined) return -1;
+
   const session = c.get("session");
   const playerName = session[sessionID];
   const roomID = getCookie(c, "roomID");

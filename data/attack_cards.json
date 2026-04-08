@@ -3,7 +3,9 @@
     "id": 1,
     "name": "Conjunctivitis",
     "isInstant": false,
-    "afflictableOrgans": [11],
+    "afflictableOrgans": [
+      11
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -16,7 +18,9 @@
     "id": 2,
     "name": "Hyperspleenism!",
     "isInstant": false,
-    "afflictableOrgans": [10],
+    "afflictableOrgans": [
+      10
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -29,7 +33,9 @@
     "id": 5,
     "name": "Enamel Erosion!",
     "isInstant": false,
-    "afflictableOrgans": [5],
+    "afflictableOrgans": [
+      5
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -42,7 +48,9 @@
     "id": 6,
     "name": "Heart Attack!",
     "isInstant": false,
-    "afflictableOrgans": [7],
+    "afflictableOrgans": [
+      7
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -55,7 +63,9 @@
     "id": 7,
     "name": "Kindey Donor!",
     "isInstant": false,
-    "afflictableOrgans": [1],
+    "afflictableOrgans": [
+      1
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -68,7 +78,9 @@
     "id": 8,
     "name": "Arrhythmia!",
     "isInstant": false,
-    "afflictableOrgans": [7],
+    "afflictableOrgans": [
+      7
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -81,7 +93,9 @@
     "id": 9,
     "name": "Foreign Object in Eye!",
     "isInstant": false,
-    "afflictableOrgans": [11],
+    "afflictableOrgans": [
+      11
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -94,7 +108,9 @@
     "id": 10,
     "name": "Cirrhosis",
     "isInstant": false,
-    "afflictableOrgans": [12],
+    "afflictableOrgans": [
+      12
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -107,7 +123,9 @@
     "id": 11,
     "name": "Scalding coffee",
     "isInstant": false,
-    "afflictableOrgans": [4],
+    "afflictableOrgans": [
+      4
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -120,7 +138,9 @@
     "id": 13,
     "name": "Love",
     "isInstant": false,
-    "afflictableOrgans": [7],
+    "afflictableOrgans": [
+      7
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -133,7 +153,11 @@
     "id": 14,
     "name": "Vomit!",
     "isInstant": false,
-    "afflictableOrgans": [2, 4, 5],
+    "afflictableOrgans": [
+      2,
+      4,
+      5
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -146,7 +170,10 @@
     "id": 15,
     "name": "Hepatospleenomegaly!",
     "isInstant": false,
-    "afflictableOrgans": [10, 12],
+    "afflictableOrgans": [
+      10,
+      12
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -159,7 +186,9 @@
     "id": 16,
     "name": "Urinary Tract Infection!",
     "isInstant": false,
-    "afflictableOrgans": [1],
+    "afflictableOrgans": [
+      1
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -316,7 +345,9 @@
     "name": "Removes Heart",
     "isInstant": false,
     "afflictableOrgans": [],
-    "removableOrgans": [7],
+    "removableOrgans": [
+      7
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Removes heart",
@@ -329,7 +360,9 @@
     "name": "Removes kidney",
     "isInstant": false,
     "afflictableOrgans": [],
-    "removableOrgans": [1],
+    "removableOrgans": [
+      1
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Removes Kidney",
@@ -341,8 +374,12 @@
     "id": 28,
     "name": "Afflicts Kidney or Removes Spleen",
     "isInstant": false,
-    "afflictableOrgans": [1],
-    "removableOrgans": [10],
+    "afflictableOrgans": [
+      1
+    ],
+    "removableOrgans": [
+      10
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Removes kidney or spleen",
@@ -354,8 +391,12 @@
     "id": 29,
     "name": "Afflicts Tongue or Removes Teeth",
     "isInstant": false,
-    "afflictableOrgans": [4],
-    "removableOrgans": [5],
+    "afflictableOrgans": [
+      4
+    ],
+    "removableOrgans": [
+      5
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Removes heart",

@@ -147,6 +147,7 @@ export class Game {
   #isPlayerTurn(id) {
     const player = this.#players[this.#currentPlayer];
     if (player === undefined) return false;
+
     return player.getID() === id;
   }
 
@@ -172,7 +173,9 @@ export class Game {
   itsAlive(attackerID, organCardID) {
     const player = this.#findPlayer(attackerID);
     const organ = this.#organsDeck.getCardFromDiscardPile(organCardID);
+
     if (organ === -1) return -1;
+
     organ.reAnimate();
     player.addOrgan(organ);
     return organ;
@@ -182,9 +185,9 @@ export class Game {
     const sleepPoints = 2;
     const playerToSedate = this.#players
       .find((player) => player.getID() === playerID);
-    if (playerToSedate === undefined) {
-      return -1;
-    }
+
+    if (playerToSedate === undefined) return -1;
+
     return playerToSedate.applySleep(sleepPoints);
   }
 
@@ -192,23 +195,18 @@ export class Game {
     const sleepPoints = 1;
     const playerToSleep = this.#players
       .find((player) => player.getID() === playerToSleepID);
-    if (playerToSleep === undefined) {
-      return -1;
-    }
-    // const currPlayerID = this.getCurrentPlayerID();
-    // if (currPlayerID !== playerToSleepID) {
+
+    if (playerToSleep === undefined) return -1;
+
     playerToSleep.applySleep(sleepPoints);
-    // }
   }
   applyCryopreservation(attackerID) {
-    // const currPlayerID = this.getCurrentPlayerID();
-    const sleepPoints = /*  (currPlayerID !== attackerID) ? 1 :  */ 2;
+    const sleepPoints = 2;
 
     for (const player of this.#players) {
-      if (player.getID() !== attackerID) {
-        player.applySleep(sleepPoints);
-      }
+      if (player.getID() !== attackerID) player.applySleep(sleepPoints);
     }
+
     return { success: true };
   }
 

@@ -3,12 +3,14 @@ export default class ActionController {
   constructor(stack) {
     this.#stack = stack;
   }
+
   add(action) {
     const responseActions = new Set([
       "IMMUNITY_BOOST",
       "METASTASIS",
       "CONTAGIOUS",
     ]);
+
     const afflictionResponses = new Set(["METASTASIS", "CONTAGIOUS"]);
 
     if (this.#stack.length() === 0 && responseActions.has(action.name)) {
@@ -34,6 +36,7 @@ export default class ActionController {
     if (this.#stack.length() === 0) {
       return { success: false, message: "Nothing to resolve in stack" };
     }
+
     if (this.#stack.length() === 1) {
       return { success: true, data: this.#stack.flush() };
     }

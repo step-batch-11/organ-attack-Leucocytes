@@ -24,6 +24,7 @@ export class Dealer {
 
     this.#players.forEach((player) => {
       const organCards = [];
+
       for (let i = 0; i < organCardsLimit; i++) {
         const organ = this.#organCards.getCard().getOrgan();
         organCards.push(organ);
@@ -48,6 +49,7 @@ export class Dealer {
           attackCards.push(card);
         }
       }
+
       player.fillHandWithAttacks(attackCards);
     });
   }

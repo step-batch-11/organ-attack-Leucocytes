@@ -87,12 +87,10 @@ export const displayOrgans = (
   clearPopup();
 
   const cards = {
-    "medicine": player.organCards.filter(({ health, maxHealth }) =>
-      health !== maxHealth
-    ),
-    "medical-miracle": player.organCards.filter(({ health, maxHealth }) =>
-      health !== maxHealth
-    ),
+    "medicine": player
+      .organCards.filter(({ health, maxHealth }) => health !== maxHealth),
+    "medical-miracle": player
+      .organCards.filter(({ health, maxHealth }) => health !== maxHealth),
     "poison": player.organCards,
     "itsAlive": organDiscardPile,
   };
@@ -113,7 +111,7 @@ export const displayOrgans = (
         const organ = e.target.closest(".organ");
         const organID = Number(organ.getAttribute("organ-id"));
         if (!selectedCards.includes(organID)) selectedCards.push(organID);
-        {
+        if (selectedCards.length === 2) {
           clearPopup();
           await postJSON("/attack", {
             attackerID: player.id,

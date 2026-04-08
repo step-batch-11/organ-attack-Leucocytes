@@ -15,9 +15,9 @@ const ACTIONS = {
   remove: handlers.handleRemoveOrgan,
   hybrid: handlers.handleHybridAffliction,
   itsAlive: handlers.handleItsAlive,
-  "sedate": handlers.handleSedate,
-  "narcolepsy": handlers.handleNarcolepsy,
-  "cryopreservation": handlers.handleCryopreservation,
+  sedate: handlers.handleSedate,
+  narcolepsy: handlers.handleNarcolepsy,
+  cryopreservation: handlers.handleCryopreservation,
   "common-cold": handlers.handleCommonCold,
   "clinical-audit": handlers.handleRefillSelfPostAudit,
   research: handlers.handleResearch,
@@ -50,7 +50,6 @@ export const handleAttack = async (c) => {
     opponentID,
     attackCardID,
     organCardID,
-    // _isInstant,
     canRemove,
     selectedCardID,
     organCardIDs,
@@ -88,8 +87,10 @@ export const handleAttack = async (c) => {
     selectedCardID,
     organCardIDs,
   });
-  const isSleepCard = [33, 34].includes(attackCardID);
-  if (isSleepCard && attackerID !== game.getCurrentPlayerID()) {
+
+  const isInstantSleep = [33, 34].includes(attackCardID);
+
+  if (isInstantSleep && attackerID !== game.getCurrentPlayerID()) {
     game.passTurn();
   }
 

@@ -52,9 +52,7 @@ export class Player {
     const organIndex = this.#organCards
       .findIndex((organ) => organ.getID() === organCardID);
 
-    if (organ.isDead()) {
-      this.#organCards.splice(organIndex, 1);
-    }
+    if (organ.isDead()) this.#organCards.splice(organIndex, 1);
 
     return { organ, isDead: organ.isDead() };
   }
@@ -63,6 +61,7 @@ export class Player {
     const attackIndex = index || this.#attackCards
       .findIndex(({ id }) => id === attackCardID);
     const card = this.#attackCards.splice(attackIndex, 1);
+
     return card[0];
   }
 
@@ -120,6 +119,7 @@ export class Player {
     this.#attackCards = this.#attackCards.filter((card) =>
       card.type === "affliction" || card.action === "common-cold"
     );
+
     return cards;
   }
 

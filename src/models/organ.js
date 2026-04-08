@@ -26,12 +26,15 @@ export class Organ {
   isWild() {
     return this.#name.toLowerCase() === "wild";
   }
+
   getOrgan() {
     return this;
   }
+
   getID() {
     return this.#id;
   }
+
   getDetails() {
     return {
       name: this.#name,

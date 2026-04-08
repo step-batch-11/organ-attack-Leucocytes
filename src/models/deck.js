@@ -43,6 +43,7 @@ export class Deck {
     this.#discardPile = this.#discardPile.filter((card) => card.getID() !== id);
     return card;
   }
+
   getCardByID(cardID) {
     return this.#discardPile.find((card) => card.id === cardID);
   }

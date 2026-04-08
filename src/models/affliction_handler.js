@@ -10,9 +10,7 @@ export class AfflictionHandler {
   afflictOrganOfOpponent(opponent, organCardID, afflictPoints) {
     const { organ, isDead } = opponent.afflictOrgan(organCardID, afflictPoints);
 
-    if (isDead) {
-      this.#organCards.addToDiscardPile(organ);
-    }
+    if (isDead) this.#organCards.addToDiscardPile(organ);
   }
 
   #doesEffectAnyOwnOrgan(attackCard, organCards) {
@@ -29,9 +27,7 @@ export class AfflictionHandler {
         "id": 100,
         "name": "Dummy",
         "isInstant": false,
-        "afflictableOrgans": [
-          1000,
-        ],
+        "afflictableOrgans": [1000],
         "removableOrgans": [],
         "isWild": true,
         "afflictPoints": 1,
@@ -40,6 +36,7 @@ export class AfflictionHandler {
         "action": "affliction",
         "isBlockable": true,
       };
+
       attacker.refillHand(dummyCard);
       this.#attackCards.addToDiscardPile(attackCard);
     } else {
