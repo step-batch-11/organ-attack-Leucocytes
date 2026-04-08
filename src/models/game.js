@@ -195,9 +195,9 @@ export class Game {
     const sleepPoints = 1;
     const playerToSleep = this.#players
       .find((player) => player.getID() === playerToSleepID);
-
-    if (playerToSleep === undefined) return -1;
-
+    if (playerToSleep === undefined) {
+      return -1;
+    }
     playerToSleep.applySleep(sleepPoints);
   }
   applyCryopreservation(attackerID) {
@@ -236,8 +236,10 @@ export class Game {
   }
 
   #swapOrgans(playerWithHeart, playerWithLungs) {
-    const heart = playerWithHeart.removeOrgan(7); // Have to change magic numbers
-    const lungs = playerWithLungs.removeOrgan(13);
+    const [HEART_ID, LUNG_ID] = [7, 13];
+    const heart = playerWithHeart.removeOrgan(HEART_ID); // Have to change magic numbers
+    const lungs = playerWithLungs.removeOrgan(LUNG_ID);
+
     playerWithHeart.addOrgan(lungs);
     playerWithLungs.addOrgan(heart);
   }
@@ -249,6 +251,7 @@ export class Game {
     const playerWithLungs = this.#players.find((player) =>
       player.hasOrgan("lungs")
     );
+
     if (playerWithHeart !== undefined && playerWithLungs !== undefined) {
       this.#swapOrgans(playerWithHeart, playerWithLungs);
     }

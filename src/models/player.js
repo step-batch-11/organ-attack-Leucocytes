@@ -133,7 +133,9 @@ export class Player {
   }
 
   decreaseSleep() {
-    this.sleepCount -= 1;
+    if (this.sleepCount > 0) {
+      this.sleepCount -= 1;
+    }
     return this.sleepCount;
   }
 }

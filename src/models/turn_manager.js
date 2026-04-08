@@ -18,6 +18,11 @@ export class TurnManager {
   }
 
   passTurn() {
+    const currPlayer = this.#players[this.#turn];
+    if (currPlayer.isSleeping()) {
+      currPlayer.decreaseSleep();
+    }
+
     while (this.#getNextPlayer().isSleeping()) {
       this.#getNextPlayer().decreaseSleep();
 

@@ -61,6 +61,7 @@ export const handleAttack = async (c) => {
     attackerID,
     attackCardID,
   );
+
   const { action, afflictPoints } = attackCard;
 
   if (!(action in ACTIONS)) {
@@ -88,9 +89,9 @@ export const handleAttack = async (c) => {
     organCardIDs,
   });
 
-  const isInstantSleep = [33, 34].includes(attackCardID);
+  const isSleepCard = [33, 34].includes(attackCardID);
 
-  if (isInstantSleep && attackerID !== game.getCurrentPlayerID()) {
+  if (isSleepCard && attackerID !== game.getCurrentPlayerID()) {
     game.passTurn();
   }
 
