@@ -21,6 +21,7 @@ import {
   redirectLoggedInUser,
 } from "./handlers/auth/auth.js";
 import { createRoom, joinRoom } from "./handlers/room_handler.js";
+import { serveUserDetails } from "./handlers/userHandler.js";
 
 const waitingList = new Set();
 const playersInLobby = new Set();
@@ -102,6 +103,6 @@ export const createApp = ({
   app.get("/", allowLoggedInUser);
   app.get("/pages/login.html", redirectLoggedInUser);
   app.get("*", serveStatic({ root: "./public" }));
-
+  app.get("/user-details", serveUserDetails )
   return app;
 };
