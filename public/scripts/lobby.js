@@ -12,11 +12,6 @@ const triggerGameSetup = async (roomID) =>
     body: JSON.stringify({ roomID }),
   });
 
-const startGame = async () => {
-  await fetch("/start-game");
-  window.location.href = "/game-page";
-};
-
 const renderTableFooter = (
   initLobbyIntervalID,
   roomID,
@@ -62,9 +57,10 @@ const leaveLobby = (isHost) => {
 
   const initiateLobby = async () => {
     const response = await fetch("/get-players").catch(() => {});
-    const { players, myID, roomID, redirectPath, roomAvailable } =
+    const { players, myID, roomID, redirectPath, roomAvailable, started } =
       await response.json();
     if (!roomAvailable) window.location.href = "/";
+    if (started) window.location.href = "/game-page";
 
     renderPlayers(players, myID, roomID);
     const isHost = amIHost(players, myID);
@@ -73,7 +69,6 @@ const leaveLobby = (isHost) => {
   };
 
   window.onload = () => {
-    startGame();
     initLobbyIntervalID = setInterval(initiateLobby, 1000);
   };
 })();

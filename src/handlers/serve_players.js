@@ -6,13 +6,26 @@ export const handleGetPlayers = (c) => {
   const sessionID = getCookie(c, "sessionID");
   const rooms = c.get("rooms");
   const session = c.get("session");
+
   if (!(roomID in rooms)) return c.json({ roomAvailable: false });
-  const players = rooms[roomID];
+
+  const players = rooms[roomID].players;
   const player = players.find((player) => player.id === session[sessionID]);
 
   if ((player === undefined)) return c.json({ redirectPath: "/" }, 302);
 
   const myID = player.id;
+
+  if (rooms[roomID].started) {
+    return c.json({
+      started: true,
+      roomAvailable: true,
+      players,
+      myID,
+      roomID,
+      redirectPath: "/game-page",
+    });
+  }
 
   return c.json({
     roomAvailable: true,

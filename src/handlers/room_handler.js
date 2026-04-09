@@ -15,7 +15,7 @@ export const createRoom = (c) => {
 
   const rooms = c.get("rooms");
   const player = createPlayer(c, "host");
-  rooms[roomID] = [player];
+  rooms[roomID] = { players: [player], started: false };
 
   return c.redirect("/pages/lobby.html");
 };
@@ -31,17 +31,17 @@ export const joinRoom = async (c) => {
 
   setCookie(c, "roomID", roomID);
 
-  const players = rooms[roomID];
-  console.log({ rooms, roomID });
+  const players = rooms[roomID].players;
   const player = createPlayer(c, "non-host");
   players.push(player);
+  console.log({ rooms, roomID });
 
   return c.redirect("/pages/lobby.html");
 };
 
 const removePlayer = (c, rooms, roomID) => {
   const id = getPlayerID(c);
-  const players = rooms[roomID];
+  const players = rooms[roomID].players;
   const playerIndex = players.findIndex((player) => player.id === id);
   console.log("Before", players);
   players.splice(playerIndex, 1);

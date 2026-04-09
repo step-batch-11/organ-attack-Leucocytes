@@ -17,7 +17,7 @@ const createSessionID = (c) => {
 
 export const getPlayers = (c, roomID) => {
   const rooms = c.get("rooms");
-  const players = rooms[roomID];
+  const players = rooms[roomID].players;
   return players;
 };
 

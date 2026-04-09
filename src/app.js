@@ -25,7 +25,7 @@ import { createRoom, joinRoom, leaveLobby } from "./handlers/room_handler.js";
 import { getCookie } from "hono/cookie";
 
 const waitingList = new Set();
-const playersInLobby = new Set();
+// const playersInLobby = new Set();
 
 export const updateGameState = (ctx, publicGameState) => {
   const roomID = getCookie(ctx, "roomID");
@@ -74,21 +74,14 @@ export const createApp = ({
     await next();
   });
 
-  app.get(
-    "/start-game",
-    (c) => new Promise((resolve) => playersInLobby.add({ resolve, c })),
-  );
+  // app.get(
+  //   "/start-game",
+  //   (c) => new Promise((resolve) => playersInLobby.add({ resolve, c })),
+  // );
   app.post("/setup-game", (ctx) => {
     const roomID = getCookie(ctx, "roomID");
-    for (const client of playersInLobby) {
-      const { resolve, c } = client;
-      const clientRoomID = getCookie(c, "roomID");
-
-      if (roomID === clientRoomID) {
-        resolve(c.json({ started: true }));
-        playersInLobby.delete(client);
-      }
-    }
+    const rooms = ctx.get("rooms");
+    rooms[roomID].started = true;
     return gameSetup(ctx);
   });
 
