@@ -1,13 +1,15 @@
 import { postJSON } from "../utils.js";
 import { affliction, immunityBoost } from "./attack_card_actions.js";
+import { higlightOrgan, removeHiglightOrgan } from "./highlight.js";
 
 export const setupEventListeners = () => {
-  // popup
   const attackCardArea = document.querySelector(".attack-cards");
   attackCardArea.addEventListener("click", attackCardsListener);
 
   const popup = document.querySelector(".popup");
   popup.addEventListener("click", popupListener);
+  popup.addEventListener("mouseover", higlightOrgan);
+  popup.addEventListener("mouseout", removeHiglightOrgan);
 };
 
 const attackCardsListener = (event) => {

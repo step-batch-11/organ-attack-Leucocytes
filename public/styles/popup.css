@@ -86,3 +86,29 @@ popup-removable img:hover,
   cursor: pointer;
   transition: 200ms;
 }
+
+/* organ higlight */
+.highlight-organ {
+  position: relative;
+}
+.highlight-organ::after {
+  content: "";
+  width: 125%;
+  height: 125%;
+
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+
+  position: absolute;
+  border-radius: inherit;
+
+  border: 3px dashed var(--clr-red);
+  animation: rotate 5s linear infinite;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
