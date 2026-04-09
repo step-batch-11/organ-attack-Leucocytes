@@ -81,12 +81,22 @@ li:last-child {
   border-bottom: none;
 }
 
-.player-profile {
+/* .player-profile {
   width: 45px;
   height: 45px;
   border-radius: 50%;
   background-color: black;
   border: 1px solid white;
+} */
+.player-profile {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 100vw;
+  background-image:
+    radial-gradient(circle at 50% 30%, rgb(0, 0, 0) 30%, transparent 30%),
+    radial-gradient(circle at 50% 100%, rgb(0, 0, 0) 50%, transparent 50%),
+    linear-gradient(#fff, #fff);
 }
 
 .loader {
