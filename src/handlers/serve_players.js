@@ -13,11 +13,7 @@ export const handleGetPlayers = (c) => {
 
   const myID = player.id;
 
-  if (players.length === 2) {
-    return c.json({ players, myID, roomID, redirectPath: "/game-page" }, 302);
-  }
-
-  return c.json({ players, myID, roomID, redirectPath: "" }, 200);
+  return c.json({ players, myID, roomID, redirectPath: "/game-page" }, 302);
 };
 
 export const getPlayerData = (c) => {

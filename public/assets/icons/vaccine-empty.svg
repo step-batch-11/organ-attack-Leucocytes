@@ -25,6 +25,14 @@
          y="29.902859"
          ry="2.1166666"
          rx="2.1166666" />
+         <rect
+            style="fill:#99f0ff;"
+            x="42.5"
+            y="30.8"
+            width="7"
+            height="7"
+            rx="1.5"
+            ry="1.5" />
       <rect
          style="fill:none;stroke:#99f0ff;stroke-width:1.05833;stroke-dasharray:none;stroke-opacity:1"
          id="rect2"

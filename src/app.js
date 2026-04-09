@@ -23,6 +23,7 @@ import {
 import { createRoom, joinRoom } from "./handlers/room_handler.js";
 
 const waitingList = new Set();
+const playersInLobby = new Set();
 
 export const updateGameState = (publicGameState) => {
   for (const { resolve, c } of waitingList) {
@@ -65,7 +66,18 @@ export const createApp = ({
     await next();
   });
 
-  app.post("/setup-game", gameSetup);
+  app.get(
+    "/start-game",
+    (c) => new Promise((resolve) => playersInLobby.add({ resolve, c })),
+  );
+  app.post("/setup-game", (c) => {
+    for (const { resolve, c } of playersInLobby) {
+      resolve(c.json({ started: true }));
+    }
+    waitingList.clear();
+    return gameSetup(c);
+  });
+
   app.post("/login", loginHandler);
   app.post("/attack", resolveAction);
   app.post("/opponent-hands", serveOpponentHand);

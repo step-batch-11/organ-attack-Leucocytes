@@ -1,57 +1,49 @@
 * {
-  padding: 0px;
-  margin: 0px;
+  margin: 0;
+  padding: 0;
 }
+
 :root {
-  --bg-color: #1f1f1f;
-  --fg-color: #fdfdfd;
-  --organ-size: 44px;
-  --clr-red: crimson;
-  --bg-gradient: radial-gradient(var(--bg-color), black);
+  --bg-color: hsl(0, 0%, 15%);
+  --bg-gradient: radial-gradient(black, var(--bg-color));
+  --fg-color: hsl(0, 0%, 95%);
+  --clr-black:black;
+  --clr-red: hsl(348, 83%, 47%);
+  --clr-dark-blue: hsl(216, 89%, 25%);
   --clr-dark-red: hsl(355, 85%, 30%);
-  --clr-gold:hsla(51, 100%, 50%, 0.9);
+  --clr-gold: hsla(51, 100%, 50%, 0.9);
+  --clr-gray: hsl(0, 0%, 30%);
+  --clr-gray-alpha-30: hsla(0, 0%, 30%.0.34);
+  --clr-light-gray: hsl(0, 0%, 65%);
 }
 
 body {
+  font-family: Schoolbell, fantasy;
+  line-height: 1.2;
   background-image: var(--bg-gradient);
   color: var(--fg-color);
-  font-family: Schoolbell, fantasy;
+  height: 100vh;
 }
 
-/* body {
-  background-image: url('../assets/background/bg_organs.png');
-  background-color: #1f1f1f;
-  background-repeat: no-repeat;
-  background-size: contain;
-  color: var(--fg-color);
-  font-family: Schoolbell, fantasy;
-  opacity: 0.3;
-} */
-
-main,
-#login-form,
-header {
+main {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-header h1 {
-  padding-top: 1em;
-  font-family: "serif";
-  font-size: 80px;
-}
+
 
 main {
-  height: 80vh;
+  height: 100vh;
   width: 100vw;
 }
 
-#login-form {
-  /* height: 30%;
-  width: 25%; */
-  flex-direction: row;
+#room-id-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   gap: 1em;
   padding: 2em;
   background-color: var(--bg-color);
@@ -59,7 +51,14 @@ main {
   border-radius: 0.4em;
 }
 
-#login-form input {
+#textarea-for-room-id{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap:10px;
+}
+
+#room-id-form input {
   width: 200px;
 }
 
@@ -70,20 +69,25 @@ input {
   font-size: 18px;
   padding: 0.4em 0.8em;
   background-color: hsla(51, 100%, 50%, 0.1);
+  
   /* outline-style: dashed; */
 }
+
 input:focus {
   outline-color: hsla(51, 100%, 50%, 0.5);
 }
 
-button {
+#room-id-form button {
   cursor: pointer;
   font-family: "Nerko one", fantasy;
-  font-size: 18px;
+  font-size: 20px;
   border: none;
   border-radius: 0.2em;
-  /* background-color: hsla(51, 100%, 50%, 0.9); */
   background-color: var(--clr-gold);
   box-shadow: 0 0 5px var(--clr-red);
-  padding: 0.4em 0.8em;
+  padding: 0.3em 0.5em;
 }
+
+
+
+

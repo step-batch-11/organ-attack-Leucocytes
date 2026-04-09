@@ -152,7 +152,7 @@ describe("tests for app", () => {
         headers: { cookie: "sessionID=1;roomID=101" },
       });
       const contentType = response.headers.get("content-type");
-      assertEquals(response.status, 200);
+      assertEquals(response.status, 302);
       assertEquals(contentType, "application/json");
 
       const body = await response.json();
@@ -160,7 +160,7 @@ describe("tests for app", () => {
         players: [{ id: 1, name: "chiru" }],
         myID: 1,
         roomID: "101",
-        redirectPath: "",
+        redirectPath: "/game-page",
       });
     });
 
@@ -190,7 +190,7 @@ describe("tests for app", () => {
         ],
         myID: 1,
         roomID: "101",
-        redirectPath: "",
+        redirectPath: "/game-page",
       });
     });
   });
