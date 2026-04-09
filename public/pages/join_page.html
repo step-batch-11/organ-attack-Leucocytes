@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap" rel="stylesheet" />
+
+  <title>Join Room</title>
+  <link rel="stylesheet" href="../styles/join_page.css">
 </head>
+
 <body>
-  <header>
+  <!-- <header>
     <h1>organ Attack</h1>
-  </header>
+  </header> -->
   <main>
-    <form action="/join-room" method="POST">
+    <form action="/join-room" method="POST" id="room-id-form">
       <div id="textarea-for-room-id">
         <label for="room-id-input">Enter ID</label>
-        <input type="number" name="room-id" id="room-id-input">
+        <input type="text" name="room-id" id="room-id-input" autofocus>
       </div>
       <button type="submit">JOIN</button>
     </form>
   </main>
-  
+
 </body>
+
 </html>

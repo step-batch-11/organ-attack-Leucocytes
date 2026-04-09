@@ -39,4 +39,5 @@ const popupListener = (event) => {
   };
 
   postJSON("/action", body);
+  event.target.closest(".organs-popup").remove()
 };
