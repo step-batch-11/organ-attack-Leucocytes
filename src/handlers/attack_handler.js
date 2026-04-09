@@ -42,6 +42,7 @@ export const resolveAction = async (c) => {
   const currentPlayer = game.getPlayer(currentPlayerID);
 
   if (currentPlayer && currentPlayer.organCards.length === 0) {
+    game.discardAttackHandOfPlayer(currentPlayerID);
     game.passTurn();
   }
 

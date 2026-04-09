@@ -45,13 +45,17 @@ const addFlipEvent = (attackCard) => {
   });
 };
 
-const renderAttackCards = (attackCardNodes, attackCards, opponents) => {
-  attackCardNodes.forEach((attackCard, i) => {
+const renderAttackCards = (attackCardsNode, attackCards, opponents) => {
+  attackCardsNode.replaceChildren();
+
+  attackCards.forEach((attackCard, i) => {
+    const attackCardNode = cloneFromTemplate("#attack-cards");
     const cardData = attackCards[i];
-    setCardContent(attackCard, cardData);
-    setCardAttributes(attackCard, cardData);
-    checkCardDisabled(attackCard, cardData, opponents);
-    addFlipEvent(attackCard);
+    setCardContent(attackCardNode, cardData);
+    setCardAttributes(attackCardNode, cardData);
+    checkCardDisabled(attackCardNode, cardData, opponents);
+    addFlipEvent(attackCardNode);
+    attackCardsNode.append(attackCardNode);
   });
 };
 
@@ -80,7 +84,7 @@ const renderMyCards = (
 ) => {
   const playerArea = document.querySelector(".player-area");
   const playerOrganContainer = playerArea.querySelector(".organs");
-  const playerAttacks = playerArea.querySelectorAll(".attack-card");
+  const attackCardContainer = document.querySelector(".attack-cards");
 
   setTextContent(playerArea, ".name", name);
 
@@ -98,7 +102,7 @@ const renderMyCards = (
 
   playerOrganContainer.innerHTML = "";
   renderOrgans(playerOrganContainer, organCards);
-  renderAttackCards(playerAttacks, attackCards, opponents);
+  renderAttackCards(attackCardContainer, attackCards, opponents);
 };
 
 const createOppFragment = (

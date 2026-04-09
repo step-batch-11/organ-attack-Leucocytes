@@ -156,4 +156,20 @@ describe("Testing Player Class", () => {
       maxHealth: 1,
     });
   });
+
+  it("should remove all attack cards", () => {
+    const player = new Player("Chiru", 1);
+    const attackCardsExp = Array.from(
+      { length: 5 },
+      (_, i) => ({ id: i, name: `a${i + 1}` }),
+    );
+    const organCardsExp = Array.from(
+      { length: 4 },
+      (_, i) => ({ id: i, name: `o${i + 1}`, health: 1 }),
+    ).map(({ name, id, health }) => new Organ(name, id, health));
+    player.fillHandWithAttacks(attackCardsExp);
+    player.fillHandWithOrgans(organCardsExp);
+    player.discardAttackHand();
+    assertEquals(player.getPlayerDetails().attackCards.length, 0);
+  });
 });

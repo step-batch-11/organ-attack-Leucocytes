@@ -25,8 +25,6 @@ const popupListener = (event) => {
   const state = window.gameState;
   const organ = event.target.closest(".organ");
   const popup = event.target.closest(".organs-popup");
-
-  // const action = popup.dataset.action;
   const organCardID = parseInt(organ.dataset.id);
   const attackCardID = parseInt(popup.dataset.for);
 

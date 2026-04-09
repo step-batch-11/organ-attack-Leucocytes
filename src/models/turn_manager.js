@@ -38,7 +38,12 @@ export class TurnManager {
       this.#players[nextIndex].isSleeping() ||
       !this.#players[nextIndex].isAlive()
     ) {
-      this.#players[nextIndex].decreaseSleep();
+      if (!this.#players[nextIndex].isAlive()) {
+        this.#players[nextIndex].discardAttackHand();
+      } else {
+        this.#players[nextIndex].decreaseSleep();
+      }
+
       this.#turn = nextIndex;
       nextIndex = this.#getNextIndex();
     }

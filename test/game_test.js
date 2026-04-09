@@ -317,16 +317,17 @@ describe("Game model test", () => {
       assertNotEquals(player2Attacks, player2PreAttacks);
     });
 
-    it("Should distribute 5 attack cards to each players", () => {
+    it("Should empty the attack hand of the given player", () => {
       const [player1, player2] = [
         new Player("Shivang", 1),
         new Player("Samiran", 2),
       ];
 
       const attackCards = new Deck(
-        Array.from({ length: 20 }, (_, i) => `a${i + 1}`),
+        Array.from({ length: 5 }, (_, i) => `a${i + 1}`),
         shuffle,
       );
+
       const organCards = [];
       player1.fillHandWithAttacks(attackCards.getDrawingPile());
       player2.fillHandWithAttacks(attackCards.getDrawingPile());
@@ -341,50 +342,14 @@ describe("Game model test", () => {
       );
 
       const { attackCards: player1PreAttacks } = player1.getPlayerDetails();
-      const { attackCards: player2PreAttacks } = player2.getPlayerDetails();
 
-      game.chartMixup();
-
-      const { attackCards: player1Attacks } = player1.getPlayerDetails();
-      const { attackCards: player2Attacks } = player2.getPlayerDetails();
-
-      assertNotEquals(player1Attacks, player1PreAttacks);
-      assertNotEquals(player2Attacks, player2PreAttacks);
-    });
-
-    it("Should distribute 5 attack cards to each players", () => {
-      const [player1, player2] = [
-        new Player("Shivang", 1),
-        new Player("Samiran", 2),
-      ];
-
-      const attackCards = new Deck(
-        Array.from({ length: 20 }, (_, i) => `a${i + 1}`),
-        shuffle,
-      );
-      const organCards = [];
-      player1.fillHandWithAttacks(attackCards.getDrawingPile());
-      player2.fillHandWithAttacks(attackCards.getDrawingPile());
-
-      const dealer = new Dealer(attackCards, organCards, [player1, player2]);
-
-      const game = new Game(
-        [player1, player2],
-        attackCards,
-        organCards,
-        dealer,
-      );
-
-      const { attackCards: player1PreAttacks } = player1.getPlayerDetails();
-      const { attackCards: player2PreAttacks } = player2.getPlayerDetails();
-
-      game.chartMixup();
+      game.discardAttackHandOfPlayer(1);
 
       const { attackCards: player1Attacks } = player1.getPlayerDetails();
-      const { attackCards: player2Attacks } = player2.getPlayerDetails();
 
       assertNotEquals(player1Attacks, player1PreAttacks);
-      assertNotEquals(player2Attacks, player2PreAttacks);
+      assertEquals(player1PreAttacks.length, 5);
+      assertEquals(player1Attacks.length, 0);
     });
   });
 });

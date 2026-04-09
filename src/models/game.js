@@ -274,4 +274,9 @@ export class Game {
   changeOrderOfPlay() {
     this.#turnManager.changeDirection();
   }
+
+  discardAttackHandOfPlayer(playerID) {
+    const player = this.#findPlayer(playerID);
+    player.discardAttackHand();
+  }
 }
