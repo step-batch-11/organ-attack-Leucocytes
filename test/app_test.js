@@ -23,7 +23,7 @@ describe("tests for app", () => {
       idGenerator = counter();
       playerIDGenerator = counter();
       roomIDGenerator = counter();
-      rooms = { 101:{  players : [{ id: 1, name: "chiru" }] }};
+      rooms = { 101: { players: [{ id: 1, name: "chiru" }] } };
       games = {};
       app = createApp({
         session,

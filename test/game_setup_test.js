@@ -10,7 +10,7 @@ describe("Game setup tests", () => {
   let ctx;
   beforeEach(() => {
     roomID = 1;
-    rooms = { [roomID]:{players: [{ name: "qwerty", id: 1 }]} };
+    rooms = { [roomID]: { players: [{ name: "qwerty", id: 1 }] } };
     games = {};
     ctx = {
       games,

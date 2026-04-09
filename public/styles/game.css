@@ -37,6 +37,8 @@ main {
   flex-direction: column;
 }
 
+/* organs */
+
 .organ {
   background-color: hsl(208, 100%, 97%);
   font-size: larger;
@@ -46,25 +48,25 @@ main {
   position: relative;
 }
 
-.organ[data-affliction="1"]::before {
-  content: "";
-
-  position: absolute;
-  right: -8px;
-  z-index: 3;
-  width: 18px;
-  height: 18px;
-
-  background-image: url("/assets/icons/blood_drop.svg");
-  background-size: 100%;
-  background-repeat: no-repeat;
+.organ[data-affliction="1"] > img,
+.organ[data-affliction="2"] > img,
+.organ[data-affliction="3"] > img {
+  filter: brightness(50%);
 }
 
-.organ[data-affliction="1"] > img {
-  filter: brightness(60%);
+.organ[data-affliction="1"] .afflict-1 {
+  display: block !important;
 }
-
-.organ img {
+.organ[data-affliction="2"] .afflict-1 ,
+.organ[data-affliction="2"] .afflict-2 {
+  display: block;
+}
+.organ[data-affliction="3"] .afflict-1 ,
+.organ[data-affliction="3"] .afflict-2 ,
+.organ[data-affliction="3"] .afflict-3 {
+  display: block;
+}
+.organ > img {
   font-size: 14px;
 
   color: crimson;
@@ -75,6 +77,27 @@ main {
   top: 50%;
   left: 50%;
   translate: -50% -50%;
+}
+
+.affliction-markers {
+  position: absolute;
+  top: 0;
+  right: 6px;
+}
+.affliction-markers img {
+  display: none;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+
+  top: 0;
+}
+.affliction-markers .afflict-2 {
+  top: 15px;
+  right: 0px;
+}
+.affliction-markers .afflict-3 {
+  top: 30px;
 }
 
 /* Player */
