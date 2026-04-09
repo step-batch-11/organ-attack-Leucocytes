@@ -3,6 +3,16 @@
   padding: 0px;
 }
 
+:root {
+  --bg-color: #1f1f1f;
+  --fg-color: #fdfdfd;
+  --organ-size: 44px;
+  --clr-red: crimson;
+  --bg-gradient: radial-gradient(var(--bg-color), black);
+  --clr-dark-red: hsl(355, 85%, 30%);
+  --clr-gold:hsla(51, 100%, 50%, 0.9);
+}
+
 body,
 #waiting-header,
 #waiting-table,
@@ -122,7 +132,12 @@ li:last-child {
 }
 
 .start-button {
-  padding: 0.5em 1em;
-  font-size: 20px;
-  font-weight: 600;
+  cursor: pointer;
+  font-family: "Nerko one", fantasy;
+  font-size: 18px;
+  border: none;
+  border-radius: 0.2em;
+  background-color: var(--clr-gold);
+  box-shadow: 0 0 5px var(--clr-red);
+  padding: 0.4em 0.8em;
 }
