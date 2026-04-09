@@ -38,6 +38,7 @@ describe("Game setup tests", () => {
       id: 1,
       organCards: [],
       isMyTurn: false,
+      isAlive: false,
       vaccinePoints: 0,
       isSleeping: false,
     }];

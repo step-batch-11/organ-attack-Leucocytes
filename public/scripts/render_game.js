@@ -229,9 +229,15 @@ const renderFlashScreen = ({ name, ...eventData } = {}) => {
   }
 };
 
-export const renderGame = () => {
+export const renderGame = async (isAlive) => {
   const gameState = window.gameState;
   const { event, players, self } = gameState.snapshot();
+  const livingPlayers = players.filter((player) => player.isAlive);
+
+  if (livingPlayers.length === 1) {
+    const page = isAlive ? "pages/winner.html" : "pages/looser.html";
+    window.location.replace(page);
+  }
   const opponents = players.filter(({ id }) => id !== self.id);
   renderOpponents(opponents);
   renderMyCards(self, opponents);

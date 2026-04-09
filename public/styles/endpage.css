@@ -1,0 +1,36 @@
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    main {
+      display: flex;
+      color: rgb(44, 35, 35);
+      height: 100vh;
+      width: 100vw;
+    }
+
+    article {
+      margin: auto;
+      height: 60%;
+      width: 60%;
+      border: 2px solid gold;
+      padding: 2em;
+      display: flex;
+      flex-direction: column;
+      gap: 10em;
+    }
+
+
+
+    h1,
+    h2,
+    h3 {
+      text-align: center;
+      margin-bottom: 0.5em;
+    }
+
+    .replay {
+      display: flex;
+      justify-content: center;
+    }

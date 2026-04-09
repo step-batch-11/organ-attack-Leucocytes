@@ -54,7 +54,7 @@ const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
 const manageTurn = async (gameState) => {
   const { self, players, organDiscardPile } = gameState;
   const opponents = players.filter(({ id }) => id !== self.id);
-  renderGame();
+  await renderGame(self.isAlive);
 
   const poisonCard = findPoisonCard(self.attackCards);
 
@@ -105,7 +105,6 @@ const poll = async () => {
 
 window.onload = async () => {
   const players = await fetchPlayersData();
-
   if (players.status === false) {
     window.location.href = "/";
     return;

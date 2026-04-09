@@ -114,6 +114,7 @@ export class Player {
       organCards: [...this.#organCards.map((organ) => organ.getDetails())],
       vaccinePoints: this.#vaccinePoints,
       isSleeping: this.isSleeping(),
+      isAlive: this.isAlive(),
     };
   }
 

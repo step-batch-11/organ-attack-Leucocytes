@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="/styles/endPage.css">
+  <title>Winner page</title>
+
+</head>
+
+<body>
+  <main>
+    <article>
+      <header>
+        <h1>Congratulations</h1>
+        <h1 id="winner-name">player Name</h1>
+        <h2>You are the LAST FUNCTIONING HUMAN!</h2>
+        <h3>(at least for now...)</h3>
+      </header>
+      <div class="replay">
+        <button class="replay-btn">Replay</button>
+      </div>
+    </article>
+  </main>
+  <script>
+    const replayBtn = document.querySelector(".replay-btn")
+    replayBtn.onclick = () => {
+      window.location.replace("/")
+    }
+  </script>
+</body>
+
+</html>

@@ -26,6 +26,7 @@ describe("Game model test", () => {
         organCards: [],
         vaccinePoints: 0,
         isSleeping: false,
+        isAlive: false,
       }, {
         isMyTurn: false,
         id: 1,
@@ -33,6 +34,7 @@ describe("Game model test", () => {
         organCards: [],
         vaccinePoints: 0,
         isSleeping: false,
+        isAlive: false,
       }]);
     });
 
@@ -57,6 +59,7 @@ describe("Game model test", () => {
       assertInstanceOf(game, Game);
       assertEquals(playerDetails, {
         isMyTurn: true,
+        isAlive: true,
         id: 1,
         name: "Shivang",
         organCards: [

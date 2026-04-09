@@ -1,33 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "Kidneys",
-    "health": 2,
-    "isWild": false,
-    "maxHealth": 2
-  },
-  {
-    "id": 4,
-    "name": "Tongue",
-    "health": 2,
-    "isWild": false,
-    "maxHealth": 2
-  },
-  {
-    "id": 5,
-    "name": "Teeth",
-    "health": 2,
-    "isWild": false,
-    "maxHealth": 2
-  },
-  {
-    "id": 7,
-    "name": "Heart",
-    "health": 2,
-    "isWild": false,
-    "maxHealth": 2
-  },
-  {
     "id": 11,
     "name": "Eyes",
     "health": 2,
