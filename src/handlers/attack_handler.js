@@ -38,6 +38,13 @@ export const resolveAction = async (c) => {
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];
 
+  const currentPlayerID = game.getCurrentPlayerID();
+  const currentPlayer = game.getPlayer(currentPlayerID);
+
+  if (currentPlayer && currentPlayer.organCards.length === 0) {
+    game.passTurn();
+  }
+
   const gameState = game.getGameState();
 
   updateGameState(gameState);

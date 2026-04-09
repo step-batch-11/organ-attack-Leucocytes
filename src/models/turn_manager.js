@@ -16,15 +16,13 @@ export class TurnManager {
   setTurn(pioneer = 0) {
     this.#turn = pioneer;
   }
+
   changeDirection() {
     this.#next = this.#next === 1 ? -1 : 1;
   }
+
   #getNextIndex() {
     return (this.#turn + this.#next + this.#playerCount) % this.#playerCount;
-  }
-
-  #getNextPlayer() {
-    return this.#players[this.#getNextIndex()];
   }
 
   passTurn() {
@@ -36,7 +34,10 @@ export class TurnManager {
 
     let nextIndex = this.#getNextIndex();
 
-    while (this.#players[nextIndex].isSleeping()) {
+    while (
+      this.#players[nextIndex].isSleeping() ||
+      !this.#players[nextIndex].isAlive()
+    ) {
       this.#players[nextIndex].decreaseSleep();
       this.#turn = nextIndex;
       nextIndex = this.#getNextIndex();

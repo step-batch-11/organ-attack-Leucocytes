@@ -5,6 +5,7 @@ const createEvent = ({ actor, target, card }, resolved = true) => {
   const { player, organID } = target;
 
   const eventTarget = {};
+
   if (card.action === "affliction") {
     eventTarget.playerName = player.name;
     eventTarget.organName = player
@@ -38,12 +39,14 @@ export const resolveAction = async (ctx, gameController) => {
   const game = ctx.get("games")[roomID];
 
   const action = gameController.constructAction(body, game);
+
   try {
     playCard(gameController, action, game);
   } catch (error) {
     console.error(error.message);
     return ctx.json({ message: error.message }, 400);
   }
+
   const event = createEvent(action, false);
   // should go inside controller
   game.registerEvent(event);

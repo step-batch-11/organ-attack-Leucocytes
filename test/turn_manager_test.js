@@ -14,6 +14,9 @@ describe("tests for turn manager", () => {
       isSleeping() {
         return this.sleepCount > 0;
       },
+      isAlive() {
+        return true;
+      },
     };
   });
 

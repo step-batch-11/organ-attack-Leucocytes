@@ -110,7 +110,6 @@ window.onload = async () => {
     window.location.href = "/";
     return;
   }
-  console.log(players);
 
   window.gameState = new GameState(players);
   setupEventListeners();

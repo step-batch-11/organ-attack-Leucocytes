@@ -124,6 +124,7 @@ export class Game {
     return this.#players.map((player) => {
       const { name, id, organCards, vaccinePoints, isSleeping } = player
         .getPlayerDetails();
+
       return {
         name,
         id,

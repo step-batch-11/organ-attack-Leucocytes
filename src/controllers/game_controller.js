@@ -49,7 +49,6 @@ export default class GameController {
 
   #applyAction(game, action) {
     // has to call different cards action accordingly(needs validation)
-    console.log(action);
     const { target } = action;
     const opponentID = target.player.id;
     const organCardID = target.organID;
