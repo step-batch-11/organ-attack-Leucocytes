@@ -1,4 +1,4 @@
-export const higlightOrgan = (e) => {
+export const highlightOrgan = (e) => {
   const sourceOrgan = e.target.closest(".organ");
   console.log(sourceOrgan);
   const targetOrgan = document.querySelector(
@@ -8,7 +8,7 @@ export const higlightOrgan = (e) => {
   console.log(targetOrgan);
 };
 
-export const removeHiglightOrgan = (e) => {
+export const removeHighlightOrgan = (e) => {
   const sourceOrgan = e.target.closest(".organ");
   const targetOrgan = document.querySelector(
     `.opponent-area [data-id="${sourceOrgan.dataset.id}"]`,

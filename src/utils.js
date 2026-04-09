@@ -14,13 +14,13 @@ export const getPlayerID = (c) => {
   return session[sessionID];
 };
 
-const getOrganName = (organCards, organCardID) => {
+const getOrganDetails = (organCards, organCardID) => {
   if (organCardID === undefined) return;
 
   const organCard = organCards.find(({ id }) => id === organCardID);
 
   if (typeof organCard === "object") {
-    return organCard.name;
+    return { name: organCard.name, id: organCardID };
   }
 };
 
@@ -29,14 +29,18 @@ const extractTargetData = ({ player, game, opponentID, organCardID }) => {
 
   if (opponentID) {
     const opponent = game.getPlayer(opponentID);
-    target.playerName = opponent.name;
-    target.organName = getOrganName(opponent.organCards, organCardID);
+    const player = {
+      name: opponent.name,
+      id: opponentID,
+    };
+    target.player = player;
+    target.organ = getOrganDetails(opponent.organCards, organCardID);
   }
 
-  if (organCardID && !target.organName) {
+  if (organCardID && !target.organ) {
     const playerOrgan = player.organCards;
     const discardedOrgan = game.getOrganDiscardPile();
-    target.organName = getOrganName(
+    target.organ = getOrganDetails(
       [...playerOrgan, ...discardedOrgan],
       organCardID,
     );
@@ -46,13 +50,14 @@ const extractTargetData = ({ player, game, opponentID, organCardID }) => {
 };
 
 export const createEvent = (eventData, game) => {
+  console.log("here is data for create Event", eventData);
   const { card, attackerID } = eventData;
   const player = game.getPlayer(attackerID);
   const target = extractTargetData({ player, game, ...eventData });
 
   return {
     name: card.action,
-    actor: player.name,
+    actor: { name: player.name, id: attackerID },
     target,
     card,
   };

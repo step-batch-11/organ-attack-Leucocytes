@@ -2,6 +2,7 @@ import { getCookie } from "hono/cookie";
 import * as handlers from "./card_action_handler.js";
 
 import { updateGameState } from "../app.js";
+import { createEvent } from "../utils.js";
 
 const ACTIONS = {
   transplant: handlers.handleTransplant,
@@ -118,7 +119,7 @@ export const handleAttack = async (c) => {
     game.passTurn();
   }
 
-  registerEvent(
+  const event = createEvent(
     {
       opponentID,
       target,
@@ -126,35 +127,13 @@ export const handleAttack = async (c) => {
       organCardID,
       action,
       attackerID,
-      attackCard,
+      card: attackCard,
     },
+    game,
   );
+  game.registerEvent(event);
 
   return res;
-};
-
-const registerEvent = (
-  { opponentID, target, game, organCardID, action, attackerID, attackCard },
-) => {
-  if (opponentID) {
-    target.targetPlayer = game.getPlayer(opponentID);
-    target.targetOrgan = target.targetPlayer
-      .organCards.find(({ id }) => id === organCardID);
-  }
-
-  const { targetPlayer, targetOrgan } = target;
-
-  const event = {
-    name: action,
-    actor: game.getPlayer(attackerID).name,
-    target: {
-      playerName: targetPlayer?.name,
-      organName: targetOrgan?.name,
-    },
-    card: attackCard,
-  };
-
-  game.registerEvent(event);
 };
 
 export const handleOpponentAudit = async (c) => {
@@ -170,34 +149,3 @@ export const handleOpponentAudit = async (c) => {
 
   return c.json({ success: true }, 200);
 };
-
-// class GameController {
-//   constructor() {
-//     this.#actions = {
-//       "attack": this.#attackHandler,
-//       "affliction": this.#affliction,
-//     };
-//   }
-
-//   #attackHandler({ game, playerId }) {
-//     game.handleAttack(playerId);
-//     console.log("hello i am attack handler");
-//   }
-
-//   #affliction({ game, playerId }) {
-//     game.afflictionHandler(playerId);
-//     console.log("hello i am affliction handler");
-//   }
-
-//   #actionHandler(action, ...params) {
-//     if (action in this.actions) {
-//       return this.actions[action](...params);
-//     }
-//   }
-
-//   resolveAction(game, actions) {
-//     actions.forEach((action) => {
-//       this.#actionHandler(game, action);
-//     });
-//   }
-// }

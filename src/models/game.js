@@ -147,9 +147,27 @@ export class Game {
     return this.getAllPlayersDetails().filter((player) => player.id !== id);
   }
 
+  #setAttackStatus(cards) {
+    cards.forEach((card) => {
+      const action = card.action;
+      card.isActive = true;
+      if (
+        this.#event.name === "affliction" &&
+        this.#event.resolved !== true &&
+        action !== "immunity-boost"
+      ) {
+        card.isActive = false;
+      }
+    });
+  }
+
   getPlayer(id) {
     const player = this.#findPlayer(id);
-    return { ...player.getPlayerDetails(), isMyTurn: this.#isPlayerTurn(id) };
+    const playerDetails = player.getPlayerDetails();
+
+    this.#setAttackStatus(playerDetails.attackCards);
+
+    return { ...playerDetails, isMyTurn: this.#isPlayerTurn(id) };
   }
 
   #isPlayerTurn(id) {
@@ -216,6 +234,11 @@ export class Game {
     }
     playerToSleep.applySleep(sleepPoints);
   }
+
+  getOrganDiscardPile() {
+    return this.#organsDeck.getDiscardPile();
+  }
+
   applyCryopreservation(attackerID) {
     const sleepPoints = 2;
 

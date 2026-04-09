@@ -468,6 +468,58 @@
     "isBlockable": true
   },
   {
+    "id": 68,
+    "name": "Contagious 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "An Instant reactive card used to attack on opponents",
+    "action": "contagious",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
+    "id": 69,
+    "name": "Contagious 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "An Instant reactive card used to attack on opponents",
+    "action": "contagious",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
+    "id": 70,
+    "name": "Contagious 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "An Instant reactive card used to attack on opponents",
+    "action": "contagious",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
+    "id": 71,
+    "name": "Contagious 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "An Instant reactive card used to attack on opponents",
+    "action": "contagious",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
     "id": 33,
     "name": "Narcolepsy 🔥",
     "isInstant": true,
@@ -556,6 +608,74 @@
     "Desc": "Removes one affliction from two organ",
     "action": "medical-miracle",
     "type": "cure",
+    "isBlockable": true
+  },
+  {
+    "id": 15,
+    "name": "Hepatospleenomegaly!",
+    "isInstant": false,
+    "afflictableOrgans": [
+      10,
+      12
+    ],
+    "removableOrgans": [],
+    "isWild": false,
+    "afflictPoints": 1,
+    "Desc": "Hepatospleenomegaly! affecting organs",
+    "type": "affliction",
+    "action": "affliction",
+    "isBlockable": true
+  },
+  {
+    "id": 121,
+    "name": "Metastasis 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "The spreading of a disease such as cancer to the other areas",
+    "action": "metastasis",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
+    "id": 122,
+    "name": "Metastasis 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "The spreading of a disease such as cancer to the other areas",
+    "action": "metastasis",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
+    "id": 123,
+    "name": "Metastasis 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "The spreading of a disease such as cancer to the other areas",
+    "action": "metastasis",
+    "type": "tactical",
+    "isBlockable": true
+  },
+  {
+    "id": 124,
+    "name": "Metastasis 🔥",
+    "isInstant": true,
+    "afflictableOrgans": [],
+    "removableOrgans": [],
+    "isWild": true,
+    "afflictPoints": 1,
+    "Desc": "The spreading of a disease such as cancer to the other areas",
+    "action": "metastasis",
+    "type": "tactical",
     "isBlockable": true
   }
 ]

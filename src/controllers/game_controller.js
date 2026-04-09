@@ -13,6 +13,8 @@ export default class GameController {
 
     this.#ACTIONS = {
       affliction: this.#handleNormalAffliction,
+      contagious: this.#handleNormalAffliction,
+      metastasis: this.#handleNormalAffliction,
     };
   }
 

@@ -1,6 +1,11 @@
 import { postJSON } from "../utils.js";
-import { affliction, immunityBoost } from "./attack_card_actions.js";
-import { higlightOrgan, removeHiglightOrgan } from "./highlight.js";
+import { highlightOrgan, removeHighlightOrgan } from "./highlight.js";
+import {
+  affliction,
+  contagious,
+  immunityBoost,
+  metastasis,
+} from "./attack_card_actions.js";
 
 export const setupEventListeners = () => {
   const attackCardArea = document.querySelector(".attack-cards");
@@ -8,8 +13,8 @@ export const setupEventListeners = () => {
 
   const popup = document.querySelector(".popup");
   popup.addEventListener("click", popupListener);
-  popup.addEventListener("mouseover", higlightOrgan);
-  popup.addEventListener("mouseout", removeHiglightOrgan);
+  popup.addEventListener("mouseover", highlightOrgan);
+  popup.addEventListener("mouseout", removeHighlightOrgan);
 };
 
 const attackCardsListener = (event) => {
@@ -18,8 +23,11 @@ const attackCardsListener = (event) => {
   const cardType = attackCard.dataset.type;
 
   if (cardAction === "affliction" && cardType === "affliction") {
+    // console.log("affliction card is played");
     affliction(attackCard);
   }
+  if (cardAction === "contagious") contagious(attackCard);
+  if (cardAction === "metastasis") metastasis(attackCard);
   if (cardAction === "immunity-boost") immunityBoost(attackCard);
 };
 

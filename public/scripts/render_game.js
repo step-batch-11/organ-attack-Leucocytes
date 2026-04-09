@@ -160,13 +160,12 @@ const scaffoldFlashScreen = ({ actor, target, card, timeRemaining }) => {
   const targetOrgan = targetContainer.querySelector(".organ");
   const bar = flashScreen.querySelector(".bar");
 
-  setTextContent(flashScreen, ".actor .name", actor);
+  setTextContent(flashScreen, ".actor .name", actor.name);
   setTextContent(attackCard, " h1", card.name);
-  setTextContent(targetContainer, ".name", target.playerName);
+  setTextContent(targetContainer, ".name", target.player?.name);
 
   attackCard.setAttribute("data-type", card.type);
 
-  console.log(bar);
   bar.style.animationDuration = (timeRemaining ?? 5000) + "ms";
   setTimeout(() => {
     flashScreen.remove();
@@ -177,7 +176,7 @@ const scaffoldFlashScreen = ({ actor, target, card, timeRemaining }) => {
 const flashScreenForUsedOnEvent = (eventData) => {
   const { targetOrgan, flashScreen } = scaffoldFlashScreen(eventData);
 
-  renderOrganImage(targetOrgan, eventData.target.organName);
+  renderOrganImage(targetOrgan, eventData.target.organ?.name);
   return flashScreen;
 };
 
@@ -192,7 +191,7 @@ const flashScreenForUsedOnOrganEvent = (eventData) => {
   const { targetOrgan, flashScreen } = scaffoldFlashScreen(eventData);
 
   flashScreen.querySelector(".target .avatar").remove();
-  renderOrganImage(targetOrgan, eventData.target.organName);
+  renderOrganImage(targetOrgan, eventData.target.organ?.name);
 
   return flashScreen;
 };
@@ -201,6 +200,8 @@ const FLASH_SCREENS = {
   "hybrid": flashScreenForUsedOnEvent,
   "remove": flashScreenForUsedOnEvent,
   "affliction": flashScreenForUsedOnEvent,
+  "contagious": flashScreenForUsedOnEvent,
+  "metastasis": flashScreenForUsedOnEvent,
   "Vaccine": flashScreenForUsedEvent,
   "immunity-boost": flashScreenForUsedEvent,
   "poison": flashScreenForUsedOnOrganEvent,
@@ -223,6 +224,7 @@ const renderFlashScreen = ({ name, ...eventData } = {}) => {
   if (!(name in FLASH_SCREENS)) {
     return;
   }
+
   const flashScreen = FLASH_SCREENS[name](eventData);
   if (flashScreen instanceof HTMLElement) {
     document.querySelector(".flash-screen-container").appendChild(flashScreen);
@@ -240,6 +242,7 @@ export const renderGame = async (isAlive) => {
   }
   const opponents = players.filter(({ id }) => id !== self.id);
   renderOpponents(opponents);
+  console.log("event", event);
   renderMyCards(self, opponents);
   renderFlashScreen(event);
 };
