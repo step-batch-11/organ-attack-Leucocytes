@@ -143,6 +143,8 @@ export class Player {
   }
 
   discardAttackHand() {
+    const cardsToDiscard = [...this.#attackCards];
     this.#attackCards.length = 0;
+    return cardsToDiscard;
   }
 }

@@ -277,6 +277,7 @@ export class Game {
 
   discardAttackHandOfPlayer(playerID) {
     const player = this.#findPlayer(playerID);
-    player.discardAttackHand();
+    const cardsToDiscard = player.discardAttackHand();
+    cardsToDiscard.forEach((card) => this.#attackDeck.addToDiscardPile(card));
   }
 }
