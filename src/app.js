@@ -20,6 +20,7 @@ import {
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers/auth/auth.js";
+import { createRoom, joinRoom } from "./handlers/room_handler.js";
 
 const waitingList = new Set();
 
@@ -42,6 +43,7 @@ export const updateGameState = (publicGameState) => {
 
 export const createApp = ({
   session,
+  players,
   idGenerator,
   playerIDGenerator,
   games,
@@ -56,6 +58,7 @@ export const createApp = ({
     c.set("session", session);
     c.set("idGenerator", idGenerator);
     c.set("games", games);
+    c.set("players", players);
     c.set("shuffle", shuffle);
     c.set("playerIDGenerator", playerIDGenerator);
     c.set("rooms", rooms);
@@ -79,6 +82,10 @@ export const createApp = ({
     "/game-page",
     serveStatic({ root: "public", path: "/pages/game.html" }),
   );
+
+  app.get("/create-room", createRoom);
+  app.post("/join-room", joinRoom);
+
   app.get("/get-players", handleGetPlayers);
   app.get("/", allowLoggedInUser);
   app.get("/pages/login.html", redirectLoggedInUser);

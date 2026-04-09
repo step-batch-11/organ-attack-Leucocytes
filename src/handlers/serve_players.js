@@ -7,7 +7,7 @@ export const handleGetPlayers = (c) => {
   const rooms = c.get("rooms");
   const session = c.get("session");
   const players = rooms[roomID];
-  const player = players.find((player) => player.name === session[sessionID]);
+  const player = players.find((player) => player.id === session[sessionID]);
 
   if ((player === undefined)) return c.json({ redirectPath: "/" }, 302);
 

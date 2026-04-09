@@ -15,17 +15,19 @@ describe("tests for app", () => {
     let roomIDGenerator;
     let rooms;
     let games;
+    const playersList = [];
     const shuffle = (x) => x;
 
     beforeEach(() => {
-      session = { "1": "chiru" };
+      session = { "1": 1 };
       idGenerator = counter();
       playerIDGenerator = counter();
       roomIDGenerator = counter();
-      rooms = { 101: [] };
+      rooms = { 101: [{ id: 1, name: "chiru" }] };
       games = {};
       app = createApp({
         session,
+        players: playersList,
         idGenerator,
         playerIDGenerator,
         roomIDGenerator,
@@ -56,7 +58,7 @@ describe("tests for app", () => {
       assertEquals(location, "/");
       assertEquals(
         cookie,
-        "sessionID=1; Max-Age=7200; Path=/, roomID=101; Max-Age=7200; Path=/",
+        "sessionID=1; Max-Age=7200; Path=/",
       );
     });
 
@@ -82,7 +84,7 @@ describe("tests for app", () => {
       assertEquals(location, "/");
       assertEquals(
         cookie,
-        "sessionID=2; Max-Age=7200; Path=/, roomID=101; Max-Age=7200; Path=/",
+        "sessionID=2; Max-Age=7200; Path=/",
       );
     });
 
@@ -119,7 +121,7 @@ describe("tests for app", () => {
         }),
       });
       const location = response.headers.get("location");
-      assertEquals(location, "/");
+      assertEquals(location, "/home_page.html");
       assertEquals(response.status, 302);
     });
 
@@ -140,10 +142,6 @@ describe("tests for app", () => {
         body: formData,
       });
       assertEquals(
-        response1ToAddUser.headers.getSetCookie()[1],
-        "roomID=101; Max-Age=7200; Path=/",
-      );
-      assertEquals(
         response1ToAddUser.headers.getSetCookie()[0],
         "sessionID=1; Max-Age=7200; Path=/",
       );
@@ -159,7 +157,7 @@ describe("tests for app", () => {
 
       const body = await response.json();
       assertEquals(body, {
-        players: [{ id: 1, name: "user1", type: "host" }],
+        players: [{ id: 1, name: "chiru" }],
         myID: 1,
         roomID: "101",
         redirectPath: "",
@@ -188,12 +186,11 @@ describe("tests for app", () => {
       const body = await response.json();
       assertEquals(body, {
         players: [
-          { id: 1, name: "user1", type: "host" },
-          { id: 2, name: "user2", type: "non-host" },
+          { id: 1, name: "chiru" },
         ],
         myID: 1,
         roomID: "101",
-        redirectPath: "/game-page",
+        redirectPath: "",
       });
     });
   });

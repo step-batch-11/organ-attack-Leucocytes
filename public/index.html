@@ -1,46 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./styles/index.css" />
-    <link
-      rel="shortcut icon"
-      href="/assets/favicon/favicon.png"
-      type="image/x-icon"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap"
-      rel="stylesheet"
-    />
-    <title>lobby page</title>
-    <script type="module" src="./scripts/index.js"></script>
-  </head>
 
-  <body>
-    <main>
-      <section id="waiting-table">
-        <section id="waiting-header">
-          <h2>Room ID : <span id="room-number"> </span></h2>
-          <h3 id="players-count">players : <span id="number"></span> / 2</h3>
-        </section>
-        <section id="waiting-members">
-          <ul></ul>
-        </section>
-      </section>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
 
-      <section id="table-footer">
-        <div class="loader"></div>
-        <span id="waiting-msg"> waiting for other players to join </span>
-      </section>
-    </main>
-    <template id="player-row">
-      <li>
-        <div class="player-profile"></div>
-        <span class="player-name"></span> <span id="indication"></span>
-      </li>
-    </template>
-  </body>
+<body>
+
+  <header>
+    <div id="username">Chiru</div>
+    <h1>organ Attack</h1>
+    <div id="rules-btn">Rules</div>
+  </header>
+  <main>
+    <div id="room-connection-btns">
+      <a href="/create-room">Create Room</a>
+      <a href="/pages/join_page.html">Join room</a>
+    </div>
+  </main>
+
+</body>
+
 </html>

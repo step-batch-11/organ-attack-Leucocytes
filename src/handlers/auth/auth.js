@@ -9,16 +9,6 @@ const getUsername = async (c) => {
   return username.trim();
 };
 
-const createPlayer = (c, name, players) => {
-  const generatePlayerID = c.get("playerIDGenerator");
-
-  return {
-    id: generatePlayerID(),
-    name,
-    type: (players.length === 0) ? "host" : "non-host",
-  };
-};
-
 const createSessionID = (c) => {
   const generateSessionID = c.get("idGenerator");
   const sessionID = generateSessionID();
@@ -34,9 +24,6 @@ export const getPlayers = (c, roomID) => {
 export const setAuthCookies = (c, sessionID) => {
   const maxAge = cookieAgeInSec(2);
   setCookie(c, "sessionID", sessionID, { maxAge });
-  const roomID = 101;
-  setCookie(c, "roomID", roomID, { maxAge });
-  return roomID;
 };
 
 export const loginHandler = async (c) => {
@@ -49,14 +36,20 @@ export const loginHandler = async (c) => {
 
   const sessionID = createSessionID(c);
   const sessions = c.get("session");
+  const playerIDGenerator = c.get("playerIDGenerator");
+  const players = c.get("players");
+
+  const id = playerIDGenerator();
+  sessions[sessionID] = id;
+
   const sanitizedUsername = username.trim().slice(0, 8);
-  sessions[sessionID] = sanitizedUsername;
+  players[id] = sanitizedUsername;
 
-  const roomID = setAuthCookies(c, sessionID);
+  setAuthCookies(c, sessionID);
 
-  const players = getPlayers(c, roomID);
-  const player = createPlayer(c, sanitizedUsername, players);
-  players.push(player);
+  // const players = getPlayers(c, roomID);
+  // const player = createPlayer(c, sanitizedUsername, players);
+  // players.push(player);
 
   return c.redirect("/");
 };
@@ -66,7 +59,7 @@ const redirectLoggedInUser = (c, next) => {
   const sessionID = getCookie(c, "sessionID");
 
   if (sessionID in session) {
-    return c.redirect("/");
+    return c.redirect("/home_page.html");
   }
 
   return next();

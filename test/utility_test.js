@@ -9,7 +9,7 @@ describe("utility: getPlayerID", () => {
 
   beforeEach(() => {
     cookie = "sessionID=1; roomID=1";
-    const session = { 1: "Alpha" };
+    const session = { 1: 1 };
     rooms = { 1: [{ name: "Alpha", id: 1 }, { name: "Beta", id: 2 }] };
 
     ctx = {

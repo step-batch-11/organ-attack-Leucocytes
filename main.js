@@ -9,6 +9,7 @@ import Timer from "./src/models/timer.js";
 
 const main = () => {
   const session = {};
+  const players = {};
   const games = {};
   const rooms = { 101: [] };
   const timer = new Timer(5000);
@@ -21,7 +22,7 @@ const main = () => {
   const gameController = new GameController(actionController, timer);
 
   const generators = { idGenerator, playerIDGenerator };
-  const appUtils = { session, games, rooms, shuffle, gameController };
+  const appUtils = { session, players, games, rooms, shuffle, gameController };
 
   const app = createApp({ ...generators, ...appUtils }, logger);
   const port = Deno.env.get("PORT") || 8000;

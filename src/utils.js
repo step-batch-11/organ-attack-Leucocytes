@@ -11,8 +11,5 @@ export const getPlayerID = (c) => {
   if (sessionID === undefined) return -1;
 
   const session = c.get("session");
-  const playerName = session[sessionID];
-  const roomID = getCookie(c, "roomID");
-  const rooms = c.get("rooms");
-  return rooms[roomID].find(({ name }) => name === playerName).id;
+  return session[sessionID];
 };
