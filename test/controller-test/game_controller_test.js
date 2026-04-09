@@ -13,11 +13,15 @@ describe("GameController", () => {
       return "Dummy Promise";
     },
   };
-  const target = { player: { id: 1 }, organID: 1 };
+  const target = { opponentID: 1, organCardID: 1 };
   const actions = {
-    affliction: { name: "AFFLICTION", target },
-    contagious: { name: "CONTAGIOUS" },
-    immunity: { name: "IMMUNITY_BOOST" },
+    affliction: {
+      name: "AFFLICTION",
+      ...target,
+      card: { action: "affliction" },
+    },
+    contagious: { name: "CONTAGIOUS", card: { action: "contagious" } },
+    immunity: { name: "IMMUNITY_BOOST", card: { action: "immunity-boost" } },
   };
 
   beforeEach(() => {
@@ -69,43 +73,6 @@ describe("GameController", () => {
     });
   });
 
-  describe("Construct action method", () => {
-    const game = {
-      getPlayer(id) {
-        return { name: `Player${id}` };
-      },
-      discardAttackCard(attackerID, attackCardID, isInstant) {
-        return { action: "attack-card", attackerID, attackCardID, isInstant };
-      },
-    };
-    it("should create an action for an event", () => {
-      const attackerID = 1;
-      const attackCardID = 1;
-      const isInstant = false;
-      const organCardID = 1;
-      const opponentID = 2;
-
-      const expectedAction = {
-        name: "ATTACK_CARD",
-        actor: { name: "Player1" },
-        target: { player: { name: "Player2" }, organID: organCardID },
-        card: {
-          action: "attack-card",
-          attackerID,
-          attackCardID,
-          isInstant,
-        },
-      };
-
-      const action = gameController.constructAction(
-        { attackerID, attackCardID, isInstant, organCardID, opponentID },
-        game,
-      );
-
-      assertEquals(action, expectedAction);
-    });
-  });
-
   describe("resolve action method", () => {
     let game;
     let afflictionRecord;
@@ -139,8 +106,8 @@ describe("GameController", () => {
       const { success } = gameController.resolveAction(game);
       assertEquals(success, true);
 
-      const opponentID = affliction.target.player.id;
-      const organCardID = affliction.target.organID;
+      const opponentID = affliction.opponentID;
+      const organCardID = affliction.organCardID;
       assertEquals(afflictionRecord, [{ opponentID, organCardID }]);
     });
 
@@ -149,8 +116,8 @@ describe("GameController", () => {
       gameController.playCard(affliction);
       const { success } = gameController.resolveAction(game);
       assertEquals(success, true);
-      const opponentID = affliction.target.player.id;
-      const organCardID = affliction.target.organID;
+      const opponentID = affliction.opponentID;
+      const organCardID = affliction.organCardID;
       assertEquals(afflictionRecord, [{ opponentID, organCardID }]);
     });
 

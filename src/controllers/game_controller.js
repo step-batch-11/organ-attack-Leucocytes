@@ -1,39 +1,24 @@
 export default class GameController {
   #actionController;
   #timer;
+  #ACTIONS;
+
+  // the game should be in the constructor
   constructor(actionController, timer) {
     if (typeof actionController !== "object") {
       throw new Error("GameController requires valid ActionController");
     }
     this.#actionController = actionController;
     this.#timer = timer;
+
+    this.#ACTIONS = {
+      affliction: this.#handleNormalAffliction,
+    };
   }
 
-  constructAction(
-    { attackerID, attackCardID, isInstant, organCardID, opponentID },
-    game,
-  ) {
-    // needs to be moved
-    const card = game
-      .discardAttackCard(attackerID, attackCardID, isInstant);
-
-    const { action } = card;
-
-    const actor = game.getPlayer(attackerID);
-
-    const targetPlayer = opponentID ? game.getPlayer(opponentID) : "";
-
-    console.log("if there is no error it should print", {
-      attackCardID,
-      attackerID,
-      isInstant,
-    });
-    return {
-      name: action.toUpperCase().split("-").join("_"),
-      actor,
-      target: { player: targetPlayer, organID: organCardID },
-      card,
-    };
+  updateEventStatus(game) {
+    const remainingTime = this.#timer.remaining();
+    game.updateEventStatus(remainingTime);
   }
 
   playCard(action) {
@@ -47,15 +32,21 @@ export default class GameController {
     return this.#timer.start();
   }
 
+  #handleNormalAffliction(game, { opponentID, organCardID }) {
+    return game.afflictOrganOfOpponent(opponentID, organCardID);
+  }
+
   #applyAction(game, action) {
     // has to call different cards action accordingly(needs validation)
-    const { target } = action;
-    const opponentID = target.player.id;
-    const organCardID = target.organID;
+    const { action: cardAction } = action.card;
+    if (!(cardAction in this.#ACTIONS)) {
+      return { success: false };
+    }
 
-    return game.afflictOrganOfOpponent(opponentID, organCardID);
+    return this.#ACTIONS[cardAction](game, action);
     // ---
   }
+
   #applyActions(game, actions) {
     actions.forEach((action) => {
       this.#applyAction(game, action);

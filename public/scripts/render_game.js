@@ -137,7 +137,7 @@ const setTextContent = (container, selector, content) => {
   container.querySelector(selector).textContent = content;
 };
 
-const scaffoldFlashScreen = (actor, target, card) => {
+const scaffoldFlashScreen = ({ actor, target, card, timeRemaining }) => {
   const flashScreen = cloneFromTemplate("#flash-screen-used-on-template");
 
   flashScreen.dataset["cardtype"] = card.type;
@@ -145,34 +145,41 @@ const scaffoldFlashScreen = (actor, target, card) => {
   const attackCard = flashScreen.querySelector(".attack-card");
   const targetContainer = flashScreen.querySelector(".target");
   const targetOrgan = targetContainer.querySelector(".organ");
+  const bar = flashScreen.querySelector(".bar");
 
   setTextContent(flashScreen, ".actor .name", actor);
   setTextContent(attackCard, " h1", card.name);
   setTextContent(targetContainer, ".name", target.playerName);
 
   attackCard.setAttribute("data-type", card.type);
+
+  console.log(bar);
+  bar.style.animationDuration = (timeRemaining ?? 5000) + "ms";
+  setTimeout(() => {
+    flashScreen.remove();
+  }, timeRemaining ?? 5000);
   return { targetOrgan, flashScreen };
 };
 
-const flashScreenForUsedOnEvent = (actor, target, card) => {
-  const { targetOrgan, flashScreen } = scaffoldFlashScreen(actor, target, card);
+const flashScreenForUsedOnEvent = (eventData) => {
+  const { targetOrgan, flashScreen } = scaffoldFlashScreen(eventData);
 
-  renderOrganImage(targetOrgan, target.organName);
+  renderOrganImage(targetOrgan, eventData.target.organName);
   return flashScreen;
 };
 
-const flashScreenForUsedEvent = (actor, target, card) => {
-  const { flashScreen } = scaffoldFlashScreen(actor, target, card);
+const flashScreenForUsedEvent = (eventData) => {
+  const { flashScreen } = scaffoldFlashScreen(eventData);
   flashScreen.querySelector(".target").remove();
 
   return flashScreen;
 };
 
-const flashScreenForUsedOnOrganEvent = (actor, target, card) => {
-  const { targetOrgan, flashScreen } = scaffoldFlashScreen(actor, target, card);
+const flashScreenForUsedOnOrganEvent = (eventData) => {
+  const { targetOrgan, flashScreen } = scaffoldFlashScreen(eventData);
 
   flashScreen.querySelector(".target .avatar").remove();
-  renderOrganImage(targetOrgan, target.organName);
+  renderOrganImage(targetOrgan, eventData.target.organName);
 
   return flashScreen;
 };
@@ -197,13 +204,13 @@ const FLASH_SCREENS = {
   "medical-miracle": flashScreenForUsedEvent,
 };
 
-const renderFlashScreen = ({ name, actor, target, card } = {}) => {
+const renderFlashScreen = ({ name, ...eventData } = {}) => {
   document.querySelector(".flash-screen-container > div ")?.remove();
 
   if (!(name in FLASH_SCREENS)) {
     return;
   }
-  const flashScreen = FLASH_SCREENS[name](actor, target, card);
+  const flashScreen = FLASH_SCREENS[name](eventData);
   if (flashScreen instanceof HTMLElement) {
     document.querySelector(".flash-screen-container").appendChild(flashScreen);
   }

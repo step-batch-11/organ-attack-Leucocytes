@@ -47,6 +47,11 @@ export class Game {
     return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
   }
 
+  getAttackCardData(playerID, attackCardID) {
+    const player = this.#findPlayer(playerID);
+    return player.attackCardData(attackCardID);
+  }
+
   afflictOrganOfOpponent(opponentID, organCardID, afflictPoints) {
     const opponent = this.#findPlayer(opponentID);
     this.#afflictionHandler.afflictOrganOfOpponent(
@@ -152,8 +157,12 @@ export class Game {
     return player.getID() === id;
   }
 
-  markEventDone() {
-    this.#event.resolved = true;
+  updateEventStatus(timeRemaining) {
+    this.#event.resolved = timeRemaining <= 0;
+    this.#event.timeRemaining = timeRemaining;
+    if (this.#event.resolved) {
+      this.#event.name = "idle";
+    }
   }
 
   getGameState() {

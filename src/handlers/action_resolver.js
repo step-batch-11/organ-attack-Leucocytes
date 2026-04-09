@@ -1,32 +1,28 @@
 import { getCookie } from "hono/cookie";
 import { updateGameState } from "../app.js";
+import { createEvent } from "../utils.js";
 
-const createEvent = ({ actor, target, card }, resolved = true) => {
-  const { player, organID } = target;
+const constructAction = (game, body) => {
+  const { attackerID, attackCardID } = body;
 
-  const eventTarget = {};
+  const card = game.getAttackCardData(attackerID, attackCardID);
 
-  if (card.action === "affliction") {
-    eventTarget.playerName = player.name;
-    eventTarget.organName = player
-      .organCards.find(({ id }) => id === organID).name;
-  }
+  const { action } = card;
 
   return {
-    resolved,
-    name: card.action,
-    actor: actor.name,
-    target: eventTarget,
+    name: action.toUpperCase().split("-").join("_"),
     card,
+    ...body,
   };
 };
 
-const playCard = (gameController, action, game) => {
+const playCard = (gameController, game, action) => {
   const done = gameController.playCard(action, game);
   done.then(() => {
     gameController.resolveAction(game);
     // should go inside game controller
-    game.markEventDone();
+
+    gameController.updateEventStatus(game);
     const gameState = game.getGameState();
     updateGameState(gameState);
   }).catch((reject) => console.error({ reject }));
@@ -38,18 +34,25 @@ export const resolveAction = async (ctx, gameController) => {
   const roomID = getCookie(ctx, "roomID");
   const game = ctx.get("games")[roomID];
 
-  const action = gameController.constructAction(body, game);
+  const action = constructAction(game, body);
 
   try {
-    playCard(gameController, action, game);
+    playCard(gameController, game, action);
+
+    const { attackerID, attackCardID, isInstant } = body;
+
+    game.discardAttackCard(attackerID, attackCardID, isInstant);
   } catch (error) {
     console.error(error.message);
     return ctx.json({ message: error.message }, 400);
   }
 
-  const event = createEvent(action, false);
-  // should go inside controller
+  const event = createEvent(action, game);
   game.registerEvent(event);
+
+  gameController.updateEventStatus(game);
+
+  // should go inside controller
   const gameState = game.getGameState();
 
   updateGameState(gameState);

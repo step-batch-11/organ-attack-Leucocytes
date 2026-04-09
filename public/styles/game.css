@@ -19,6 +19,8 @@
   --clr-gray-alpha-30: hsla(0, 0%, 30%.0.34);
   --clr-light-gray: hsl(0, 0%, 65%);
   --clr-blue-alpha-30: hsla(189, 100%, 80%, 0.3);
+
+  --clr-green: hsl(120, 50%, 50%);
 }
 
 body {

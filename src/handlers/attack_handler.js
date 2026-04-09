@@ -51,6 +51,17 @@ export const resolveAction = async (c) => {
   return c.json(res);
 };
 
+/*
+{
+  attackCardID: 11,
+  organCardID: 4,
+  attackerID: 1,
+  opponentID: 2,
+  isInstant: false
+}
+
+*/
+
 export const handleAttack = async (c) => {
   const {
     attackerID,
@@ -158,3 +169,34 @@ export const handleOpponentAudit = async (c) => {
 
   return c.json({ success: true }, 200);
 };
+
+// class GameController {
+//   constructor() {
+//     this.#actions = {
+//       "attack": this.#attackHandler,
+//       "affliction": this.#affliction,
+//     };
+//   }
+
+//   #attackHandler({ game, playerId }) {
+//     game.handleAttack(playerId);
+//     console.log("hello i am attack handler");
+//   }
+
+//   #affliction({ game, playerId }) {
+//     game.afflictionHandler(playerId);
+//     console.log("hello i am affliction handler");
+//   }
+
+//   #actionHandler(action, ...params) {
+//     if (action in this.actions) {
+//       return this.actions[action](...params);
+//     }
+//   }
+
+//   resolveAction(game, actions) {
+//     actions.forEach((action) => {
+//       this.#actionHandler(game, action);
+//     });
+//   }
+// }

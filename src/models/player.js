@@ -65,6 +65,11 @@ export class Player {
     return card[0];
   }
 
+  attackCardData(attackCardID) {
+    const card = this.#attackCards.find(({ id }) => id === attackCardID);
+    return structuredClone(card);
+  }
+
   refillHand(attackCard) {
     this.#attackCards.push(attackCard);
   }
