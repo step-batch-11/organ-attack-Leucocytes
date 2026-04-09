@@ -48,7 +48,7 @@ export const resolveAction = async (c) => {
 
   const gameState = game.getGameState();
 
-  updateGameState(gameState);
+  updateGameState(c, gameState);
   return c.json(res);
 };
 
@@ -166,7 +166,7 @@ export const handleOpponentAudit = async (c) => {
 
   const gameState = game.getGameState();
 
-  updateGameState(gameState);
+  updateGameState(c, gameState);
 
   return c.json({ success: true }, 200);
 };

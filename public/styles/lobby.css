@@ -141,7 +141,7 @@ li:last-child {
   color: white;
 }
 
-.start-button {
+.start-button, .exit-button {
   cursor: pointer;
   font-family: "Nerko one", fantasy;
   font-size: 18px;
@@ -150,4 +150,8 @@ li:last-child {
   background-color: var(--clr-gold);
   box-shadow: 0 0 5px var(--clr-red);
   padding: 0.4em 0.8em;
+}
+
+.exit-button {
+  font-size: 15px;
 }

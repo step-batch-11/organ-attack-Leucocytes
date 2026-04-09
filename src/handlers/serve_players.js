@@ -6,6 +6,7 @@ export const handleGetPlayers = (c) => {
   const sessionID = getCookie(c, "sessionID");
   const rooms = c.get("rooms");
   const session = c.get("session");
+  if (!(roomID in rooms)) return c.json({ roomAvailable: false });
   const players = rooms[roomID];
   const player = players.find((player) => player.id === session[sessionID]);
 
@@ -13,7 +14,13 @@ export const handleGetPlayers = (c) => {
 
   const myID = player.id;
 
-  return c.json({ players, myID, roomID, redirectPath: "/game-page" }, 302);
+  return c.json({
+    roomAvailable: true,
+    players,
+    myID,
+    roomID,
+    redirectPath: "/game-page",
+  }, 302);
 };
 
 export const getPlayerData = (c) => {
@@ -63,7 +70,7 @@ export const handleResearch = async (c) => {
   game.passTurn();
 
   const gameState = game.getGameState();
-  updateGameState(gameState);
+  updateGameState(c, gameState);
 
   return c.json({ success: true }, 200);
 };

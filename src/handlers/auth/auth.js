@@ -46,11 +46,6 @@ export const loginHandler = async (c) => {
   players[id] = sanitizedUsername;
 
   setAuthCookies(c, sessionID);
-
-  // const players = getPlayers(c, roomID);
-  // const player = createPlayer(c, sanitizedUsername, players);
-  // players.push(player);
-
   return c.redirect("/");
 };
 

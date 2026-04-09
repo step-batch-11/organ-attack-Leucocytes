@@ -20,26 +20,33 @@ import {
   loginHandler,
   redirectLoggedInUser,
 } from "./handlers/auth/auth.js";
-import { createRoom, joinRoom } from "./handlers/room_handler.js";
 import { serveUserDetails } from "./handlers/userHandler.js";
+import { createRoom, joinRoom, leaveLobby } from "./handlers/room_handler.js";
+import { getCookie } from "hono/cookie";
 
 const waitingList = new Set();
 const playersInLobby = new Set();
 
-export const updateGameState = (publicGameState) => {
-  for (const { resolve, c } of waitingList) {
-    const res = getPlayerData(c);
+export const updateGameState = (ctx, publicGameState) => {
+  const roomID = getCookie(ctx, "roomID");
+  for (const client of waitingList) {
+    const { resolve, c } = client;
+    const clientRoomID = getCookie(c, "roomID");
 
-    if (!res.success) {
-      resolve(c.json({ message: res.message }, 400));
-      return;
+    if (roomID === clientRoomID) {
+      const res = getPlayerData(c);
+
+      if (!res.success) {
+        resolve(c.json({ message: res.message }, 400));
+        return;
+      }
+      const { data: playerData } = res;
+      const gameState = { ...publicGameState, self: playerData };
+      resolve(c.json(gameState));
+      waitingList.delete(client);
     }
-    const { data: playerData } = res;
-    const gameState = { ...publicGameState, self: playerData };
-    resolve(c.json(gameState));
   }
 
-  waitingList.clear();
   return;
 };
 
@@ -71,12 +78,18 @@ export const createApp = ({
     "/start-game",
     (c) => new Promise((resolve) => playersInLobby.add({ resolve, c })),
   );
-  app.post("/setup-game", (c) => {
-    for (const { resolve, c } of playersInLobby) {
-      resolve(c.json({ started: true }));
+  app.post("/setup-game", (ctx) => {
+    const roomID = getCookie(ctx, "roomID");
+    for (const client of playersInLobby) {
+      const { resolve, c } = client;
+      const clientRoomID = getCookie(c, "roomID");
+
+      if (roomID === clientRoomID) {
+        resolve(c.json({ started: true }));
+        playersInLobby.delete(client);
+      }
     }
-    waitingList.clear();
-    return gameSetup(c);
+    return gameSetup(ctx);
   });
 
   app.post("/login", loginHandler);
@@ -98,11 +111,12 @@ export const createApp = ({
 
   app.get("/create-room", createRoom);
   app.post("/join-room", joinRoom);
+  app.post("/leave-lobby", leaveLobby);
 
   app.get("/get-players", handleGetPlayers);
   app.get("/", allowLoggedInUser);
   app.get("/pages/login.html", redirectLoggedInUser);
   app.get("*", serveStatic({ root: "./public" }));
-  app.get("/user-details", serveUserDetails )
+  app.get("/user-details", serveUserDetails);
   return app;
 };

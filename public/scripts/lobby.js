@@ -43,18 +43,33 @@ const renderTableFooter = (
   waitingMsg.textContent = "waiting for players to join";
 };
 
+const leaveLobby = (isHost) => {
+  const button = document.querySelector(".exit-button");
+
+  button.onclick = async () => {
+    const { success } = await fetch("/leave-lobby", {
+      method: "post",
+      body: JSON.stringify({ isHost }),
+    }).then((res) => res.json())
+      .catch((err) => console.error(err.message));
+
+    if (success) window.location.href = "/";
+  };
+};
+
 (() => {
   let initLobbyIntervalID;
 
   const initiateLobby = async () => {
     const response = await fetch("/get-players").catch(() => {});
-    const { players, myID, roomID, redirectPath } = await response.json();
-    console.log({ redirectPath });
+    const { players, myID, roomID, redirectPath, roomAvailable } =
+      await response.json();
+    if (!roomAvailable) window.location.href = "/";
 
     renderPlayers(players, myID, roomID);
-    if (amIHost(players, myID)) {
-      renderTableFooter(initLobbyIntervalID, roomID, players.length);
-    }
+    const isHost = amIHost(players, myID);
+    leaveLobby(isHost);
+    if (isHost) renderTableFooter(initLobbyIntervalID, roomID, players.length);
   };
 
   window.onload = () => {

@@ -160,6 +160,7 @@ describe("tests for app", () => {
         players: [{ id: 1, name: "chiru" }],
         myID: 1,
         roomID: "101",
+        roomAvailable: true,
         redirectPath: "/game-page",
       });
     });
@@ -189,6 +190,7 @@ describe("tests for app", () => {
           { id: 1, name: "chiru" },
         ],
         myID: 1,
+        roomAvailable: true,
         roomID: "101",
         redirectPath: "/game-page",
       });

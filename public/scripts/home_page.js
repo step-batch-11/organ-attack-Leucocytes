@@ -1,9 +1,8 @@
 const fetchUserdata = async () => {
   return fetch("/user-details");
-}
+};
 
 const renderUserInfo = async () => {
-
   const userInfo = document.querySelector("#user-info");
   console.log(userInfo);
   const res = await fetchUserdata();
@@ -12,8 +11,8 @@ const renderUserInfo = async () => {
   const usernamePlaceHolder = userInfo.querySelector("#username");
 
   usernamePlaceHolder.textContent = username;
-}
+};
 
 window.onload = () => {
   renderUserInfo();
-}
+};

@@ -1,4 +1,5 @@
-import { getCookie, setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
+import { getPlayerID } from "../utils.js";
 
 const createPlayer = (c, type) => {
   const sessionID = getCookie(c, "sessionID");
@@ -23,7 +24,10 @@ export const joinRoom = async (c) => {
   const request = await c.req.formData();
   const { "room-id": roomID } = Object.fromEntries(request.entries());
   const rooms = c.get("rooms");
-  if (!(roomID in rooms)) return c.text("Room Not Found", 400);
+  if (!(roomID in rooms)) {
+    deleteCookie(c, "roomID");
+    return c.text("Room Not Found", 400);
+  }
 
   setCookie(c, "roomID", roomID);
 
@@ -33,4 +37,23 @@ export const joinRoom = async (c) => {
   players.push(player);
 
   return c.redirect("/pages/lobby.html");
+};
+
+const removePlayer = (c, rooms, roomID) => {
+  const id = getPlayerID(c);
+  const players = rooms[roomID];
+  const playerIndex = players.findIndex((player) => player.id === id);
+  console.log("Before", players);
+  players.splice(playerIndex, 1);
+  console.log("After", players);
+};
+
+export const leaveLobby = async (c) => {
+  const { isHost } = await c.req.json();
+  const rooms = c.get("rooms");
+  const roomID = getCookie(c, "roomID");
+  if (!isHost) removePlayer(c, rooms, roomID);
+  else delete rooms[roomID];
+  deleteCookie(c, "roomID");
+  return c.json({ success: true });
 };

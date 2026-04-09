@@ -16,7 +16,7 @@ const constructAction = (game, body) => {
   };
 };
 
-const playCard = (gameController, game, action) => {
+const playCard = (ctx, gameController, game, action) => {
   const done = gameController.playCard(action, game);
   done.then(() => {
     gameController.resolveAction(game);
@@ -24,7 +24,7 @@ const playCard = (gameController, game, action) => {
 
     gameController.updateEventStatus(game);
     const gameState = game.getGameState();
-    updateGameState(gameState);
+    updateGameState(ctx, gameState);
   }).catch((reject) => console.error({ reject }));
 };
 
@@ -37,7 +37,7 @@ export const resolveAction = async (ctx, gameController) => {
   const action = constructAction(game, body);
 
   try {
-    playCard(gameController, game, action);
+    playCard(ctx, gameController, game, action);
 
     const { attackerID, attackCardID, isInstant } = body;
 
@@ -55,6 +55,6 @@ export const resolveAction = async (ctx, gameController) => {
   // should go inside controller
   const gameState = game.getGameState();
 
-  updateGameState(gameState);
+  updateGameState(ctx, gameState);
   return ctx.json({ success: true });
 };
