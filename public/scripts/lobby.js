@@ -17,11 +17,15 @@ const startGame = async () => {
   window.location.href = "/game-page";
 };
 
-const renderTableFooter = (initLobbyIntervalID, roomID, currentPlayersCount) => {
+const renderTableFooter = (
+  initLobbyIntervalID,
+  roomID,
+  currentPlayersCount,
+) => {
   const tableFooter = document.querySelector("#table-footer");
   const button = document.createElement("button");
 
-    if (currentPlayersCount > 1) {
+  if (currentPlayersCount > 1) {
     tableFooter.innerHTML = "";
     button.textContent = "Start";
     button.classList.add("start-button");
@@ -33,23 +37,24 @@ const renderTableFooter = (initLobbyIntervalID, roomID, currentPlayersCount) => 
       window.location.href = "/game-page";
     });
     return;
-    
   }
 
   const waitingMsg = document.querySelector("#waiting-msg");
-  waitingMsg.textContent = "waiting for players to join"
+  waitingMsg.textContent = "waiting for players to join";
 };
 
 (() => {
   let initLobbyIntervalID;
 
   const initiateLobby = async () => {
-    const response = await fetch("/get-players").catch(() => { });
+    const response = await fetch("/get-players").catch(() => {});
     const { players, myID, roomID, redirectPath } = await response.json();
     console.log({ redirectPath });
 
     renderPlayers(players, myID, roomID);
-    if (amIHost(players, myID)) renderTableFooter(initLobbyIntervalID, roomID, players.length);
+    if (amIHost(players, myID)) {
+      renderTableFooter(initLobbyIntervalID, roomID, players.length);
+    }
   };
 
   window.onload = () => {

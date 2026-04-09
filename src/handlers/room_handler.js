@@ -23,7 +23,7 @@ export const joinRoom = async (c) => {
   const request = await c.req.formData();
   const { "room-id": roomID } = Object.fromEntries(request.entries());
   const rooms = c.get("rooms");
-  if (!(roomID in rooms)) return c.text("Room Not Found" , 400);
+  if (!(roomID in rooms)) return c.text("Room Not Found", 400);
 
   setCookie(c, "roomID", roomID);
 

@@ -88,7 +88,10 @@ const renderMyCards = (
 
   setTextContent(playerArea, ".name", name);
 
+  const isDead = organCards.length === 0 ? "true" : "false";
   const avatar = playerArea.querySelector(".player");
+  avatar.setAttribute("data-is-alive", isDead);
+
   if (isMyTurn) {
     document.querySelector("body").style.background =
       "radial-gradient( gray, black )";
@@ -113,12 +116,18 @@ const createOppFragment = (
   const element = clone.querySelector(".opponent");
   element.setAttribute("id", `player-${id}`);
 
+  const isDead = organCards.length === 0 ? "true" : "false";
+
+  element.setAttribute("data-is-alive", isDead);
+
   setTextContent(element, ".name", name);
 
   element.dataset.vaccine = vaccinePoints;
   renderOrgans(element, organCards);
 
   const avatar = clone.querySelector(".avatar");
+  avatar.setAttribute("data-is-alive", isDead);
+
   if (isMyTurn) {
     avatar.classList.add("highlight-avatar");
   } else {

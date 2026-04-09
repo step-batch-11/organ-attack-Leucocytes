@@ -471,3 +471,16 @@ popup-removable-organs img:hover,
   height: 2em;
   width: 2em;
 }
+
+.avatar[data-is-alive="true"] {
+  box-shadow: 0px 0px 0px 5px var(--clr-red);
+}
+
+.opponent[data-is-alive="true"] {
+  opacity: 0.5;
+}
+
+.player[data-is-alive="true"] {
+  opacity: 0.5;
+  box-shadow: 0px 0px 0px 5px var(--clr-red);
+}
