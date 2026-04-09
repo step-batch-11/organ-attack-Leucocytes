@@ -213,7 +213,6 @@ export const renderGame = () => {
   const gameState = window.gameState;
   const { event, players, self } = gameState.snapshot();
   const opponents = players.filter(({ id }) => id !== self.id);
-  console.log("event", event);
   renderOpponents(opponents);
   renderMyCards(self, opponents);
   renderFlashScreen(event);
