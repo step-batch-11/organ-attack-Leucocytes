@@ -261,6 +261,10 @@ export class Game {
     this.#attackDeck.addToDiscardPile(card);
   }
 
+  removeFromDiscardPile(cardID) {
+    this.#attackDeck.removeFromDiscardPile(cardID);
+  }
+
   exchangeCard(attackerID, attackCardID, opponentID) {
     const attacker = this.#findPlayer(attackerID);
     const opponent = this.#findPlayer(opponentID);

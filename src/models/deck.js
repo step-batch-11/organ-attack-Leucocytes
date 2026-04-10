@@ -27,6 +27,11 @@ export class Deck {
     this.#discardPile.push(card);
   }
 
+  removeFromDiscardPile(cardID) {
+    const index = this.#discardPile.findIndex((card) => card.id === cardID);
+    this.#discardPile.splice(index, 1);
+  }
+
   getDrawingPile() {
     return [...this.#drawingPile];
   }

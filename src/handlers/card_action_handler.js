@@ -93,6 +93,7 @@ export const handleResearch = (
   { attackCardID, attackerID, selectedCardID, game },
 ) => {
   game.research(attackerID, selectedCardID, attackCardID);
+  game.removeFromDiscardPile(selectedCardID);
   return { success: true };
 };
 
