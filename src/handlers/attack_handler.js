@@ -1,6 +1,5 @@
 import { getCookie } from "hono/cookie";
 import * as handlers from "./card_action_handler.js";
-
 import { updateGameState } from "../app.js";
 import { createEvent } from "../utils.js";
 
@@ -49,7 +48,7 @@ export const resolveAction = async (c) => {
 
   const gameState = game.getGameState();
 
-  updateGameState(c, gameState);
+  updateGameState(roomID, gameState);
   return c.json(res);
 };
 
@@ -88,12 +87,17 @@ export const handleAttack = async (c) => {
     return { message: "Invalid action" };
   }
 
-  const target = {};
-
-  if (action === "poison") {
-    target.targetOrgan = game.getPlayer(attackerID)
-      .organCards.find(({ id }) => id === organCardID);
-  }
+  const event = createEvent(
+    {
+      opponentID,
+      organCardID,
+      action,
+      attackerID,
+      card: attackCard,
+    },
+    game,
+  );
+  game.registerEvent(event);
 
   const handler = ACTIONS[action];
 
@@ -119,20 +123,6 @@ export const handleAttack = async (c) => {
     game.passTurn();
   }
 
-  const event = createEvent(
-    {
-      opponentID,
-      target,
-      game,
-      organCardID,
-      action,
-      attackerID,
-      card: attackCard,
-    },
-    game,
-  );
-  game.registerEvent(event);
-
   return res;
 };
 
@@ -145,7 +135,7 @@ export const handleOpponentAudit = async (c) => {
 
   const gameState = game.getGameState();
 
-  updateGameState(c, gameState);
+  updateGameState(roomID, gameState);
 
   return c.json({ success: true }, 200);
 };

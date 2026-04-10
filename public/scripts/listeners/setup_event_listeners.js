@@ -21,13 +21,15 @@ const attackCardsListener = (event) => {
   const attackCard = event.target.closest(".attack-card");
   const cardAction = attackCard.dataset.action;
   const cardType = attackCard.dataset.type;
+  console.log("card", cardAction);
+  console.log("attackCard", attackCard);
+  console.log("cardType", cardType);
 
-  if (cardAction === "affliction" && cardType === "affliction") {
-    affliction(attackCard);
-  }
+  if (cardAction === "affliction") affliction(attackCard);
   if (cardAction === "contagious") contagious(attackCard);
   if (cardAction === "metastasis") metastasis(attackCard);
   if (cardAction === "immunity-boost") immunityBoost(attackCard);
+  // if (cardAction === "medical-miracle") medicalMiracle(attackCard);
 };
 
 const popupListener = (event) => {

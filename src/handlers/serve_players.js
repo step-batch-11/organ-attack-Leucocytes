@@ -83,7 +83,7 @@ export const handleResearch = async (c) => {
   game.passTurn();
 
   const gameState = game.getGameState();
-  updateGameState(c, gameState);
+  updateGameState(roomID, gameState);
 
   return c.json({ success: true }, 200);
 };

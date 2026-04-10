@@ -49,11 +49,6 @@ const performAttack = async (
    */
 };
 
-const getOrgansToDisplay = (cards, attackCard, opponents) => {
-  return cards[attackCard.action] ||
-    getAfflictableOrgans(opponents, attackCard);
-};
-
 const createPopupFragment = (
   opponents,
   attackCard,
@@ -95,8 +90,6 @@ export const displayOrgans = (
     "itsAlive": organDiscardPile,
   };
 
-  const organCards = getOrgansToDisplay(cards, attackCard, opponents);
-
   if (attackCard.action in cards) {
     const container = document.createElement("div");
     container.setAttribute("class", "popup-afflictable");
@@ -118,9 +111,10 @@ export const displayOrgans = (
         if (!organData) return;
 
         const remainingHeal = organData.maxHealth - organData.health;
-        if (remainingHeal === 0) return;
 
+        if (remainingHeal === 0) return;
         if (totalHeal >= 2) return;
+
         const count = selectedCards.filter((id) => id === organID).length;
         if (count > remainingHeal) return;
 

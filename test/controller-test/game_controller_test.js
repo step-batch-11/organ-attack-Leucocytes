@@ -18,7 +18,7 @@ describe("GameController", () => {
     affliction: {
       name: "AFFLICTION",
       ...target,
-      card: { action: "affliction" },
+      card: { action: "affliction", removableOrgans: [] },
     },
     contagious: { name: "CONTAGIOUS", card: { action: "contagious" } },
     immunity: { name: "IMMUNITY_BOOST", card: { action: "immunity-boost" } },

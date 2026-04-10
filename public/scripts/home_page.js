@@ -4,13 +4,11 @@ const fetchUserdata = async () => {
   return fetch("/user-details");
 };
 
-
-
 const renderUserProfile = (avatarUrl) => {
   const avatarContainer = document.querySelector("#avatar");
-  console.log(avatarContainer)
+  console.log(avatarContainer);
   avatarContainer.style.backgroundImage = `url(${avatarUrl})`;
-}
+};
 
 const renderUserInfo = async () => {
   const userInfo = document.querySelector("#user-info");
@@ -20,10 +18,9 @@ const renderUserInfo = async () => {
   usernamePlaceHolder.textContent = username.toUpperCase();
   const getAvatarURL = getAvatarClosure();
 
-
   const avatarUrl = getAvatarURL(username);
-  localStorage.setItem('profile', avatarUrl);
-  renderUserProfile(avatarUrl)
+  localStorage.setItem("profile", avatarUrl);
+  renderUserProfile(avatarUrl);
 };
 
 window.onload = () => {

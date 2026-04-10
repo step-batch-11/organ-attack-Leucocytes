@@ -12,9 +12,10 @@ export default class GameController {
     this.#timer = timer;
 
     this.#ACTIONS = {
-      affliction: this.#handleNormalAffliction,
-      contagious: this.#handleNormalAffliction,
-      metastasis: this.#handleNormalAffliction,
+      affliction: this.#handleAffliction,
+      contagious: this.#handleAffliction,
+      metastasis: this.#handleAffliction,
+      "medical-miracle": this.#handleMedicalMiracle,
     };
   }
 
@@ -34,8 +35,28 @@ export default class GameController {
     return this.#timer.start();
   }
 
-  #handleNormalAffliction(game, { opponentID, organCardID }) {
-    return game.afflictOrganOfOpponent(opponentID, organCardID);
+  #handleAffliction(game, { opponentID, organCardID, card }) {
+    const { removableOrgans } = card;
+    const afflictionPoints =
+      (removableOrgans.includes(organCardID) || card.type === "necrosis")
+        ? 2
+        : 1;
+
+    return game.afflictOrganOfOpponent(
+      opponentID,
+      organCardID,
+      afflictionPoints,
+    );
+  }
+
+  #handleMedicalMiracle(game, { attackerID, organCardIDs }) {
+    console.log({ game, attackerID, organCardIDs }, "in medical shop");
+
+    organCardIDs.forEach((organCardID) => {
+      game.healOrgan(attackerID, organCardID);
+    });
+
+    return ({ success: true });
   }
 
   #applyAction(game, action) {

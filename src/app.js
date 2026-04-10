@@ -27,8 +27,7 @@ import { getCookie } from "hono/cookie";
 
 const waitingList = new Set();
 
-export const updateGameState = (ctx, publicGameState) => {
-  const roomID = getCookie(ctx, "roomID");
+export const updateGameState = (roomID, publicGameState) => {
   for (const client of waitingList) {
     const { resolve, c } = client;
     const clientRoomID = getCookie(c, "roomID");

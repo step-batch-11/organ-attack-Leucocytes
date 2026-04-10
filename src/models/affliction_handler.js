@@ -20,28 +20,14 @@ export class AfflictionHandler {
 
   refillAttackCard(attacker) {
     const { organCards } = attacker.getPlayerDetails();
-    const attackCard = this.#attackCards.getCard();
+    let attackCard = this.#attackCards.getCard();
 
-    if (this.#doesEffectAnyOwnOrgan(attackCard, organCards)) {
-      const dummyCard = {
-        "id": 100,
-        "name": "Dummy",
-        "isInstant": false,
-        "afflictableOrgans": [1000],
-        "removableOrgans": [],
-        "isWild": true,
-        "afflictPoints": 1,
-        "Desc": "A Dummy Attack Card",
-        "type": "dummy",
-        "action": "affliction",
-        "isBlockable": true,
-      };
-
-      attacker.refillHand(dummyCard);
+    while (this.#doesEffectAnyOwnOrgan(attackCard, organCards)) {
       this.#attackCards.addToDiscardPile(attackCard);
-    } else {
-      attacker.refillHand(attackCard);
+      attackCard = this.#attackCards.getCard();
     }
+
+    attacker.refillHand(attackCard);
   }
 
   discardAttackCard(attacker, attackCardID) {

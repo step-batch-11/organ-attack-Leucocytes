@@ -14,7 +14,7 @@ const main = () => {
   const rooms = { 101: [] };
   const timer = new Timer(5000);
 
-  const idGenerator = counter();
+  const idGenerator = () => Date.now() * Math.random();
   const playerIDGenerator = counter();
 
   const actionStack = new ActionStack();

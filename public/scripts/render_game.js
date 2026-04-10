@@ -145,7 +145,8 @@ export const renderOpponents = (opponents) => {
   const opponentArea = document.querySelector(".opponent-area");
   opponentArea.innerHTML = "";
 
-  const opponentSpacer = (6 / (opponents.length + 1)) + 0.15;
+  const offset = opponents.length === 3 ? 0.2 : 0.15;
+  const opponentSpacer = (6 / (opponents.length + 1)) + offset;
   const fragments = opponents.map((opponent, i) => {
     const position = opponentPos(i, opponentSpacer);
     return createOppFragment(template, opponent, position);

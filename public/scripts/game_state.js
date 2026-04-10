@@ -12,18 +12,28 @@ export default class GameState {
     return this.#state.self.isMyTurn;
   }
 
+  areOrgansAfflicted() {
+    const { self } = this.#state;
+    return self.organCards.some(({ maxHealth, health }) => health < maxHealth);
+  }
+
   getAfflictableOrgans(cardID) {
-    const { self, players } = this.#state;
-    const attackCard = self.attackCards.find(({ id }) => id === cardID);
-
-    const afflictableOrgans = attackCard !== undefined
-      ? attackCard.afflictableOrgans
-      : [];
-
-    const opponents = players.filter(({ id }) => id !== self.id);
+    const afflictableOrgans = this.#getAttackCardField(
+      cardID,
+      "afflictableOrgans",
+    );
+    const opponents = this.getOpponents();
 
     return opponents.flatMap(({ organCards }) => organCards)
       .filter(({ id }) => afflictableOrgans.includes(id) || id === 100);
+  }
+
+  getRemovableOrgans(cardID) {
+    const removableOrgans = this.#getAttackCardField(cardID, "removableOrgans");
+    const opponents = this.getOpponents();
+
+    return opponents.flatMap(({ organCards }) => organCards)
+      .filter(({ id }) => removableOrgans.includes(id));
   }
 
   getPlayerWithOrgan(organID) {
@@ -42,6 +52,11 @@ export default class GameState {
     return this.#state.event.actor.id;
   }
 
+  getOpponents() {
+    const { players, self } = this.#state;
+    return players.filter(({ id }) => id !== self.id);
+  }
+
   getAttackedPlayerID() {
     return this.#state.event.target.player.id;
   }
@@ -50,10 +65,24 @@ export default class GameState {
     return this.#state.event.target.organ.id;
   }
 
+  getAfflictedOrgans() {
+    const { self } = this.#state;
+    return self.organCards.filter(({ maxHealth, health }) =>
+      health < maxHealth
+    );
+  }
+
   #getAttackCardFlag(attackCardID, flag) {
     const { self } = this.#state;
     const attackCard = self.attackCards.find(({ id }) => id === attackCardID);
     return attackCard[flag];
+  }
+
+  #getAttackCardField(cardID, field) {
+    const { self } = this.#state;
+    const attackCard = self.attackCards.find(({ id }) => id === cardID);
+
+    return attackCard !== undefined ? attackCard[field] : [];
   }
 
   isInstant(attackCardID) {

@@ -4,7 +4,7 @@ const renderPlayerProfile = (name, avatarContainer) => {
   const getAvatarURL = getAvatarClosure();
   const avatarUrl = getAvatarURL(name);
   avatarContainer.style.backgroundImage = `url(${avatarUrl})`;
-}
+};
 
 const renderPlayerInfo = (template, myID, playerCount, players) => {
   return (player) => {
@@ -14,8 +14,8 @@ const renderPlayerInfo = (template, myID, playerCount, players) => {
     const indication = playerDetail.querySelector("#indication");
     const avatarContainer = playerDetail.querySelector(".player-profile");
 
-    console.log(avatarContainer)
-    renderPlayerProfile(player.name, avatarContainer)
+    console.log(avatarContainer);
+    renderPlayerProfile(player.name, avatarContainer);
 
     if (player.id === myID) {
       indication.textContent = "(YOU)";

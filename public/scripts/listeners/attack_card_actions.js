@@ -1,30 +1,5 @@
 import { cloneFromTemplate, postJSON, setOrganImage } from "../utils.js";
 
-export const affliction = (card) => {
-  const cardID = parseInt(card.dataset.id);
-  const gameState = window.gameState;
-
-  if (!gameState.isMyTurn() || !gameState.isCardActive(cardID)) return;
-
-  const popup = cloneFromTemplate("#popup-organs-template");
-  popup.querySelector(".removes-organ").remove();
-
-  popup.dataset.action = "affliction";
-  popup.dataset.for = cardID;
-
-  const afflictableOrgans = gameState.getAfflictableOrgans(cardID);
-  const organNodes = createOrganNodes(afflictableOrgans);
-
-  const afflictableOrgansContainer = popup.querySelector(
-    ".afflicts-organ .target-organs",
-  );
-  afflictableOrgansContainer.append(...organNodes);
-
-  const popupContainer = document.querySelector(".popup");
-
-  popupContainer.replaceChildren(popup);
-};
-
 const createOrganNodes = (afflictableOrgans) => {
   const organElement = cloneFromTemplate("#organ-card-template");
 
@@ -35,6 +10,42 @@ const createOrganNodes = (afflictableOrgans) => {
     return organNode;
   });
   return organNodes;
+};
+
+const renderOrganNodes = (popup, organs, query) => {
+  if (organs.length === 0) {
+    popup.querySelector(query).remove();
+    return;
+  }
+
+  const organNodes = createOrganNodes(organs);
+  const organsContainer = popup.querySelector(`${query} .target-organs`);
+  organsContainer.append(...organNodes);
+};
+
+export const affliction = (card) => {
+  const cardID = parseInt(card.dataset.id);
+  const gameState = window.gameState;
+
+  if (
+    (!gameState.isMyTurn() && !gameState.isInstant(cardID)) ||
+    !gameState.isCardActive(cardID)
+  ) return;
+
+  const popup = cloneFromTemplate("#popup-organs-template");
+
+  popup.dataset.action = "affliction";
+  popup.dataset.for = cardID;
+
+  const removableOrgans = gameState.getRemovableOrgans(cardID);
+  const afflictableOrgans = gameState.getAfflictableOrgans(cardID);
+
+  renderOrganNodes(popup, afflictableOrgans, ".afflicts-organ");
+  renderOrganNodes(popup, removableOrgans, ".removes-organ");
+
+  const popupContainer = document.querySelector(".popup");
+
+  popupContainer.replaceChildren(popup);
 };
 
 // immunity boost
@@ -68,12 +79,8 @@ export const contagious = (card) => {
   popup.dataset.for = cardID;
 
   const afflictableOrgans = gameState.getPlayerOrgans(opponentID);
-  const organNodes = createOrganNodes(afflictableOrgans);
 
-  const afflictableOrgansContainer = popup.querySelector(
-    ".afflicts-organ .target-organs",
-  );
-  afflictableOrgansContainer.append(...organNodes);
+  renderOrganNodes(popup, afflictableOrgans, ".afflicts-organ");
 
   const popupContainer = document.querySelector(".popup");
 
@@ -98,12 +105,7 @@ export const metastasis = (card) => {
   const afflictableOrgans = gameState
     .getUnharmedOrgan(opponentID, currentDamagedOrgan);
 
-  const organNodes = createOrganNodes(afflictableOrgans);
-
-  const afflictableOrgansContainer = popup.querySelector(
-    ".afflicts-organ .target-organs",
-  );
-  afflictableOrgansContainer.append(...organNodes);
+  renderOrganNodes(popup, afflictableOrgans, ".afflicts-organ");
 
   const popupContainer = document.querySelector(".popup");
 
