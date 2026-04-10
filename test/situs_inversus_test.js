@@ -14,10 +14,20 @@ describe("tests for situs inversus", () => {
     const p1 = new Player("user-1", 1, "non-host");
     const p2 = new Player("user-2", 2, "non-host");
     const players = [p1, p2];
-    const organ1 = new Organ("heart", 1, 2, 2);
+    const organ1 = new Organ("heart", 7, 2, 2);
     const shuffler = (x) => x;
-    const organ2 = new Organ("lungs", 2, 2, 2);
-    const organs = [organ1, organ2];
+    const organ2 = new Organ("lungs", 13, 2, 2);
+    const organ3 = new Organ("wild", 1, 4, 4);
+    const organs = [
+      organ3,
+      new Organ("o4", 4, 2, 2),
+      new Organ("o5", 5, 2, 2),
+      organ1,
+      new Organ("o6", 6, 2, 2),
+      new Organ("o7", 1, 2, 2),
+      new Organ("o8", 8, 2, 2),
+      organ2,
+    ];
     const attackCards = Array.from(
       { length: 10 },
       (i) => ({
@@ -47,17 +57,26 @@ describe("tests for situs inversus", () => {
     const { success } = handleSitusInversus({ game });
 
     assertEquals(success, true);
-    assertEquals(p1.getPlayerDetails().organCards[0].name, "heart");
-    assertEquals(p2.getPlayerDetails().organCards[0].name, "lungs");
+    assertEquals(p1.getPlayerDetails().organCards.at(-1).name, "heart");
+    assertEquals(p2.getPlayerDetails().organCards.at(-1).name, "lungs");
   });
   it("players lungs and heart shouldn't swap when both don't exists ", () => {
     const p1 = new Player("user-1", 1, "non-host");
     const p2 = new Player("user-2", 2, "non-host");
     const players = [p1, p2];
-    const organ1 = new Organ("spleen", 1, 2, 2);
     const shuffler = (x) => x;
-    const organ2 = new Organ("lungs", 2, 2, 2);
-    const organs = [organ1, organ2];
+    const organ2 = new Organ("lungs", 13, 2, 2);
+    const organ3 = new Organ("wild", 1, 4, 4);
+    const organs = [
+      organ3,
+      new Organ("o4", 4, 2, 2),
+      new Organ("o5", 5, 2, 2),
+      new Organ("o6", 6, 2, 2),
+      new Organ("o7", 1, 2, 2),
+      new Organ("o8", 8, 2, 2),
+      new Organ("o9", 9, 2, 2),
+      organ2,
+    ];
     const attackCards = Array.from(
       { length: 10 },
       (i) => ({
@@ -82,12 +101,12 @@ describe("tests for situs inversus", () => {
     game.dealCards();
 
     assertEquals(p1.getPlayerDetails().organCards[0].name, "lungs");
-    assertEquals(p2.getPlayerDetails().organCards[0].name, "spleen");
+    assertEquals(p2.getPlayerDetails().organCards[0].name, "o6");
 
     const { success } = handleSitusInversus({ game });
 
     assertEquals(success, true);
-    assertEquals(p2.getPlayerDetails().organCards[0].name, "spleen");
     assertEquals(p1.getPlayerDetails().organCards[0].name, "lungs");
+    assertEquals(p2.getPlayerDetails().organCards[0].name, "o6");
   });
 });

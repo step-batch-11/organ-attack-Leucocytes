@@ -33,7 +33,7 @@ export class Game {
 
   setFirstPlayer() {
     this.#currentPlayer = this.#players
-      .findIndex((player) => player.holdsWild());
+      .findIndex((player) => player.holdsWild()) || 0;
     this.#turnManager.setTurn(this.#currentPlayer);
     return this.#currentPlayer;
   }

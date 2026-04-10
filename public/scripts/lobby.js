@@ -52,6 +52,16 @@ const leaveLobby = (isHost) => {
   };
 };
 
+const copyRoomID = () => {
+  const copyBtn = document.querySelector("#copy-btn");
+
+  copyBtn.addEventListener("click", () => {
+    const id = document.querySelector("#room-id").textContent;
+    navigator.clipboard.writeText(id);
+    alert(`Room ID copied`);
+  });
+};
+
 (() => {
   let initLobbyIntervalID;
 
@@ -69,6 +79,7 @@ const leaveLobby = (isHost) => {
   };
 
   window.onload = () => {
+    copyRoomID();
     initLobbyIntervalID = setInterval(initiateLobby, 1000);
   };
 })();

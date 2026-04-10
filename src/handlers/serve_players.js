@@ -33,7 +33,7 @@ export const handleGetPlayers = (c) => {
     myID,
     roomID,
     redirectPath: "/game-page",
-  }, 302);
+  }, 200);
 };
 
 export const getPlayerData = (c) => {

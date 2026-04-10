@@ -118,7 +118,16 @@ describe("Game model test", () => {
         ),
         shuffle,
       );
-      const organCards = new Deck([{ id: 1 }], shuffle);
+      const organCards = new Deck([
+        new Organ("wild", 1, 4, 4),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+      ], shuffle);
 
       const dealer = new Dealer(attackCards, organCards, [player1, player2]);
       const turnManager = new TurnManager(players, 1);
@@ -171,12 +180,16 @@ describe("Game model test", () => {
         ),
         shuffle,
       );
-      const organCards = new Deck(
-        Array.from({ length: 8 }, (_, i) => `o${i + 1}`).map((x) =>
-          new Organ(x)
-        ),
-        shuffle,
-      );
+      const organCards = new Deck([
+        new Organ("wild", 1, 4, 4),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+      ], shuffle);
 
       const dealer = new Dealer(attackCards, organCards, [player1, player2]);
 
@@ -192,12 +205,12 @@ describe("Game model test", () => {
       const player1Organs = player1
         .getPlayerDetails().organCards.map(({ name }) => name);
 
-      assertEquals(player1Organs, ["o5", "o6", "o7", "o8"].reverse());
+      assertEquals(player1Organs, ["organ1", "organ1", "organ1", "organ1"]);
 
       const player2Organs = player2
         .getPlayerDetails().organCards.map(({ name }) => name);
 
-      assertEquals(player2Organs, ["o1", "o2", "o3", "o4"].reverse());
+      assertEquals(player2Organs, ["organ1", "organ1", "organ1", "wild"]);
     });
 
     it("Should distribute 5 attack cards and 4 organ cards for 2 players", () => {
@@ -217,12 +230,16 @@ describe("Game model test", () => {
         ),
         shuffle,
       );
-      const organCards = new Deck(
-        Array.from({ length: 8 }, (_, i) => `o${i + 1}`).map((x) =>
-          new Organ(x)
-        ),
-        shuffle,
-      );
+      const organCards = new Deck([
+        new Organ("wild", 1, 4, 4),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+        new Organ("organ1", 1, 2, 2),
+      ], shuffle);
 
       const dealer = new Dealer(attackCards, organCards, [player1, player2]);
 
@@ -251,10 +268,7 @@ describe("Game model test", () => {
       );
       assertEquals(
         player1Organs.map(({ name }) => name),
-        Array.from(
-          { length: 4 },
-          (_, i) => `o${8 - i}`,
-        ),
+        ["organ1", "organ1", "organ1", "organ1"],
       );
 
       const { attackCards: player2Attacks, organCards: player2Organs } = player2
@@ -278,10 +292,7 @@ describe("Game model test", () => {
       );
       assertEquals(
         player2Organs.map(({ name }) => name),
-        Array.from(
-          { length: 4 },
-          (_, i) => `o${4 - i}`,
-        ),
+        ["organ1", "organ1", "organ1", "wild"],
       );
     });
 

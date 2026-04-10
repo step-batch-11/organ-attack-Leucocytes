@@ -1,33 +1,50 @@
 export class AfflictionHandler {
   #attackCards;
   #organCards;
+  #players;
 
-  constructor(attackCards, organCards) {
+  constructor(attackCards, organCards, players) {
     this.#attackCards = attackCards;
     this.#organCards = organCards;
+    this.#players = players;
+  }
+
+  #canAfflictOpponents(attackCard, opponents) {
+    return opponents.some((opponent) => {
+      const { organCards } = opponent.getPlayerDetails();
+      return organCards.some(({ id }) =>
+        attackCard.afflictableOrgans.includes(id) ||
+        attackCard.removableOrgans.includes(id)
+      );
+    });
+  }
+
+  #isNormalAffliction({ action, afflictPoints }) {
+    return action === "affliction" && afflictPoints === 1;
+  }
+
+  refillAttackCard(attacker) {
+    const opponents = this.#players.filter((player) =>
+      player.getID() !== attacker.getID()
+    );
+    console.log(opponents);
+    let attackCard = this.#attackCards.getCard();
+
+    while (
+      this.#isNormalAffliction(attackCard) &&
+      !this.#canAfflictOpponents(attackCard, opponents)
+    ) {
+      console.log("I have ");
+      this.#attackCards.addToDiscardPile(attackCard);
+      attackCard = this.#attackCards.getCard();
+    }
+    attacker.refillHand(attackCard);
   }
 
   afflictOrganOfOpponent(opponent, organCardID, afflictPoints) {
     const { organ, isDead } = opponent.afflictOrgan(organCardID, afflictPoints);
 
     if (isDead) this.#organCards.addToDiscardPile(organ);
-  }
-
-  #doesEffectAnyOwnOrgan(attackCard, organCards) {
-    return organCards
-      .some(({ id }) => attackCard.afflictableOrgans.includes(id));
-  }
-
-  refillAttackCard(attacker) {
-    const { organCards } = attacker.getPlayerDetails();
-    let attackCard = this.#attackCards.getCard();
-
-    while (this.#doesEffectAnyOwnOrgan(attackCard, organCards)) {
-      this.#attackCards.addToDiscardPile(attackCard);
-      attackCard = this.#attackCards.getCard();
-    }
-
-    attacker.refillHand(attackCard);
   }
 
   discardAttackCard(attacker, attackCardID) {

@@ -90,6 +90,20 @@ export const createApp = ({
     return new Promise((resolve) => waitingList.add({ resolve, c }));
   });
 
+  app.post("/remove-card", async (c) => {
+    const { attackCardID, playerID } = await c.req.json();
+
+    const roomID = getCookie(c, "roomID");
+    const game = c.get("games")[roomID];
+
+    game.discardAttackCard(
+      playerID,
+      attackCardID,
+    );
+
+    return c.json({ success: true });
+  });
+
   app.get("/discard-pile", serveAttackCardPile);
   app.get("/game-state", serveGameState);
   app.get(

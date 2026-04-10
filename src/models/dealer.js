@@ -9,29 +9,48 @@ export class Dealer {
     this.#players = players;
   }
 
-  #doesEffectAnyOwnOrgan(attackCard, organCards) {
-    return organCards.some(({ id }) => {
-      return attackCard.afflictableOrgans.includes(id) ||
-        attackCard.removableOrgans.includes(id);
+  #canAfflictOpponents(attackCard, opponents) {
+    return opponents.some((opponent) => {
+      const { organCards } = opponent.getPlayerDetails();
+      return organCards.some(({ id }) =>
+        attackCard.afflictableOrgans.includes(id) ||
+        attackCard.removableOrgans.includes(id)
+      );
     });
   }
 
   #dealOrganCards() {
     this.#organCards.shuffleCards();
-    const organCardsLimit = Math.floor(
-      this.#organCards.getDrawingPile().length / this.#players.length,
-    );
-
+    const organCardsLimit = 4;
+    const totalOrgansCount = organCardsLimit * this.#players.length;
+    let dealtOrgansCount = 0;
+    let isWildDealt = false;
     this.#players.forEach((player) => {
       const organCards = [];
 
       for (let i = 0; i < organCardsLimit; i++) {
-        const organ = this.#organCards.getCard().getOrgan();
-        organCards.push(organ);
+        if (dealtOrgansCount === totalOrgansCount - 1 && !isWildDealt) {
+          let organ = this.#organCards.getCard().getOrgan();
+          while (!organ.isWild()) {
+            organ = this.#organCards.getCard().getOrgan();
+          }
+          organCards.push(organ);
+        } else {
+          const card = this.#organCards.getCard();
+          console.log("hrer", card);
+          const organ = card.getOrgan();
+          organCards.push(organ);
+          isWildDealt = organ.isWild();
+        }
+        dealtOrgansCount++;
       }
 
       player.fillHandWithOrgans(organCards);
     });
+  }
+
+  #isNormalAffliction({ action, afflictPoints }) {
+    return action === "affliction" && afflictPoints === 1;
   }
 
   dealAttackCards() {
@@ -39,11 +58,15 @@ export class Dealer {
     const limit = 5;
     this.#players.forEach((player) => {
       const attackCards = [];
-      const { organCards } = player.getPlayerDetails();
+      const opponents = this.#players.filter((p) =>
+        player.getID() !== p.getID()
+      );
       while (attackCards.length < limit) {
         const card = this.#attackCards.getCard();
-
-        if (this.#doesEffectAnyOwnOrgan(card, organCards)) {
+        if (
+          this.#isNormalAffliction(card) &&
+          !this.#canAfflictOpponents(card, opponents)
+        ) {
           this.#attackCards.addToDiscardPile(card);
         } else {
           attackCards.push(card);

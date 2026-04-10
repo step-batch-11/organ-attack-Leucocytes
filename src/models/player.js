@@ -65,6 +65,24 @@ export class Player {
     return card[0];
   }
 
+  removeAttackCardIfOrganDead(organ) {
+    const cards = [];
+    let i = 0;
+    while (i < this.#attackCards.length) {
+      const card = this.#attackCards[i];
+      if (
+        (card.afflictableOrgans.includes(organ.getID()) &&
+          card.afflictableOrgans.length === 1) ||
+        (card.removableOrgans.includes(organ.getID()) &&
+          card.removableOrgans.length === 1)
+      ) {
+        const attackCard = this.removeAttackCard(card.id);
+        cards.push(attackCard);
+      } else i++;
+    }
+    return cards;
+  }
+
   attackCardData(attackCardID) {
     const card = this.#attackCards.find(({ id }) => id === attackCardID);
     return structuredClone(card);

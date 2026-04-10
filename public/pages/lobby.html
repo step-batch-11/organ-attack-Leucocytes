@@ -15,33 +15,34 @@
 
 <body>
   <header">
-  </header>
-  <main>
-    <section id="waiting-table">
-      <section id="waiting-header">
-        <h2>Room ID : <span id="room-number"> </span></h2>
-        <h3 id="players-count">players : <span id="number"></span></h3>
-    <img class="exit-button" src="/assets/background/exit.png"></img>
+    </header>
+    <main>
+      <section id="waiting-table">
+        <section id="waiting-header">
+          <h2>Room ID : <span id="room-id"> </span> <img src="/assets/icons/copy-icon.png" alt="copy"
+              id="copy-btn"></span></h2>
+          <h3 id="players-count">players : <span id="number"></span></h3>
+          <img class="exit-button" src="/assets/background/exit.png"></img>
 
-        
+
+        </section>
+        <section id="waiting-members">
+          <ul></ul>
+        </section>
       </section>
-      <section id="waiting-members">
-        <ul></ul>
-      </section>
-    </section>
 
-    <footer id="table-footer">
-      <div class="loader"></div>
-      <span id="waiting-msg"> waiting for host to start </span>
-    </footer>
-  </main>
+      <footer id="table-footer">
+        <div class="loader"></div>
+        <span id="waiting-msg"> waiting for host to start </span>
+      </footer>
+    </main>
 
-  <template id="player-row">
-    <li>
-      <div class="player-profile"></div>
-      <span class="player-name"></span> <span id="indication"></span>
-    </li>
-  </template>
+    <template id="player-row">
+      <li>
+        <div class="player-profile"></div>
+        <span class="player-name"></span> <span id="indication"></span>
+      </li>
+    </template>
 </body>
 
 </html>

@@ -43,7 +43,11 @@ describe("Cryopreservation Card Test", () => {
     });
 
     const dealer = new Dealer(attackCards, organCards, players);
-    const afflictionHandler = new AfflictionHandler(attackCards, organCards);
+    const afflictionHandler = new AfflictionHandler(
+      attackCards,
+      organCards,
+      players,
+    );
     const turnManager = new TurnManager(players, 1);
 
     const game = new Game(
@@ -135,7 +139,11 @@ describe("Cryopreservation Instant Card Test", () => {
     });
 
     const dealer = new Dealer(attackCards, organCards, players);
-    const afflictionHandler = new AfflictionHandler(attackCards, organCards);
+    const afflictionHandler = new AfflictionHandler(
+      attackCards,
+      organCards,
+      players,
+    );
     const turnManager = new TurnManager(players, 1);
 
     const game = new Game(

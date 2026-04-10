@@ -70,6 +70,32 @@ const manageTurn = async (gameState) => {
     attackCards.forEach((card) => card.onclick = () => "");
   }
 
+  const disabledCards = document.querySelectorAll(
+    ".player-area .disabled-card",
+  );
+
+  disabledCards.forEach((card) => {
+    card.onclick = async (event) => {
+      const attackCardElement = event.target.closest(".attack-card");
+      const attackCardID = getCardID(attackCardElement);
+      await fetch("/remove-card", {
+        method: "post",
+        body: JSON.stringify({ attackCardID, playerID: self.id }),
+      });
+
+      const players = await fetchPlayersData();
+      if (players.status === false) {
+        window.location.href = "/";
+        return;
+      }
+
+      window.gameState = new GameState(players);
+      setupEventListeners();
+
+      await manageTurn(players);
+    };
+  });
+
   const instantCards = [...document.querySelectorAll(".attack-card")]
     .filter((card) => Number(card.getAttribute("is-instant")) === 1);
 

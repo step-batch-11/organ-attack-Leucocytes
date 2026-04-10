@@ -32,7 +32,11 @@ export const gameSetup = async (ctx) => {
   const organDeck = new Deck(organCards, shuffle);
 
   const dealer = new Dealer(attackCards, organDeck, players);
-  const afflictionHandler = new AfflictionHandler(attackCards, organDeck);
+  const afflictionHandler = new AfflictionHandler(
+    attackCards,
+    organDeck,
+    players,
+  );
   const turnManager = new TurnManager(players);
 
   const game = new Game(

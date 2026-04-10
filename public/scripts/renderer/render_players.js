@@ -32,7 +32,7 @@ export const renderPlayers = (players, myID, roomID) => {
   const playerCount = document.querySelector("#players-count #number");
   const template = document.querySelector("#player-row");
   const joinedPlayers = document.querySelector("#waiting-members ul");
-  const roomIDField = document.querySelector("#room-number");
+  const roomIDField = document.querySelector("#room-id");
   roomIDField.textContent = roomID;
 
   const lobbyDetails = players

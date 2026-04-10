@@ -1,6 +1,6 @@
 @import url(./title.css);
 
-*{
+* {
   margin: 0px;
   padding: 0px;
 }
@@ -12,13 +12,13 @@
   --clr-red: crimson;
   --bg-gradient: radial-gradient(var(--bg-color), black);
   --clr-dark-red: hsl(355, 85%, 30%);
-  --clr-gold:hsla(51, 100%, 50%, 0.9);
+  --clr-gold: hsla(51, 100%, 50%, 0.9);
 }
 
-body{
+body {
   backdrop-filter: brightness(30%) contrast(100%);
 }
-header{
+header {
   width: 95%;
 }
 
@@ -28,17 +28,17 @@ header{
 ul {
   display: flex;
   align-items: center;
-} 
-
-#exit-btn{
-  padding:20px;
 }
 
-main{
-width: 100vw;
-height: 88vh;
-display: flex;
-margin-top: 50px;
+#exit-btn {
+  padding: 20px;
+}
+
+main {
+  width: 100vw;
+  height: 88vh;
+  display: flex;
+  margin-top: 50px;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -47,7 +47,7 @@ margin-top: 50px;
 #waiting-table {
   width: 800px;
   height: 600px;
-  background-color:hsl(0, 0%, 20%);
+  background-color: hsl(0, 0%, 20%);
   box-shadow: 0 0 8px hsl(0, 0%, 0%);
   border-radius: 0.4em;
   flex-direction: column;
@@ -104,13 +104,13 @@ li:last-child {
   background-color: black;
   border: 1px solid white;
 } */
- 
+
 .player-profile {
   position: relative;
   width: 50px;
   height: 50px;
   border-radius: 100vw;
-  border:2px solid black ;
+  border: 2px solid black;
   background-image:
     radial-gradient(circle at 50% 30%, rgb(0, 0, 0) 30%, transparent 30%),
     radial-gradient(circle at 50% 100%, rgb(0, 0, 0) 50%, transparent 50%),
@@ -140,13 +140,14 @@ li:last-child {
   gap: 10px;
 }
 
-.timer{
+.timer {
   color: rgb(253, 208, 23) !important;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7),
-               0 0 20px rgba(255, 215, 0, 0.5); 
-  
+  text-shadow:
+    0 0 10px rgba(255, 215, 0, 0.7),
+    0 0 20px rgba(255, 215, 0, 0.5);
+
   font-weight: bold;
-    font-size: 20px; 
+  font-size: 20px;
 }
 
 #waiting-msg {
@@ -154,9 +155,7 @@ li:last-child {
   font-size: 18px;
   letter-spacing: 1px;
   font-family: Schoolbell, fantasy;
-
 }
-
 
 #players-count {
   color: white;
@@ -179,5 +178,16 @@ li:last-child {
   height: 45px;
   color: white;
   background-color: rgba(0, 0, 0, 0);
-  border: white;padding: 20px;
+  border: white;
+  padding: 20px;
+  cursor: pointer;
+}
+
+#copy-btn {
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+#copy-btn:hover {
+  background: #ffffff53;
 }
