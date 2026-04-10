@@ -6,7 +6,6 @@ const fetchUserdata = async () => {
 
 const renderUserProfile = (avatarUrl) => {
   const avatarContainer = document.querySelector("#avatar");
-  console.log(avatarContainer);
   avatarContainer.style.backgroundImage = `url(${avatarUrl})`;
 };
 

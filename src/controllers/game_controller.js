@@ -15,6 +15,7 @@ export default class GameController {
       affliction: this.#handleAffliction,
       contagious: this.#handleAffliction,
       metastasis: this.#handleAffliction,
+      poison: this.#handlePoison,
       "medical-miracle": this.#handleMedicalMiracle,
     };
   }
@@ -49,9 +50,12 @@ export default class GameController {
     );
   }
 
-  #handleMedicalMiracle(game, { attackerID, organCardIDs }) {
-    console.log({ game, attackerID, organCardIDs }, "in medical shop");
+  #handlePoison(game, { attackerID, organCardID }) {
+    game.removeOrgan(attackerID, organCardID);
+    return ({ success: true });
+  }
 
+  #handleMedicalMiracle(game, { attackerID, organCardIDs }) {
     organCardIDs.forEach((organCardID) => {
       game.healOrgan(attackerID, organCardID);
     });

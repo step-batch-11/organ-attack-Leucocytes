@@ -5,6 +5,7 @@ import { displayOpponents, displayOrgans } from "./afflict-organ.js";
 import { displayAttackDeckDiscardPile } from "./discard_pile.js";
 import { setupEventListeners } from "./listeners/setup_event_listeners.js";
 import GameState from "./game_state.js";
+import { handlePoison } from "./listeners/attack_card_actions.js";
 
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
@@ -49,24 +50,13 @@ const attachEventListener = async (
   });
 };
 
-const findPoisonCard = (cards) => cards.find((card) => card.type === "poison");
+const holdsPoison = (cards) => cards.some((card) => card.type === "poison");
 
 const manageTurn = async (gameState) => {
   const { self, players, organDiscardPile } = gameState;
   const opponents = players.filter(({ id }) => id !== self.id);
   await renderGame(self.isAlive);
 
-  const poisonCard = findPoisonCard(self.attackCards);
-
-  if (poisonCard !== undefined) {
-    displayOrgans({
-      player: self,
-      opponents,
-      attackCardID: poisonCard.id,
-      isInstant: true,
-    });
-    return;
-  }
   const attackCards = document.querySelectorAll(".player-area .attack-card");
 
   if (self.isMyTurn && !self.isSleeping) {
@@ -98,6 +88,7 @@ const poll = async () => {
   if (res.status === 200) {
     const gameState = await res.json();
     window.gameState.update(gameState);
+    if (holdsPoison(gameState.self.attackCards)) handlePoison();
     await manageTurn(gameState);
   }
   poll();
@@ -111,6 +102,9 @@ window.onload = async () => {
   }
 
   window.gameState = new GameState(players);
+
+  if (holdsPoison(players.self.attackCards)) handlePoison();
+
   setupEventListeners();
 
   await manageTurn(players);

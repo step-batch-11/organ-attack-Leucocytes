@@ -116,6 +116,12 @@ export default class GameState {
     return organCards.filter(({ id }) => id !== organID);
   }
 
+  getPoisonID() {
+    const { self } = this.#state;
+    const poison = self.attackCards.find((card) => card.type === "poison");
+    return poison.id;
+  }
+
   snapshot() {
     return structuredClone(this.#state);
   }

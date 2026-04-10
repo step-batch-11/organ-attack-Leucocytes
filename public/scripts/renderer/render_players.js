@@ -14,7 +14,6 @@ const renderPlayerInfo = (template, myID, playerCount, players) => {
     const indication = playerDetail.querySelector("#indication");
     const avatarContainer = playerDetail.querySelector(".player-profile");
 
-    console.log(avatarContainer);
     renderPlayerProfile(player.name, avatarContainer);
 
     if (player.id === myID) {

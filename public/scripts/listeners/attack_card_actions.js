@@ -48,6 +48,23 @@ export const affliction = (card) => {
   popupContainer.replaceChildren(popup);
 };
 
+// poison
+export const handlePoison = () => {
+  const gameState = window.gameState;
+
+  const popup = cloneFromTemplate("#popup-organs-template");
+  popup.querySelector(".afflicts-organ").remove();
+
+  popup.dataset.action = "poison";
+  popup.dataset.for = gameState.getPoisonID();
+
+  const removableOrgans = gameState.getPlayerOrgans(gameState.getSelfID());
+  renderOrganNodes(popup, removableOrgans, ".removes-organ");
+  const popupContainer = document.querySelector(".popup");
+
+  popupContainer.replaceChildren(popup);
+};
+
 // immunity boost
 export const immunityBoost = (card) => {
   const gameState = window.gameState;

@@ -21,9 +21,6 @@ const attackCardsListener = (event) => {
   const attackCard = event.target.closest(".attack-card");
   const cardAction = attackCard.dataset.action;
   const cardType = attackCard.dataset.type;
-  console.log("card", cardAction);
-  console.log("attackCard", attackCard);
-  console.log("cardType", cardType);
 
   if (cardAction === "affliction") affliction(attackCard);
   if (cardAction === "contagious") contagious(attackCard);

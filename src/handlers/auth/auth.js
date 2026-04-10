@@ -31,9 +31,7 @@ export const logoutHandler = (c) => {
   const sessionID = getCookie(c, "sessionID");
   const playerID = session[sessionID];
   const players = c.get("players");
-  console.log("Before => ", players);
   delete players[playerID];
-  console.log("After => ", players);
 
   deleteCookie(c, "sessionID");
   return c.redirect("/");

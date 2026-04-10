@@ -128,8 +128,7 @@ export class Game {
   getAllPlayersDetails() {
     return this.#players.map((player) => {
       const { name, id, organCards, vaccinePoints, isSleeping, isAlive } =
-        player
-          .getPlayerDetails();
+        player.getPlayerDetails();
 
       return {
         name,
@@ -147,18 +146,19 @@ export class Game {
     return this.getAllPlayersDetails().filter((player) => player.id !== id);
   }
 
+  #setAllCardsStatus(cards, status) {
+    cards.forEach((card) => card.isActive = status);
+  }
+
   #setAttackStatus(cards) {
-    cards.forEach((card) => {
-      const action = card.action;
-      card.isActive = true;
-      if (
-        this.#event.name === "affliction" &&
-        this.#event.resolved !== true &&
-        action !== "immunity-boost"
-      ) {
-        card.isActive = false;
-      }
-    });
+    this.#setAllCardsStatus(cards, !this.#doesAnyoneHoldPoison());
+
+    if (this.#event.name === "affliction") {
+      cards.forEach((card) => {
+        const action = card.action;
+        card.isActive = action === "immunity-boost" && !this.#event.resolved;
+      });
+    }
   }
 
   getPlayer(id) {
@@ -175,6 +175,13 @@ export class Game {
     if (player === undefined) return false;
 
     return player.getID() === id;
+  }
+
+  #doesAnyoneHoldPoison() {
+    const allAttackCardsInGame = this.#players
+      .flatMap((player) => player.getPlayerDetails().attackCards);
+
+    return allAttackCardsInGame.some(({ action }) => action === "poison");
   }
 
   updateEventStatus(timeRemaining) {

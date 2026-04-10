@@ -86,7 +86,6 @@ export const displayOrgans = (
       .organCards.filter(({ health, maxHealth }) => health !== maxHealth),
     "medical-miracle": player
       .organCards.filter(({ health, maxHealth }) => health !== maxHealth),
-    "poison": player.organCards,
     "itsAlive": organDiscardPile,
   };
 
