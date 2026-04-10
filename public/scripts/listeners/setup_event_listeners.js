@@ -23,6 +23,7 @@ const attackCardsListener = (event) => {
   const cardType = attackCard.dataset.type;
 
   if (cardAction === "affliction") affliction(attackCard);
+  if (cardAction === "transplant") transplant(attackCard);
   if (cardAction === "contagious") contagious(attackCard);
   if (cardAction === "metastasis") metastasis(attackCard);
   if (cardAction === "immunity-boost") immunityBoost(attackCard);

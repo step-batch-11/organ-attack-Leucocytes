@@ -226,7 +226,7 @@
     "Desc": "Transplant",
     "action": "transplant",
     "type": "tactical",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 18,
@@ -239,7 +239,7 @@
     "Desc": "Vaccine",
     "action": "Vaccine",
     "type": "resistance",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 22,
@@ -252,7 +252,7 @@
     "Desc": "Removes one affliction from one organ",
     "action": "medicine",
     "type": "cure",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 23,
@@ -392,7 +392,7 @@
     "Desc": "can bring back any dead organ",
     "action": "itsAlive",
     "type": "tactical",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 31,
@@ -673,7 +673,7 @@
     "Desc": "Removes one affliction from two organ",
     "action": "medical-miracle",
     "type": "cure",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 121,
@@ -864,7 +864,7 @@
     "Desc": "Vaccine",
     "action": "Vaccine",
     "type": "resistance",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 205,
@@ -877,7 +877,7 @@
     "Desc": "Vaccine",
     "action": "Vaccine",
     "type": "resistance",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 206,
@@ -938,7 +938,7 @@
     "Desc": "Removes one affliction from one organ",
     "action": "medicine",
     "type": "cure",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 300,

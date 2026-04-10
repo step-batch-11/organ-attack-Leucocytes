@@ -270,7 +270,7 @@ export const renderGame = async (isAlive) => {
   const gameState = window.gameState;
   const { event, players, self } = gameState.snapshot();
   const livingPlayers = players.filter((player) => player.isAlive);
-  console.log(self);
+  console.log("self", self);
 
   if (livingPlayers.length === 1) {
     const page = isAlive ? "pages/winner.html" : "pages/looser.html";

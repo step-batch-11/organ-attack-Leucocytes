@@ -16,6 +16,7 @@ export default class GameController {
       contagious: this.#handleAffliction,
       metastasis: this.#handleAffliction,
       poison: this.#handlePoison,
+      transplant: this.#handleTransplant,
       "medical-miracle": this.#handleMedicalMiracle,
     };
   }
@@ -49,6 +50,11 @@ export default class GameController {
       afflictionPoints,
     );
   }
+
+  #handleTransplant = (game, { attackerID, opponentID, organCardID }) => {
+    game.transplantOrgan(attackerID, opponentID, organCardID);
+    return ({ success: true });
+  };
 
   #handlePoison(game, { attackerID, organCardID }) {
     game.removeOrgan(attackerID, organCardID);
@@ -91,5 +97,9 @@ export default class GameController {
     this.#applyActions(game, applicableActions);
 
     return { success: true };
+  }
+
+  resolveNow() {
+    this.#timer.end();
   }
 }

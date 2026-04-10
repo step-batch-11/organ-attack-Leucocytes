@@ -17,23 +17,29 @@ export default class GameState {
     return self.organCards.some(({ maxHealth, health }) => health < maxHealth);
   }
 
+  getAllOpponentOrgans() {
+    const opponents = this.getOpponents();
+    return opponents.flatMap(({ organCards }) => organCards);
+  }
+
   getAfflictableOrgans(cardID) {
     const afflictableOrgans = this.#getAttackCardField(
       cardID,
       "afflictableOrgans",
     );
-    const opponents = this.getOpponents();
 
-    return opponents.flatMap(({ organCards }) => organCards)
-      .filter(({ id }) => afflictableOrgans.includes(id) || id === 100);
+    const allOpponentOrgans = this.getAllOpponentOrgans();
+
+    return allOpponentOrgans.filter(({ id }) =>
+      afflictableOrgans.includes(id) || id === 100
+    );
   }
 
   getRemovableOrgans(cardID) {
     const removableOrgans = this.#getAttackCardField(cardID, "removableOrgans");
-    const opponents = this.getOpponents();
+    const allOpponentOrgans = this.getAllOpponentOrgans();
 
-    return opponents.flatMap(({ organCards }) => organCards)
-      .filter(({ id }) => removableOrgans.includes(id));
+    return allOpponentOrgans.filter(({ id }) => removableOrgans.includes(id));
   }
 
   getPlayerWithOrgan(organID) {

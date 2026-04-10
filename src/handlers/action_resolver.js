@@ -18,10 +18,12 @@ const constructAction = (game, body) => {
 
 const playCard = (roomID, gameController, game, action) => {
   const done = gameController.playCard(action, game);
+
+  if (!action.card.isBlockable) gameController.resolveNow();
+
   done.then(() => {
     gameController.resolveAction(game);
     // should go inside game controller
-
     gameController.updateEventStatus(game);
     const gameState = game.getGameState();
     updateGameState(roomID, gameState);

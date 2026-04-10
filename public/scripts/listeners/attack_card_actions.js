@@ -48,6 +48,30 @@ export const affliction = (card) => {
   popupContainer.replaceChildren(popup);
 };
 
+export const transplant = (card) => {
+  const cardID = parseInt(card.dataset.id);
+  const gameState = window.gameState;
+
+  if (
+    (!gameState.isMyTurn() && !gameState.isInstant(cardID)) ||
+    !gameState.isCardActive(cardID)
+  ) return;
+
+  const popup = cloneFromTemplate("#popup-organs-template");
+  popup.querySelector(".afflicts-organ").remove();
+
+  popup.dataset.action = "transplant";
+  popup.dataset.for = cardID;
+
+  const removableOrgans = gameState.getAllOpponentOrgans();
+
+  renderOrganNodes(popup, removableOrgans, ".removes-organ");
+
+  const popupContainer = document.querySelector(".popup");
+
+  popupContainer.replaceChildren(popup);
+};
+
 // poison
 export const handlePoison = () => {
   const gameState = window.gameState;
