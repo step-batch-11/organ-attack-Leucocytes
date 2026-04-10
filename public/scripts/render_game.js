@@ -242,7 +242,6 @@ export const renderGame = async (isAlive) => {
   }
   const opponents = players.filter(({ id }) => id !== self.id);
   renderOpponents(opponents);
-  console.log("event", event);
   renderMyCards(self, opponents);
   renderFlashScreen(event);
 };

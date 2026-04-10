@@ -71,8 +71,8 @@ export const handleAttack = async (c) => {
     attackCardID,
     organCardID,
     canRemove,
-    selectedCardID,
     organCardIDs,
+    selectedCardID,
   } = await c.req.json();
   const roomID = getCookie(c, "roomID");
   const game = c.get("games")[roomID];

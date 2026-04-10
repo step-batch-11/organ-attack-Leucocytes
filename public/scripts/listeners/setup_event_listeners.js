@@ -23,7 +23,6 @@ const attackCardsListener = (event) => {
   const cardType = attackCard.dataset.type;
 
   if (cardAction === "affliction" && cardType === "affliction") {
-    // console.log("affliction card is played");
     affliction(attackCard);
   }
   if (cardAction === "contagious") contagious(attackCard);

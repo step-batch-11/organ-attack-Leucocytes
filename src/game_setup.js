@@ -18,7 +18,6 @@ export const gameSetup = async (ctx) => {
 
   if (!(roomID in rooms)) return ctx.json({ message: "Invalid roomID" }, 400);
 
-  console.log(rooms[roomID]);
   const players = rooms[roomID].players.map(({ name, id }) =>
     new Player(name, id)
   );

@@ -34,7 +34,6 @@ export const joinRoom = async (c) => {
   const players = rooms[roomID].players;
   const player = createPlayer(c, "non-host");
   players.push(player);
-  console.log({ rooms, roomID });
 
   return c.redirect("/pages/lobby.html");
 };
@@ -43,9 +42,7 @@ const removePlayer = (c, rooms, roomID) => {
   const id = getPlayerID(c);
   const players = rooms[roomID].players;
   const playerIndex = players.findIndex((player) => player.id === id);
-  console.log("Before", players);
   players.splice(playerIndex, 1);
-  console.log("After", players);
 };
 
 export const leaveLobby = async (c) => {

@@ -107,13 +107,34 @@ export const displayOrgans = (
     container.append(...organs);
     if (attackCard.action === "medical-miracle") {
       const selectedCards = [];
+      let totalHeal = 0;
+
       container.addEventListener("click", async (e) => {
         const organ = e.target.closest(".organ");
-        organ.setAttribute("data-selected", "true");
+        if (!organ) return;
+
         const organID = Number(organ.getAttribute("organ-id"));
-        if (!selectedCards.includes(organID)) selectedCards.push(organID);
-        if (selectedCards.length === 2) {
+        const organData = player.organCards.find((o) => o.id === organID);
+        if (!organData) return;
+
+        const remainingHeal = organData.maxHealth - organData.health;
+        if (remainingHeal === 0) return;
+
+        if (totalHeal >= 2) return;
+        const count = selectedCards.filter((id) => id === organID).length;
+        if (count > remainingHeal) return;
+
+        selectedCards.push(organID);
+        totalHeal++;
+        organ.setAttribute("data-selected", "true");
+        const isWild = !(organCards.map(({ name }) => name).includes("Wild"));
+        organData.health += 1;
+        if (
+          totalHeal === 2 ||
+          (organCards.length === 1 && isWild)
+        ) {
           clearPopup();
+
           await postJSON("/attack", {
             attackerID: player.id,
             attackCardID,

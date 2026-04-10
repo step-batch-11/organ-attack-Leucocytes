@@ -50,7 +50,6 @@ const extractTargetData = ({ player, game, opponentID, organCardID }) => {
 };
 
 export const createEvent = (eventData, game) => {
-  console.log("here is data for create Event", eventData);
   const { card, attackerID } = eventData;
   const player = game.getPlayer(attackerID);
   const target = extractTargetData({ player, game, ...eventData });
