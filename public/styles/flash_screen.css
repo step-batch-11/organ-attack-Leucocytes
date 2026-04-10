@@ -103,6 +103,7 @@
   background-color: var(--clr-green);
   animation: drain linear forwards;
 }
+
 @keyframes drain {
   from {
     width: 100%;

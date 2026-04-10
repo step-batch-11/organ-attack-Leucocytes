@@ -7,8 +7,8 @@
   --bg-color: hsl(0, 0%, 15%);
   --bg-gradient: radial-gradient(var(--bg-color), black);
   --fg-color: hsl(0, 0%, 95%);
-  --card-height: 9em;
-  --card-width: 7em;
+  --card-height: 11em;
+  --card-width: 9em;
   --organ-size: 44px;
   --clr-red: hsl(348, 83%, 47%);
   --clr-red-alpha-30: hsla(348, 83%, 47%, 0.3);
@@ -33,6 +33,7 @@ body {
 
 main {
   height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
 }
@@ -57,12 +58,12 @@ main {
 .organ[data-affliction="1"] .afflict-1 {
   display: block !important;
 }
-.organ[data-affliction="2"] .afflict-1 ,
+.organ[data-affliction="2"] .afflict-1,
 .organ[data-affliction="2"] .afflict-2 {
   display: block;
 }
-.organ[data-affliction="3"] .afflict-1 ,
-.organ[data-affliction="3"] .afflict-2 ,
+.organ[data-affliction="3"] .afflict-1,
+.organ[data-affliction="3"] .afflict-2,
 .organ[data-affliction="3"] .afflict-3 {
   display: block;
 }
@@ -286,10 +287,12 @@ h1 {
   text-align: center;
 }
 
-h1,
-.name {
+h1 {
   font-family: "Nerko One";
   letter-spacing: 1px;
+}
+.name {
+  font-family: SchoolBell;
 }
 
 /* opponent */
@@ -299,29 +302,30 @@ h1,
   width: 100%;
   display: grid;
   grid-template-areas:
-    "opp-2 . opp-1 . opp-3"
+    "opp-2 . opp-3 . opp-4"
     ".     .   .   .     ."
-    "opp-4 .   .   . opp-5";
+    "opp-1 .   .   .  opp-5";
   justify-content: space-between;
+
 }
 
-.opponent:nth-child(1) {
+.opponent[data-position="1"] {
   grid-area: opp-1;
 }
 
-.opponent:nth-child(2) {
+.opponent[data-position="2"] {
   grid-area: opp-2;
 }
 
-.opponent:nth-child(3) {
+.opponent[data-position="3"] {
   grid-area: opp-3;
 }
 
-.opponent:nth-child(4) {
+.opponent[data-position="4"]{
   grid-area: opp-4;
 }
 
-.opponent:nth-child(5) {
+.opponent[data-position="5"] {
   grid-area: opp-5;
 }
 
@@ -359,6 +363,7 @@ h1,
   text-align: center;
   background-color: #272727;
   border-radius: 5px;
+  text-overflow: ellipsis;
 }
 
 .popup {
@@ -507,3 +512,4 @@ popup-removable-organs img:hover,
   opacity: 0.5;
   box-shadow: 0px 0px 0px 5px var(--clr-red);
 }
+

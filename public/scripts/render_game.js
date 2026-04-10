@@ -111,9 +111,11 @@ const renderMyCards = (
 const createOppFragment = (
   template,
   { name, organCards, id, isMyTurn, vaccinePoints },
+  position,
 ) => {
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
+  element.dataset.position = position;
   element.setAttribute("id", `player-${id}`);
 
   const isDead = organCards.length === 0 ? "true" : "false";
@@ -136,12 +138,17 @@ const createOppFragment = (
   return element;
 };
 
+const opponentPos = (i, spacer) => Math.floor((i + 1) * spacer);
+
 export const renderOpponents = (opponents) => {
   const template = document.querySelector(".opponent-template");
   const opponentArea = document.querySelector(".opponent-area");
   opponentArea.innerHTML = "";
-  const fragments = opponents.map((opponent) => {
-    return createOppFragment(template, opponent);
+
+  const opponentSpacer = (6 / (opponents.length + 1)) + 0.15;
+  const fragments = opponents.map((opponent, i) => {
+    const position = opponentPos(i, opponentSpacer);
+    return createOppFragment(template, opponent, position);
   });
   opponentArea.append(...fragments);
 };
