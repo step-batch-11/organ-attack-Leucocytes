@@ -1,7 +1,5 @@
-* {
-  padding: 0px;
-  margin: 0px;
-}
+@import url(./title.css);
+
 :root {
   --bg-color: #1f1f1f;
   --fg-color: #fdfdfd;
@@ -12,50 +10,34 @@
   --clr-gold:hsla(51, 100%, 50%, 0.9);
 }
 
-body {
-  background-image: var(--bg-gradient);
-  color: var(--fg-color);
+#sub-title{
+  font-size: 20px;
+  color: var(--clr-gold);
   font-family: Schoolbell, fantasy;
+  word-spacing: 5px;
 }
-
-/* body {
-  background-image: url('../assets/background/bg_organs.png');
-  background-color: #1f1f1f;
-  background-repeat: no-repeat;
-  background-size: contain;
-  color: var(--fg-color);
-  font-family: Schoolbell, fantasy;
-  opacity: 0.3;
-} */
 
 main,
 #login-form,
 header {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-}
+  box-sizing: border-box;
 
-header h1 {
-  padding-top: 1em;
-  font-family: "serif";
-  font-size: 80px;
 }
 
 main {
-  height: 80vh;
   width: 100vw;
+
+  flex-direction: column;
 }
 
 #login-form {
-  /* height: 30%;
-  width: 25%; */
-  flex-direction: row;
   gap: 1em;
-  padding: 2em;
-  background-color: var(--bg-color);
-  box-shadow: 0 0 5px black;
+  padding: 4em;
+  background-color:hsl(0, 0%, 12%);
+  box-shadow: 0 0 8px hsl(0, 0%, 0%);
   border-radius: 0.4em;
 }
 
@@ -70,8 +52,8 @@ input {
   font-size: 18px;
   padding: 0.4em 0.8em;
   background-color: hsla(51, 100%, 50%, 0.1);
-  /* outline-style: dashed; */
 }
+
 input:focus {
   outline-color: hsla(51, 100%, 50%, 0.5);
 }
@@ -82,7 +64,6 @@ button {
   font-size: 18px;
   border: none;
   border-radius: 0.2em;
-  /* background-color: hsla(51, 100%, 50%, 0.9); */
   background-color: var(--clr-gold);
   box-shadow: 0 0 5px var(--clr-red);
   padding: 0.4em 0.8em;

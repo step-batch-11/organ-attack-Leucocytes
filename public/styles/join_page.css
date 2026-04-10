@@ -1,3 +1,5 @@
+@import url(./title.css);
+
 * {
   margin: 0;
   padding: 0;
@@ -17,13 +19,16 @@
   --clr-light-gray: hsl(0, 0%, 65%);
 }
 
-body {
+/* body {
   font-family: Schoolbell, fantasy;
   line-height: 1.2;
   background-image: var(--bg-gradient);
   color: var(--fg-color);
   height: 100vh;
-}
+} */
+
+
+
 
 main {
   display: flex;
@@ -44,10 +49,13 @@ main {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 1em;
-  padding: 2em;
-  background-color: var(--bg-color);
+  gap: 1.3em;
+  padding: 3em;
+  /* background-color: var(--bg-color);
   box-shadow: 0 0 5px black;
+  border-radius: 0.4em; */
+  background-color:hsl(0, 0%, 12%);
+  box-shadow: 0 0 8px hsl(0, 0%, 0%);
   border-radius: 0.4em;
 }
 

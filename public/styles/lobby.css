@@ -1,4 +1,6 @@
-* {
+@import url(./title.css);
+
+*{
   margin: 0px;
   padding: 0px;
 }
@@ -13,27 +15,38 @@
   --clr-gold:hsla(51, 100%, 50%, 0.9);
 }
 
-body,
+header{
+  width: 95%;
+}
+
 #waiting-header,
 #waiting-table,
 #table-footer,
 ul {
   display: flex;
   align-items: center;
+} 
+
+#exit-btn{
+  padding:20px;
 }
 
-body {
-  font-family: Schoolbell, fantasy;
-  height: 100vh;
-  background: radial-gradient(rgb(48, 47, 47), rgb(0, 0, 0));
-  background-repeat: no-repeat;
+main{
+width: 100vw;
+height: 88vh;
+display: flex;
+margin-top: 50px;
   justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 #waiting-table {
   width: 800px;
   height: 600px;
-  background-color: rgba(101, 101, 101, 0.5);
+  background-color:hsl(0, 0%, 12%);
+  box-shadow: 0 0 8px hsl(0, 0%, 0%);
+  border-radius: 0.4em;
   flex-direction: column;
   row-gap: 15px;
   border-radius: 10px;
@@ -132,7 +145,7 @@ li:last-child {
 }
 
 #waiting-msg {
-  color: rgb(116, 116, 116);
+  color: rgb(147, 146, 146);
   font-size: 15px;
 }
 
@@ -141,7 +154,7 @@ li:last-child {
   color: white;
 }
 
-.start-button, .exit-button {
+.start-button {
   cursor: pointer;
   font-family: "Nerko one", fantasy;
   font-size: 18px;
@@ -153,5 +166,10 @@ li:last-child {
 }
 
 .exit-button {
-  font-size: 15px;
+  font-size: 40px;
+  width: 30px;
+  height: 45px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0);
+  border: white;padding: 20px;
 }
