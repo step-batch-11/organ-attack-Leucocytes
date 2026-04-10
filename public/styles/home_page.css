@@ -37,11 +37,13 @@ header{
 }
 
 #user-info {
+  font-family:Schoolbell, fantasy;
+  letter-spacing: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 40px;
-  gap: 5px;
+  gap: 10px;
 }
 
 #avatar {
@@ -49,10 +51,12 @@ header{
   width: 50px;
   height: 50px;
   border-radius: 100vw;
-  background-image:
+  /* background-image:
     radial-gradient(circle at 50% 30%, rgb(72, 72, 72) 30%, transparent 30%),
     radial-gradient(circle at 50% 100%, rgb(72, 72, 72) 50%, transparent 50%),
-    linear-gradient(#fff, #fff);
+    linear-gradient(#fff, #fff); */
+    border: 2px solid black;
+    box-shadow: 0px 0px 10px  rgb(255, 255, 255);
 }
 
 main {

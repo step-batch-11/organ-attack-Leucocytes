@@ -15,6 +15,9 @@
   --clr-gold:hsla(51, 100%, 50%, 0.9);
 }
 
+body{
+  backdrop-filter: brightness(30%) contrast(100%);
+}
 header{
   width: 95%;
 }
@@ -44,7 +47,7 @@ margin-top: 50px;
 #waiting-table {
   width: 800px;
   height: 600px;
-  background-color:hsl(0, 0%, 12%);
+  background-color:hsl(0, 0%, 20%);
   box-shadow: 0 0 8px hsl(0, 0%, 0%);
   border-radius: 0.4em;
   flex-direction: column;
@@ -84,7 +87,7 @@ li {
   color: rgb(194, 194, 194);
   padding: 15px;
   font-size: 22px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgb(95, 95, 95);
   display: flex;
   align-items: center;
   column-gap: 18px;
@@ -101,11 +104,13 @@ li:last-child {
   background-color: black;
   border: 1px solid white;
 } */
+ 
 .player-profile {
   position: relative;
   width: 50px;
   height: 50px;
   border-radius: 100vw;
+  border:2px solid black ;
   background-image:
     radial-gradient(circle at 50% 30%, rgb(0, 0, 0) 30%, transparent 30%),
     radial-gradient(circle at 50% 100%, rgb(0, 0, 0) 50%, transparent 50%),
@@ -145,8 +150,11 @@ li:last-child {
 }
 
 #waiting-msg {
-  color: rgb(147, 146, 146);
-  font-size: 15px;
+  color: rgb(191, 190, 190);
+  font-size: 18px;
+  letter-spacing: 1px;
+  font-family: Schoolbell, fantasy;
+
 }
 
 

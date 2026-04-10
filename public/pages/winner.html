@@ -4,19 +4,82 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="/styles/endPage.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap" rel="stylesheet" />
   <title>Winner page</title>
+  <style>
+    @import url('../styles/title.css');
 
+    :root {
+      --bg-color: #1f1f1f;
+      --fg-color: #fdfdfd;
+      --organ-size: 44px;
+      --clr-red: crimson;
+      --bg-gradient: radial-gradient(var(--bg-color), black);
+      --clr-dark-red: hsl(355, 85%, 30%);
+      --clr-gold: hsla(51, 100%, 50%, 0.9);
+    }
+
+    * {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #box {
+      width: 600px;
+      height: 500px;
+      background-color: rgb(101, 101, 102);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #text-greet {
+      font-size: 70px;
+      font-family: "Nerko One";
+      color: var(--clr-gold);
+      text-shadow:
+        4px 4px 2px #000000,
+        4px 4px 3px #9c2b03,
+        4px 4px 5px #eaba1c;
+      letter-spacing: 2px;
+    }
+
+    #text-won {
+      font-size: 40px;
+      font-family: "Nerko One";
+      color: var(--clr-red);
+      text-shadow:
+        /* 0px 0px 10px #ffffff, */
+        0px 0px 2px #000000,
+        0px 0px 10px #ffffff,
+        2px 2px 3px #9c2b03;
+      letter-spacing: 2px;
+    }
+  </style>
 </head>
 
 <body>
   <main>
     <article>
-      <header>
-        <h1>Congratulations</h1>
+      <div id="box">
+        <h1 id="text-greet">Congratulations</h1>
+        <h2 id="text-won">YOU WIN</h2>
         <h1 id="winner-name">player Name</h1>
         <h2>You are the LAST FUNCTIONING HUMAN!</h2>
         <h3>(at least for now...)</h3>
-      </header>
+      </div>
+
       <div class="replay">
         <button class="replay-btn">Replay</button>
       </div>

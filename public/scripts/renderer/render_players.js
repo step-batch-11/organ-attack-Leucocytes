@@ -1,9 +1,21 @@
+import { getAvatarClosure } from "../avatar.js";
+
+const renderPlayerProfile = (name, avatarContainer) => {
+  const getAvatarURL = getAvatarClosure();
+  const avatarUrl = getAvatarURL(name);
+  avatarContainer.style.backgroundImage = `url(${avatarUrl})`;
+}
+
 const renderPlayerInfo = (template, myID, playerCount, players) => {
   return (player) => {
     const playerDetail = document.importNode(template.content, true);
     const detailContainer = playerDetail.querySelector("li");
     const nameField = playerDetail.querySelector(".player-name");
     const indication = playerDetail.querySelector("#indication");
+    const avatarContainer = playerDetail.querySelector(".player-profile");
+
+    console.log(avatarContainer)
+    renderPlayerProfile(player.name, avatarContainer)
 
     if (player.id === myID) {
       indication.textContent = "(YOU)";
