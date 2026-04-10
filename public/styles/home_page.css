@@ -5,9 +5,9 @@
 
 :root {
   --bg-color: hsl(0, 0%, 12%);
-  --bg-gradient: radial-gradient(var(--bg-color) 40%,black);
+  --bg-gradient: radial-gradient(var(--bg-color) 40%, black);
   --fg-color: hsl(0, 0%, 95%);
-  --clr-black:black;
+  --clr-black: black;
   --clr-red: hsl(348, 83%, 47%);
   --clr-dark-blue: hsl(216, 89%, 25%);
   --clr-dark-red: hsl(355, 85%, 30%);
@@ -44,14 +44,13 @@ header h1 {
   font-size: 80px;
 }
 
-#user-info{
+#user-info {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 40px;
-  gap:5px;
+  gap: 5px;
 }
-
 
 #avatar {
   position: relative;
@@ -63,7 +62,6 @@ header h1 {
     radial-gradient(circle at 50% 100%, rgb(72, 72, 72) 50%, transparent 50%),
     linear-gradient(#fff, #fff);
 }
-
 
 main {
   height: 70vh;
@@ -100,13 +98,43 @@ main {
   cursor: pointer;
 }
 
-#room-connection-btns a:hover{
+#room-connection-btns a:hover {
   background-color: var(--clr-dark-blue);
-  transform: scale(1.0.3);
   box-shadow: 0 0 5px white;
-  color:white;
+  color: white;
 }
 
-#username{
+#username {
   font-size: 24px;
+}
+
+.options {
+  display: flex;
+  gap: 1em;
+  height: fit-content;
+  width: fit-content;
+}
+
+#logout,
+#rules-btn {
+  position: relative;
+  padding: 0;
+  color: var(--clr-gold);
+  text-decoration: none;
+}
+
+#rules-btn::before,
+#logout::before {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  background: var(--clr-gold);
+  height: 2px;
+  width: 0%;
+  transition: 0.3s;
+}
+
+#rules-btn:hover::before,
+#logout:hover::before {
+  width: 100%;
 }

@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
 const ONE_HOUR_IN_SEC = 3600;
 const cookieAgeInSec = (hour) => ONE_HOUR_IN_SEC * hour;
@@ -24,6 +24,19 @@ export const getPlayers = (c, roomID) => {
 export const setAuthCookies = (c, sessionID) => {
   const maxAge = cookieAgeInSec(2);
   setCookie(c, "sessionID", sessionID, { maxAge });
+};
+
+export const logoutHandler = (c) => {
+  const session = c.get("session");
+  const sessionID = getCookie(c, "sessionID");
+  const playerID = session[sessionID];
+  const players = c.get("players");
+  console.log("Before => ", players);
+  delete players[playerID];
+  console.log("After => ", players);
+
+  deleteCookie(c, "sessionID");
+  return c.redirect("/");
 };
 
 export const loginHandler = async (c) => {

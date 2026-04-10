@@ -18,6 +18,7 @@ import {
 import {
   allowLoggedInUser,
   loginHandler,
+  logoutHandler,
   redirectLoggedInUser,
 } from "./handlers/auth/auth.js";
 import { serveUserDetails } from "./handlers/userHandler.js";
@@ -84,7 +85,7 @@ export const createApp = ({
     rooms[roomID].started = true;
     return gameSetup(ctx);
   });
-
+  app.get("/logout", logoutHandler);
   app.post("/login", loginHandler);
   app.post("/attack", resolveAction);
   app.post("/opponent-hands", serveOpponentHand);
