@@ -46,23 +46,35 @@ const addFlipEvent = (attackCard) => {
   });
 };
 
+const setCardIndicators = (attackCard, { isInstant, type }) => {
+  const typeIndicator = attackCard.querySelector(".type");
+  typeIndicator.setAttribute("src", `/assets/icons/${type}.png`);
+
+  if (!isInstant) return;
+  const instant = attackCard.querySelector(".instant");
+  console.log(instant);
+  instant.setAttribute("src", "/assets/icons/fire.png");
+};
+
 const renderAttackCards = (attackCardsNode, attackCards, opponents) => {
   attackCardsNode.replaceChildren();
 
   attackCards.forEach((attackCard, i) => {
     const attackCardNode = cloneFromTemplate("#attack-cards");
     const cardData = attackCards[i];
+
     setCardContent(attackCardNode, cardData);
     setCardAttributes(attackCardNode, cardData);
     checkCardDisabled(attackCardNode, cardData, opponents);
     addFlipEvent(attackCardNode);
+    setCardIndicators(attackCardNode, cardData);
     attackCardsNode.append(attackCardNode);
   });
 };
 
-const renderOrganImage = (organ, name) => {
+const renderOrganImage = (organ, name, id) => {
   const image = organ.querySelector("img");
-  image.setAttribute("src", `/assets/organs/${String(name).toLowerCase()}.png`);
+  image.setAttribute("src", `/assets/organs/${id}.png`);
   image.setAttribute("alt", name);
   image.setAttribute("title", name);
 };
@@ -70,7 +82,7 @@ const renderOrganImage = (organ, name) => {
 const renderOrgans = (container, organCards) => {
   organCards.forEach(({ name, id, isWild, health }) => {
     const organ = cloneFromTemplate("#organ-card-template");
-    renderOrganImage(organ, name);
+    renderOrganImage(organ, name, id);
     const maxHealth = isWild ? 4 : 2;
     organ.setAttribute("data-affliction", maxHealth - health);
     organ.setAttribute("data-id", id);

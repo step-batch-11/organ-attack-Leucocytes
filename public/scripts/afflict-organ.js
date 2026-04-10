@@ -6,9 +6,9 @@ const createPopup = (collection) => {
     icon.setAttribute("class", "organ");
     icon.setAttribute("organ-id", `${item.id}`);
     icon.setAttribute("player-id", `${item.playerID}`);
-    const organName = item.name;
+    // const organName = item.name;
     const image = document.createElement("img");
-    image.setAttribute("src", `/assets/organs/${organName.toLowerCase()}.png`);
+    image.setAttribute("src", `/assets/organs/${item.id}.png`);
     icon.append(image);
     return icon;
   });

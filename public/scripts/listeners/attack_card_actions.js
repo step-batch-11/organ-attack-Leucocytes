@@ -6,7 +6,7 @@ const createOrganNodes = (afflictableOrgans) => {
   const organNodes = afflictableOrgans.map(({ id, name }) => {
     const organNode = organElement.cloneNode(true);
     organNode.dataset.id = id;
-    setOrganImage(organNode, name);
+    setOrganImage(organNode, name, id);
     return organNode;
   });
   return organNodes;

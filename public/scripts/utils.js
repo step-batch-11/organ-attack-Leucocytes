@@ -43,9 +43,9 @@ export const fetchPlayersData = () => {
     });
 };
 
-export const setOrganImage = (organ, name) => {
+export const setOrganImage = (organ, name, id) => {
   const image = organ.querySelector("img");
-  image.setAttribute("src", `/assets/organs/${String(name).toLowerCase()}.png`);
+  image.setAttribute("src", `/assets/organs/${id}.png`);
   image.setAttribute("alt", name);
   image.setAttribute("title", name);
 };

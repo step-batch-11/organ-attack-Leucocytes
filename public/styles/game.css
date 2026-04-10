@@ -224,7 +224,7 @@ main {
 
 .info-btn {
   position: absolute;
-  left: 5px;
+  right: 5px;
   bottom: 5px;
 
   width: 18px;
@@ -235,6 +235,21 @@ main {
   background: var(--bg-color);
   color: #f7f2d8;
   cursor: pointer;
+}
+.attack-card .instant {
+  width: 1.2em;
+
+  object-fit: contain;
+  position: absolute;
+  left: 35px;
+  bottom: 5px;
+}
+.attack-card .type {
+  width: 1.5em;
+
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
 }
 
 .card-desc {
@@ -306,7 +321,6 @@ h1 {
     ".     .   .   .     ."
     "opp-1 .   .   .  opp-5";
   justify-content: space-between;
-
 }
 
 .opponent[data-position="1"] {
@@ -321,7 +335,7 @@ h1 {
   grid-area: opp-3;
 }
 
-.opponent[data-position="4"]{
+.opponent[data-position="4"] {
   grid-area: opp-4;
 }
 
@@ -512,4 +526,3 @@ popup-removable-organs img:hover,
   opacity: 0.5;
   box-shadow: 0px 0px 0px 5px var(--clr-red);
 }
-
