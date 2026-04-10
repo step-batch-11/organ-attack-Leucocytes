@@ -1,6 +1,6 @@
 export const getAvatarClosure = () => {
   const base = "https://api.dicebear.com";
-  const faceType = "adventurer-neutral";
+  const faceType = "adventurer";
   const R = 50;
   /*
   <img

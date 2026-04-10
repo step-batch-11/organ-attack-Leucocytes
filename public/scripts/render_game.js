@@ -1,3 +1,4 @@
+import { getAvatarClosure } from "./avatar.js";
 import {
   cloneFromTemplate,
   getAfflictableOrgans,
@@ -90,6 +91,8 @@ const renderMyCards = (
 
   const isDead = organCards.length === 0 ? "true" : "false";
   const avatar = playerArea.querySelector(".player");
+  const profile = playerArea.querySelector(".avatar");
+  renderPlayerProfile(name, profile);
   avatar.setAttribute("data-is-alive", isDead);
 
   if (isMyTurn) {
@@ -106,6 +109,12 @@ const renderMyCards = (
   playerOrganContainer.innerHTML = "";
   renderOrgans(playerOrganContainer, organCards);
   renderAttackCards(attackCardContainer, attackCards, opponents);
+};
+
+const renderPlayerProfile = (name, avatarContainer) => {
+  const getAvatarURL = getAvatarClosure();
+  const avatarUrl = getAvatarURL(name);
+  avatarContainer.style.backgroundImage = `url(${avatarUrl})`;
 };
 
 const createOppFragment = (
@@ -128,6 +137,8 @@ const createOppFragment = (
   renderOrgans(element, organCards);
 
   const avatar = clone.querySelector(".avatar");
+  renderPlayerProfile(name, avatar);
+
   avatar.setAttribute("data-is-alive", isDead);
 
   if (isMyTurn) {
@@ -167,6 +178,10 @@ const scaffoldFlashScreen = ({ actor, target, card, timeRemaining }) => {
   const targetContainer = flashScreen.querySelector(".target");
   const targetOrgan = targetContainer.querySelector(".organ");
   const bar = flashScreen.querySelector(".bar");
+  const avatar = flashScreen.querySelector(".actor .avatar");
+  const targetAvatar = flashScreen.querySelector(".target .avatar");
+  renderPlayerProfile(actor.name, avatar);
+  renderPlayerProfile(target.player?.name, targetAvatar);
 
   setTextContent(flashScreen, ".actor .name", actor.name);
   setTextContent(attackCard, " h1", card.name);
