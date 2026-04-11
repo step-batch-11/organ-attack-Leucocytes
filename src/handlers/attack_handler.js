@@ -45,7 +45,6 @@ export const resolveAction = async (c) => {
     game.discardAttackHandOfPlayer(currentPlayerID);
     game.passTurn();
   }
-
   const gameState = game.getGameState();
 
   updateGameState(roomID, gameState);

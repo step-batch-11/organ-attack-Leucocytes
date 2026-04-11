@@ -6,7 +6,9 @@ import { displayAttackDeckDiscardPile } from "./discard_pile.js";
 import { setupEventListeners } from "./listeners/setup_event_listeners.js";
 import GameState from "./game_state.js";
 import { handlePoison } from "./listeners/attack_card_actions.js";
+import { animateFromDeck } from "./animation.js";
 
+import { setLastPlayedCard } from "./utils.js";
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
 const ACTION_HANDLERS = {
@@ -37,8 +39,15 @@ const attachEventListener = async (
   organDiscardPile,
 ) => {
   const attackCardElement = event.target.closest(".attack-card");
+  //  prevent double click
+  attackCardElement.style.pointerEvents = "none";
+  const rect = attackCardElement.getBoundingClientRect();
+  console.log({ rect }, "in the listener");
   const attackCardID = getCardID(attackCardElement);
   const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
+  console.log("in cards", { attackCard });
+  setLastPlayedCard(attackCardElement, rect, attackCard);
+
   if (!(attackCard.action in ACTION_HANDLERS)) return;
   await ACTION_HANDLERS[attackCard.action]({
     player,
@@ -52,12 +61,31 @@ const attachEventListener = async (
 
 const holdsPoison = (cards) => cards.some((card) => card.type === "poison");
 
+let prevCardIDs = [];
+
 const manageTurn = async (gameState) => {
   const { self, players, organDiscardPile } = gameState;
   const opponents = players.filter(({ id }) => id !== self.id);
+
   await renderGame(self.isAlive);
 
   const attackCards = document.querySelectorAll(".player-area .attack-card");
+
+  const currentCardIDs = Array.from(attackCards).map((card) =>
+    Number(card.dataset.id)
+  );
+  const newCards = currentCardIDs.filter((id) => !prevCardIDs.includes(id));
+
+  // 🎴 animate from deck
+  newCards.forEach((id, index) => {
+    const cardElement = document.querySelector(
+      `.attack-card[data-id="${id}"]`,
+    );
+    setTimeout(() => {
+      if (cardElement) animateFromDeck(cardElement);
+    }, index * 200);
+  });
+  prevCardIDs = currentCardIDs;
 
   if (self.isMyTurn && !self.isSleeping) {
     attackCards.forEach((card) => {

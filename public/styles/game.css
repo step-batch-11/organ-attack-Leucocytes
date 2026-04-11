@@ -310,7 +310,7 @@ main {
 
 .attack-card:hover {
   box-shadow: 0 0 10px 1px hsl(0, 0%, 0%);
-  scale: 1.03;
+ transform: scale(1.03);
 }
 
 .organs {
@@ -459,6 +459,8 @@ popup-removable-organs img:hover,
 
 /* flash screen */
 .flash-screen-container {
+  z-index: 1000;
+
   position: absolute;
   bottom: calc(var(--card-height) + var(--organ-size) + 18em);
   left: 50%;
@@ -566,4 +568,137 @@ popup-removable-organs img:hover,
 .player[data-is-alive="true"] {
   opacity: 0.5;
   box-shadow: 0px 0px 0px 5px var(--clr-red);
+}
+
+/* Discard pile (slightly right of center) */
+.discard-deck {
+  position: absolute;
+  top: 30%;
+  left: 55%;
+  width: 7.5em;
+  height: 10.5em;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  overflow: hidden; /* 🔥 IMPORTANT */
+
+}
+
+ .discard-deck,.deck {
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 0 10px rgba(255,255,255,0.05);
+  border-radius: 12px;
+
+}
+.discard-top {
+  width: 100%;
+  height: 100%;
+
+    position: absolute;
+    inset: 0; /* fill parent perfectly */
+}
+
+.deck {
+  position: absolute;
+  top: 30%;
+  left: 45%;
+  width: 7.5em;
+  height: 10.5em;
+  background: url("/assets/background/deck_back.png") center/contain no-repeat;
+
+
+  border: 1px solid #baacacc6; 
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.6),
+    inset 0 0 10px rgba(255,255,255,0.1);
+
+  z-index: 5;
+  transition: transform 0.2s ease
+}
+
+/* base game */
+.player-area,
+.opponent-area {
+  z-index: 1;
+}
+
+/* deck */
+.deck,
+.discard-deck {
+  z-index: 5;
+}
+
+/* animation layer */
+.animation-layer {
+  z-index: 10;
+}
+
+/* popup */
+.popup {
+  z-index: 50;
+}
+
+/* flash screen (TOP MOST) */
+.flash-screen-container {
+  z-index: 100;
+}
+.discard-deck {
+  z-index: 20;
+}
+
+.flash-screen-container {
+  z-index: 100;
+}
+/* .deck::before,
+.deck::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: inherit;
+  z-index: -1;
+}
+
+.deck::before {
+  transform: translate(3px, 3px);
+  opacity: 0.6;
+}
+
+.deck::after {
+  transform: translate(6px, 6px);
+  opacity: 0.3;
+}
+
+.deck:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  cursor: pointer;
+} */
+
+.discard-top .attack-card {
+  position: absolute;
+  inset: 0;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  transform: none !important;
+  margin: 0 !important;
+
+  pointer-events: none;
+}
+/* animation clone (below flash) */
+.attack-card.clone {
+  z-index: 30;
+}
+
+/* discard deck */
+.discard-deck {
+  z-index: 40;
+}
+
+/* flash screen (always above) */
+.flash-screen-container {
+  z-index: 100;
 }

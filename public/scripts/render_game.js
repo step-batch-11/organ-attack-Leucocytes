@@ -5,6 +5,26 @@ import {
   getRemovableOrgans,
 } from "./utils.js";
 
+import { createAttackCardElement, getLastDiscardedCard } from "./utils.js";
+
+const renderDiscardPile = async () => {
+  const discardTop = document.querySelector(".discard-top");
+  if (!discardTop) return;
+
+  const cardData = await getLastDiscardedCard();
+
+  if (!cardData) return;
+
+  discardTop.innerHTML = "";
+
+  const card = createAttackCardElement(cardData);
+
+  card.style.width = "100%";
+  card.style.height = "100%";
+  card.style.pointerEvents = "none";
+
+  discardTop.appendChild(card);
+};
 const setCardContent = (attackCard, { name, Desc }) => {
   const attackCardName = attackCard.querySelector("h1");
   const description = attackCard.querySelector(".card-desc");
@@ -89,13 +109,11 @@ const renderAttackCards = (attackCardsNode, attackCards, opponents) => {
 
   attackCards.forEach((attackCard, i) => {
     const attackCardNode = cloneFromTemplate("#attack-cards");
-    const cardData = attackCards[i];
-
-    setCardContent(attackCardNode, cardData);
-    setCardAttributes(attackCardNode, cardData);
-    checkCardDisabled(attackCardNode, cardData, opponents);
+    setCardContent(attackCardNode, attackCard);
+    setCardAttributes(attackCardNode, attackCard);
+    checkCardDisabled(attackCardNode, attackCard, opponents);
     addFlipEvent(attackCardNode);
-    setCardIndicators(attackCardNode, cardData);
+    setCardIndicators(attackCardNode, attackCard);
     attackCardsNode.append(attackCardNode);
   });
 };
@@ -308,4 +326,5 @@ export const renderGame = async (isAlive) => {
   renderOpponents(opponents);
   renderMyCards(self, opponents);
   renderFlashScreen(event);
+  renderDiscardPile();
 };
