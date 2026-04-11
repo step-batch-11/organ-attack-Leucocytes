@@ -21,8 +21,14 @@ export default class GameController {
       "itsAlive": this.#handleItsAlive,
       "Vaccine": this.#handleVaccine,
       "common-cold": this.#handleCommonCold,
+      "sedate": this.#handleSedate,
       "chart-mixup": this.#handleChartMixup,
       "by-the-book": this.#handleBythebook,
+      "situs-inversus": this.#handleSitusInversus,
+      "narcolepsy": this.#handleNarcolepsy,
+      "research": this.#handleResearch,
+      "medicine": this.#handleMedicine,
+      "handleCryopreservation": this.#handleCryopreservation,
     };
   }
 
@@ -40,6 +46,22 @@ export default class GameController {
     if (!res.success) throw new Error(res.message);
 
     return this.#timer.start();
+  }
+
+  #handleResearch(game, { attackCardID, attackerID, selectedCardID }) {
+    game.research(attackerID, selectedCardID, attackCardID);
+    game.removeFromDiscardPile(selectedCardID);
+    return { success: true };
+  }
+
+  #handleMedicine(game, { attackerID, organCardID }) {
+    game.healOrgan(attackerID, organCardID);
+    return ({ success: true });
+  }
+
+  #handleSedate(game, { opponentID }) {
+    const sleepCount = game.applySedate(opponentID);
+    return { success: sleepCount > 0 };
   }
 
   #handleCommonCold(game, { attackerID, attackCardID, opponentID }) {
@@ -61,6 +83,11 @@ export default class GameController {
     );
   }
 
+  #handleCryopreservation(game, { attackerID }) {
+    const result = game.applyCryopreservation(attackerID);
+    return result;
+  }
+
   #handleVaccine(game, { attackerID }) {
     game.applyVaccine(attackerID);
     return ({ success: true });
@@ -70,6 +97,12 @@ export default class GameController {
     game.transplantOrgan(attackerID, opponentID, organCardID);
     return ({ success: true });
   };
+
+  #handleNarcolepsy(game, { opponentID }) {
+    game.applyNarcolepsy(opponentID);
+
+    return { success: true };
+  }
 
   #handlePoison(game, { attackerID, organCardID }) {
     game.removeOrgan(attackerID, organCardID);
@@ -97,6 +130,13 @@ export default class GameController {
   #handleItsAlive(game, { attackerID, organCardID }) {
     const organ = game.itsAlive(attackerID, organCardID);
     return { success: !(organ.isDead()) };
+  }
+
+  #handleSitusInversus(game) {
+    game.exchangeHeartAndLungs();
+    game.changeOrderOfPlay();
+
+    return ({ success: true });
   }
 
   #applyAction(game, action) {

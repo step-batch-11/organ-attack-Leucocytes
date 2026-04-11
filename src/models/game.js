@@ -197,7 +197,6 @@ export class Game {
     const event = this.#event;
     const organDiscardPile = this.#organsDeck
       .getDiscardPile().map((organ) => organ.getDetails());
-
     const players = this.getAllPlayersDetails();
     return structuredClone({
       players,

@@ -3,11 +3,14 @@ import { highlightOrgan, removeHighlightOrgan } from "./highlight.js";
 import {
   affliction,
   chartMixupOrByTheBook,
-  commonCold,
+  commonColdOrSedate,
   contagious,
   immunityBoost,
   itsAlive,
+  medicine,
   metastasis,
+  narcolepsy,
+  situsInversusOrCryo,
   transplant,
   vaccine,
 } from "./attack_card_actions.js";
@@ -28,15 +31,20 @@ const attackCardsListener = (event) => {
   const cardType = attackCard.dataset.type;
 
   if (cardAction === "affliction") affliction(attackCard);
+  if (cardAction === "medicine") medicine(attackCard);
   if (cardAction === "transplant") transplant(attackCard);
   if (cardAction === "contagious") contagious(attackCard);
   if (cardAction === "metastasis") metastasis(attackCard);
   if (cardAction === "immunity-boost") immunityBoost(attackCard);
   if (cardAction === "itsAlive") itsAlive(attackCard);
   if (cardAction === "Vaccine") vaccine(attackCard);
-  if (cardAction === "common-cold") commonCold(attackCard);
+  if (cardAction === "common-cold") commonColdOrSedate(attackCard);
+  if (cardAction === "sedate") commonColdOrSedate(attackCard);
   if (cardAction === "chart-mixup") chartMixupOrByTheBook(attackCard);
   if (cardAction === "by-the-book") chartMixupOrByTheBook(attackCard);
+  if (cardAction === "situs-inversus") situsInversusOrCryo(attackCard);
+  if (cardAction === "cryopreservation") situsInversusOrCryo(attackCard);
+  if (cardAction === "narcolepsy") narcolepsy(attackCard);
   // if (cardAction === "medical-miracle") medicalMiracle(attackCard);
 };
 

@@ -6,12 +6,8 @@ import { createEvent } from "../utils.js";
 const ACTIONS = {
   medicine: handlers.handleMedicine,
   "medical-miracle": handlers.handleMedicalMiracle,
-  sedate: handlers.handleSedate,
-  narcolepsy: handlers.handleNarcolepsy,
-  cryopreservation: handlers.handleCryopreservation,
   "clinical-audit": handlers.handleRefillSelfPostAudit,
   research: handlers.handleResearch,
-  "situs-inversus": handlers.handleSitusInversus,
 };
 
 export const resolveAction = async (c) => {

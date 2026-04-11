@@ -33,6 +33,7 @@ const renderOrganNodes = (popup, organs, query) => {
 
   const organNodes = createOrganNodes(organs);
   const organsContainer = popup.querySelector(`${query} .target-organs`);
+
   organsContainer.append(...organNodes);
 };
 
@@ -99,7 +100,7 @@ export const transplant = (card) => {
   popupContainer.replaceChildren(popup);
 };
 
-export const commonCold = (card) => {
+export const commonColdOrSedate = (card) => {
   const cardID = parseInt(card.dataset.id);
   const gameState = window.gameState;
 
@@ -108,6 +109,29 @@ export const commonCold = (card) => {
   const popup = cloneFromTemplate("#popup-players-template");
 
   popup.dataset.action = "common-cold";
+  popup.dataset.for = cardID;
+
+  const opponents = gameState.getOpponents();
+
+  renderOpponentNodes(popup, opponents);
+
+  const popupContainer = document.querySelector(".popup");
+
+  popupContainer.replaceChildren(popup);
+};
+
+export const narcolepsy = (card) => {
+  const cardID = parseInt(card.dataset.id);
+  const gameState = window.gameState;
+
+  if (
+    (!gameState.isMyTurn() && !gameState.isInstant(cardID)) ||
+    !gameState.isCardActive(cardID)
+  ) return;
+
+  const popup = cloneFromTemplate("#popup-players-template");
+
+  popup.dataset.action = "narcolepsy";
   popup.dataset.for = cardID;
 
   const opponents = gameState.getOpponents();
@@ -137,6 +161,29 @@ export const itsAlive = (card) => {
   const discardedOrgans = gameState.getDiscardedOrgans();
 
   renderOrganNodes(popup, discardedOrgans, ".removes-organ");
+  popup.querySelector(".removes-organ p").textContent = "Bring back";
+
+  const popupContainer = document.querySelector(".popup");
+
+  popupContainer.replaceChildren(popup);
+};
+
+export const medicine = (card) => {
+  const cardID = parseInt(card.dataset.id);
+  const gameState = window.gameState;
+
+  if (!gameState.isMyTurn() || !gameState.isCardActive(cardID)) return;
+
+  const popup = cloneFromTemplate("#popup-organs-template");
+  popup.querySelector(".afflicts-organ").remove();
+
+  popup.dataset.action = "itsAlive";
+  popup.dataset.for = cardID;
+
+  const afflictedOrgans = gameState.getAfflictedOrgans();
+
+  renderOrganNodes(popup, afflictedOrgans, ".removes-organ");
+  popup.querySelector(".removes-organ p").textContent = "Heal";
 
   const popupContainer = document.querySelector(".popup");
 
@@ -182,6 +229,24 @@ export const chartMixupOrByTheBook = (card) => {
   const cardID = parseInt(card.dataset.id);
 
   if (!gameState.isMyTurn() || !gameState.isCardActive(cardID)) return;
+
+  const body = {
+    attackerID: gameState.getSelfID(),
+    attackCardID: cardID,
+  };
+
+  postJSON("/action", body);
+};
+
+// situsInversus
+export const situsInversusOrCryo = (card) => {
+  const gameState = window.gameState;
+  const cardID = parseInt(card.dataset.id);
+
+  if (
+    (!gameState.isMyTurn() && !gameState.isInstant(cardID)) ||
+    !gameState.isCardActive(cardID)
+  ) return;
 
   const body = {
     attackerID: gameState.getSelfID(),

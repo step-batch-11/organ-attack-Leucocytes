@@ -15,11 +15,8 @@ const ACTION_HANDLERS = {
   "medicine": displayOrgans,
   "medical-miracle": displayOrgans,
   "sedate": displayOpponents,
-  "narcolepsy": displayOpponents,
   "clinical-audit": NA.displayOpponentsHands,
-  "cryopreservation": NA.performCryopreservation,
   "research": displayAttackDeckDiscardPile,
-  "situs-inversus": NA.performSitusInversus,
 };
 
 const attachEventListener = async (
