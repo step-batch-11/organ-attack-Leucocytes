@@ -40,7 +40,7 @@ const performAttack = async (
 
   clearPopup();
 
-  await postJSON("/attack", body);
+  await postJSON("/action", body);
   /**
    * DO NOT REMOVE
    * await postJSON("/action", body);
@@ -128,7 +128,7 @@ export const displayOrgans = (
         ) {
           clearPopup();
 
-          await postJSON("/attack", {
+          await postJSON("/action", {
             attackerID: player.id,
             attackCardID,
             organCardIDs: selectedCards,
