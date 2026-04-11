@@ -7,6 +7,9 @@
     inset 0 0 1em 2px var(--clr-bubble-blue),
     0 0 10px 2px var(--clr-bubble-blue);
 }
+.opponents [data-vaccine]:not([data-vaccine="0"]){
+  margin: 3.2em;
+}
 .player-area [data-vaccine]:not([data-vaccine="0"])::before,
 [data-vaccine]:not([data-vaccine="0"]) .avatar::before {
   content: "";

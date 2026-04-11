@@ -20,37 +20,49 @@
 }
 
 .flash-screen {
-  min-width: 400px;
+  min-width: 500px;
+  min-height: 300px;
   border-radius: 0.4em;
   display: flex;
   padding: 1em;
   gap: 5em;
-  box-shadow: 0 0 8px var(--clr-dark-gray);
-  background-color: var(--clr-gray);
+  box-shadow: 0 0 5px black;
+  background-color: var(--clr-dark-gray);
+  /* background-color: cornsilk; */
 }
 
 .flash-screen[data-cardtype="affliction"] {
+  background-image: linear-gradient(transparent, var( --clr-red-alpha-30));
   border: 3px solid var(--clr-red);
 }
 
 .flash-screen[data-cardtype="resistance"] {
+  background-image: linear-gradient(transparent, var( --clr-blue-alpha-30));
   border: 3px solid var(--clr-blue);
 }
 
 .flash-screen[data-cardtype="poison"] {
+  background-image: linear-gradient(transparent, black);
   border: 3px solid var(--clr-red);
 }
 
 .flash-screen[data-cardtype="bureaucracy"] {
+  background-image: linear-gradient(transparent, var( --clr-gold-alpha-30));
   border: 3px solid var(--clr-gold);
 }
 
 .flash-screen[data-cardtype="tactical"] {
+  background-image: linear-gradient(transparent, black);
   border: 3px solid var(--clr-gray);
 }
 
 .flash-screen[data-cardtype="wild"] {
+  background-image: linear-gradient(transparent, var( --clr-red-alpha-30));
   border: 3px solid var(--clr-red);
+}
+.flash-screen[data-cardtype="necrosis"] {
+  background-image: linear-gradient(transparent, var( --clr-dark-violet-alpha-30));
+  border: 3px solid var(--clr-dark-violet);
 }
 
 .flash-screen .actor {

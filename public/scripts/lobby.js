@@ -58,7 +58,6 @@ const copyRoomID = () => {
   copyBtn.addEventListener("click", () => {
     const id = document.querySelector("#room-id").textContent;
     navigator.clipboard.writeText(id);
-    alert(`Room ID copied`);
   });
 };
 

@@ -257,7 +257,11 @@ const scaffoldFlashScreen = ({ actor, target, card, timeRemaining }) => {
 const flashScreenForUsedOnEvent = (eventData) => {
   const { targetOrgan, flashScreen } = scaffoldFlashScreen(eventData);
 
-  renderOrganImage(targetOrgan, eventData.target.organ?.name);
+  renderOrganImage(
+    targetOrgan,
+    eventData.target.organ?.name,
+    eventData.target.organ?.id,
+  );
   return flashScreen;
 };
 
@@ -272,7 +276,11 @@ const flashScreenForUsedOnOrganEvent = (eventData) => {
   const { targetOrgan, flashScreen } = scaffoldFlashScreen(eventData);
 
   flashScreen.querySelector(".target .avatar").remove();
-  renderOrganImage(targetOrgan, eventData.target.organ?.name);
+  renderOrganImage(
+    targetOrgan,
+    eventData.target.organ?.name,
+    eventData.target.organ?.id,
+  );
 
   return flashScreen;
 };

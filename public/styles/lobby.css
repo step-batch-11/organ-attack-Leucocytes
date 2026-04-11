@@ -16,7 +16,7 @@
 }
 
 body {
-  backdrop-filter: brightness(30%) contrast(100%);
+  backdrop-filter: brightness(30%) contrast(85%);
 }
 header {
   width: 95%;
@@ -172,16 +172,6 @@ li:last-child {
   padding: 0.4em 0.8em;
 }
 
-.exit-button {
-  font-size: 40px;
-  width: 30px;
-  height: 45px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0);
-  border: white;
-  padding: 20px;
-  cursor: pointer;
-}
 
 #copy-btn {
   cursor: pointer;
@@ -190,4 +180,21 @@ li:last-child {
 
 #copy-btn:hover {
   background: #ffffff53;
+}
+
+
+
+#players-count{
+  display: none;
+}
+
+.exit-button{
+  width: 24px;
+  height: 24px;
+  background-image: url("../assets/icons/exit.svg");
+  background-repeat: none;
+  background-size: cover;
+  cursor: pointer;
+ opacity: 0.6;
+
 }

@@ -15,6 +15,7 @@
   --clr-red-alpha-30: hsla(348, 83%, 47%, 0.3);
   --clr-dark-red: hsl(355, 85%, 30%);
   --clr-gold: hsl(51, 100%, 63%);
+  --clr-gold-alpha-30: hsla(51, 100%, 63%, 0.3);
   --clr-dark-gray: hsl(0, 0%, 12%);
   --clr-gray: hsl(0, 0%, 30%);
   --clr-gray-alpha-30: hsla(0, 0%, 30%.0.34);
@@ -22,6 +23,7 @@
   --clr-blue-alpha-30: hsla(189, 100%, 80%, 0.3);
   --clr-violet: hsl(275, 80%, 60%);
   --clr-dark-violet: hsl(275, 90%, 30%);
+  --clr-dark-violet-alpha-30: hsla(275, 90%, 30%, 0.3);
 
   --clr-green: hsl(120, 50%, 50%);
 }
@@ -158,6 +160,11 @@ main {
   background-image: radial-gradient(var(--clr-light-red), var(--clr-dark-red));
   color: var(--clr-gold);
   border: 0.3em solid var(--clr-gray);
+}
+[data-type="metastasis"] {
+  background-image: radial-gradient(var(--clr-dark-gray));
+  color: var(--fg-color);
+  border: 0.3em solid var(--clr-red);
 }
 
 [data-type="instant wild"] {
@@ -388,7 +395,7 @@ h1 {
   display: flex;
   gap: 1em;
   align-items: center;
-  padding: 1em;
+  padding: 4em;
   height: min-content;
 }
 
@@ -456,79 +463,6 @@ popup-removable-organs img:hover,
   /* box-shadow: 0 0 10px 1px hsl(0, 0%, 0%); */
   scale: 1.05;
 }
-
-/* flash screen */
-/* .flash-screen-container {
-  z-index: 1000;
-
-  position: absolute;
-  bottom: calc(var(--card-height) + var(--organ-size) + 18em);
-  left: 50%;
-  translate: -50% 0%;
-}
-
-.flash-screen {
-  border-radius: 0.4em;
-  display: flex;
-  padding: 1em;
-  gap: 5em;
-}
-.flash-screen[data-cardtype="affliction"] {
-  background-color: var(--clr-red-alpha-30);
-}
-.flash-screen[data-cardtype="resistance"] {
-  background-color: var(--clr-blue-alpha-30);
-}
-.flash-screen[data-cardtype="poison"] {
-  background-color: var(--clr-red-alpha-30);
-}
-.flash-screen[data-cardtype="bureaucracy"] {
-  background-color: var(--clr-gray);
-}
-.flash-screen[data-cardtype="tactical"] {
-  background-color: var(--clr-gray);
-}
-.flash-screen[data-cardtype="wild"] {
-  background-color: var(--clr-gray);
-}
-
-.flash-screen .actor {
-  position: relative;
-}
-.flash-screen .actor::after {
-  content: "USED";
-  position: absolute;
-  top: 2em;
-  right: -3em;
-}
-
-.flash-screen .target {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 1em;
-}
-.flash-screen .attack-card {
-  margin-block: 2em;
-}
-.flash-screen .target::before {
-  content: "ON";
-  position: absolute;
-  bottom: 6em;
-  left: -3em;
-}
-
-.flash-screen[data-cardtype="poison"] .target::before {
-  content: "REMOVED";
-}
-.flash-screen[data-cardtype="poison"] .actor::after {
-  content: "GOT";
-}
-
-.popup-players {
-  padding: 2em;
-} */
 
 /* clinical audit */
 .clinical-popup {

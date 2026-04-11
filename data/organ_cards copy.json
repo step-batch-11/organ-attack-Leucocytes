@@ -1,0 +1,170 @@
+[
+  {
+    "id": 1,
+    "name": "Kidneys",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 4,
+    "name": "Tongue",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 5,
+    "name": "Teeth",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 7,
+    "name": "Heart",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 10,
+    "name": "Spleen",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 11,
+    "name": "Eyes",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 12,
+    "name": "Liver",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 100,
+    "name": "Wild",
+    "health": 4,
+    "isWild": true,
+    "maxHealth": 4
+  },
+  {
+    "id": 13,
+    "name": "Lungs",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 2,
+    "name": "Trachea",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 3,
+    "name": "Stomach",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 6,
+    "name": "Skin",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 9,
+    "name": "Tonsils",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 14,
+    "name": "Nose",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 15,
+    "name": "Thyroid",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 16,
+    "name": "Esophagus",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 17,
+    "name": "Gallbladder",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 18,
+    "name": "Brain",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 19,
+    "name": "Appendix",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 20,
+    "name": "Bowels",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 21,
+    "name": "Bladder",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 22,
+    "name": "Bones",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 23,
+    "name": "Pancreas",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  },
+  {
+    "id": 24,
+    "name": "Muscles",
+    "health": 2,
+    "isWild": false,
+    "maxHealth": 2
+  }
+]

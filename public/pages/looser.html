@@ -3,30 +3,32 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="/styles/endPage.css">
-  <title>Winner page</title>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nerko+One&family=Schoolbell&display=swap" rel="stylesheet" />
+  <script type="module" src="/scripts/loser.js"></script>
+  <link rel="stylesheet" href="/styles/loser.css">
+  <title>Loser Page</title>
 </head>
 
 <body>
   <main>
     <article>
-      <header>
-        <h1>Sorry</h1>
-        <h1 id="winner-name">player Name</h1>
-        <h2>You DIED</h2>
-      </header>
-      <div class="replay">
-        <button class="replay-btn">Replay</button>
+      <div id="box">
+        <div class="profile-wrapper">
+          <div id="loser-profile"></div>
+        </div>
+
+        <h1 id="text-greet">YOU LOST!!! </h1>
+        <h1 id="loser-name">BETTER LUCK NEXT TIME</h1>
+
+        <p class="sub-text">Your organs couldn’t handle the chaos.</p>
+        <p class="small-text">(they gave up before you did...)</p>
+
+        <button class="replay-btn">Try Again</button>
       </div>
     </article>
   </main>
-  <script>
-    const replayBtn = document.querySelector(".replay-btn")
-    replayBtn.onclick = () => {
-      window.location.replace("/")
-    }
-  </script>
 </body>
 
 </html>

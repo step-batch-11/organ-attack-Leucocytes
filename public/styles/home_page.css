@@ -112,7 +112,7 @@ main {
 
 .options {
   display: flex;
-  gap: 1em;
+  gap: 25px;
   height: fit-content;
   width: fit-content;
   padding: 0px 50px;
@@ -140,4 +140,30 @@ main {
 #rules-btn:hover::before,
 #logout:hover::before {
   width: 100%;
+}
+
+#rule-icon{
+  width: 24px;
+  height: 24px;
+  background-image: url("../assets/icons/rules.png");
+  background-repeat: none;
+  background-size: cover;
+ opacity: 0.6;
+
+}
+
+#login-icon{
+  width: 24px;
+  height: 24px;
+  background-image: url("../assets/icons/exit.svg");
+  background-repeat: none;
+  background-size: cover;
+ opacity: 0.6;
+}
+
+#rules-btn,#logout{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap:5px;
 }

@@ -1,0 +1,147 @@
+@import url(./title.css);
+
+
+:root {
+  --bg-color: hsl(0, 0%, 15%);
+  --bg-gradient: radial-gradient(var(--bg-color), black);
+  --fg-color: hsl(0, 0%, 95%);
+  --card-height: 11em;
+  --card-width: 9em;
+  --organ-size: 44px;
+  --clr-light-red: hsl(0, 90%, 60%);
+  --clr-red: hsl(348, 83%, 47%);
+  --clr-red-alpha-30: hsla(348, 83%, 47%, 0.3);
+  --clr-dark-red: hsl(355, 85%, 30%);
+  --clr-gold: hsl(47, 100%, 50%);
+  --clr-dark-gray: hsl(0, 0%, 12%);
+  --clr-gray: hsl(0, 0%, 30%);
+  --clr-gray-alpha-30: hsla(0, 0%, 30%.0.34);
+  --clr-light-gray: hsl(0, 0%, 65%);
+  --clr-blue-alpha-30: hsla(189, 100%, 80%, 0.3);
+  --clr-violet: hsl(275, 80%, 60%);
+  --clr-dark-violet: hsl(275, 90%, 30%);
+
+  --clr-green: hsl(120, 50%, 50%);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
+  font-family: 'Schoolbell', cursive;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 40px;
+  border-radius: 10px;
+  width:500px;
+  height:350px;
+  gap:5px;
+  background:var(--clr-gray);
+
+  animation: fadeIn 1s ease-in-out;
+}
+
+.profile-wrapper{
+  border-radius: 50%;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.9);
+}
+
+h1,
+h2 {
+  font-family: 'Nerko One', cursive;
+}
+
+#text-greet {
+  font-size: 50px;
+  font-family: 'Nerko One', cursive;
+
+  color: #ffd700; 
+    text-shadow:
+    /* 2px 2px 0 #d8d2cb,
+    4px 4px 0 #b8b0a8; */
+    4px 4px 2px #000000,
+    4px 4px 3px #9c2b03,
+    4px 4px 5px #eaba1c;
+}
+
+#text-won {
+  font-size:35px;
+  color: #0088a3;
+     text-shadow:
+
+    4px 4px 2px #000000,
+    4px 4px 3px #9c2b03,
+    4px 4px 5px #eaba1c;
+  animation: glowPulse 1.2s infinite;
+}
+
+#winner-name {
+  font-size:28px;
+  margin-top: 10px;
+  color: #ffffff;
+}
+
+.sub-text {
+  font-size: 1.4rem;
+  color: #f49292;
+  text-shadow:
+
+    4px 4px 1px #000000;
+}
+
+.small-text {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.replay-btn {
+  margin-top: 25px;
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(45deg, gold, gold);
+  color: rgb(0, 0, 0);
+  font-family: "Nerko one", fantasy;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.replay-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 8px #000000;
+}
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: .6;
+  }
+}
+
+
+#winner-profile {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+
+  border: 6px solid gold;
+  box-shadow: 0 0 25px gold;
+}
