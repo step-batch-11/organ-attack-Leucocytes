@@ -12,9 +12,7 @@ import { setLastPlayedCard } from "./utils.js";
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
 const ACTION_HANDLERS = {
-  "medicine": displayOrgans,
   "medical-miracle": displayOrgans,
-  "sedate": displayOpponents,
   "clinical-audit": NA.displayOpponentsHands,
   "research": displayAttackDeckDiscardPile,
 };
@@ -26,6 +24,7 @@ const attachEventListener = async (
   isInstant = false,
   organDiscardPile,
 ) => {
+  const gameState = window.gameState;
   const attackCardElement = event.target.closest(".attack-card");
   //  prevent double click
   attackCardElement.style.pointerEvents = "none";
@@ -35,8 +34,9 @@ const attachEventListener = async (
   const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
   console.log("in cards", { attackCard });
   setLastPlayedCard(attackCardElement, rect, attackCard);
-
-  if (!(attackCard.action in ACTION_HANDLERS)) return;
+  if (!(attackCard.action in ACTION_HANDLERS) || gameState.amISleeping()) {
+    return;
+  }
   await ACTION_HANDLERS[attackCard.action]({
     player,
     opponents,

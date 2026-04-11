@@ -480,6 +480,7 @@ popup-removable-organs img:hover,
 
 /* clinical audit */
 .clinical-popup {
+  background-color: var(--clr-gray);
   display: flex;
   flex-direction: column;
   gap: 2em;

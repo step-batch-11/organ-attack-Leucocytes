@@ -49,14 +49,18 @@ export class Game {
 
   currentTurnPlayed({ attackerID, card, opponentID }) {
     const currentPlayer = this.#players[this.#currentPlayer];
+    const playerID = currentPlayer.getID();
     const { action } = card;
 
     const isNarcolepsyPlayedOnMe = action === "narcolepsy" &&
-      opponentID === currentPlayer.getID();
+      opponentID === playerID;
+
+    const isCryoPlayedByMe = action === "cryopreservation" &&
+      attackerID === playerID;
 
     this.currentPlayedCard = this.currentPlayedCard ||
-      action === "cryopreservation" || isNarcolepsyPlayedOnMe ||
-      attackerID === currentPlayer.getID() && !card.isInstant;
+      !isCryoPlayedByMe || isNarcolepsyPlayedOnMe ||
+      attackerID === playerID && !card.isInstant;
   }
 
   discardAttackCard(attackerID, attackCardID) {

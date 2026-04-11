@@ -9,7 +9,7 @@ export default class GameState {
   }
 
   isMyTurn() {
-    return this.#state.self.isMyTurn;
+    return this.#state.self.isMyTurn && !this.amISleeping();
   }
 
   areOrgansAfflicted() {
@@ -78,6 +78,10 @@ export default class GameState {
     );
   }
 
+  amISleeping() {
+    return this.#state.self.isSleeping;
+  }
+
   #getAttackCardFlag(attackCardID, flag) {
     const { self } = this.#state;
     const attackCard = self.attackCards.find(({ id }) => id === attackCardID);
@@ -101,7 +105,9 @@ export default class GameState {
 
   canPlayContagious() {
     const { self, event } = this.#state;
-    return self.id === event.target.player.id && !event.resolved &&
+    return !self.isSleeping &&
+      self.id === event.target.player.id &&
+      !event.resolved &&
       (event.name === "affliction" || event.name === "contagious");
   }
 
