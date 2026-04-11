@@ -126,6 +126,11 @@ export class Game {
   }
 
   getAllPlayersDetails() {
+    const anyBodyHasPoison = this.#players.some((player) =>
+      player.getPlayerDetails().attackCards.some(({ action }) =>
+        action === "poison"
+      )
+    );
     return this.#players.map((player) => {
       const { name, id, organCards, vaccinePoints, isSleeping, isAlive } =
         player.getPlayerDetails();
@@ -138,6 +143,7 @@ export class Game {
         isMyTurn: this.#isPlayerTurn(id),
         vaccinePoints,
         isSleeping,
+        anyBodyHasPoison,
       };
     });
   }

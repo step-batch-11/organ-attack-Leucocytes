@@ -27,6 +27,7 @@ describe("Game model test", () => {
         vaccinePoints: 0,
         isSleeping: false,
         isAlive: false,
+        anyBodyHasPoison: false,
       }, {
         isMyTurn: false,
         id: 1,
@@ -35,6 +36,7 @@ describe("Game model test", () => {
         vaccinePoints: 0,
         isSleeping: false,
         isAlive: false,
+        anyBodyHasPoison: false,
       }]);
     });
 

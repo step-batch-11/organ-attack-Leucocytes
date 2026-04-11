@@ -75,7 +75,9 @@ const manageTurn = async (gameState) => {
   });
   prevCardIDs = currentCardIDs;
 
-  if (self.isMyTurn && !self.isSleeping) {
+  if (
+    self.isMyTurn && !self.isSleeping && !players[0].anyBodyHasPoison
+  ) {
     attackCards.forEach((card) => {
       card.onclick = (event) => {
         if (event.target.closest(".info-btn")) return;
@@ -142,6 +144,7 @@ window.onload = async () => {
     window.location.href = "/";
     return;
   }
+  console.log(players);
 
   window.gameState = new GameState(players);
 

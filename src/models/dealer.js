@@ -37,10 +37,9 @@ export class Dealer {
           organCards.push(organ);
         } else {
           const card = this.#organCards.getCard();
-          console.log("hrer", card);
           const organ = card.getOrgan();
           organCards.push(organ);
-          isWildDealt = organ.isWild();
+          isWildDealt = isWildDealt || organ.isWild();
         }
         dealtOrgansCount++;
       }
