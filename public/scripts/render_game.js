@@ -45,11 +45,39 @@ const addFlipEvent = (attackCard) => {
     };
   });
 };
+const createOrganImg = (id) => {
+  const organ = document.createElement("div");
+  const image = document.createElement("img");
+  image.src = `/assets/organs/${id}.png`;
+  organ.append(image);
+  return organ;
+};
 
-const setCardIndicators = (attackCard, { isInstant, type }) => {
+const setTargetOrgans = (container, organs) => {
+  const organsImage = organs.map((id) => createOrganImg(id));
+  container.append(...organsImage);
+};
+
+const setTargetInfo = (attackCard, afflicts, removes) => {
+  const targetInfo = cloneFromTemplate("#attack-card-target");
+  const targetContainer = attackCard.querySelector(".target-info-container");
+  const afflictsContainer = targetInfo.querySelector(".afflicts > div");
+  const removesContainer = targetInfo.querySelector(".removes > div");
+  setTargetOrgans(afflictsContainer, afflicts);
+  setTargetOrgans(removesContainer, removes);
+  if (afflicts.length <= 0) targetInfo.querySelector(".afflicts")?.remove();
+  if (removes.length <= 0) targetInfo.querySelector(".removes")?.remove();
+  targetContainer.append(targetInfo);
+};
+
+const setCardIndicators = (attackCard, cardData) => {
+  const { isInstant, type, afflictableOrgans, removableOrgans } = cardData;
   const typeIndicator = attackCard.querySelector(".type");
   typeIndicator.setAttribute("src", `/assets/icons/${type}.png`);
 
+  if (type === "affliction") {
+    setTargetInfo(attackCard, afflictableOrgans, removableOrgans);
+  }
   if (!isInstant) return;
   const instant = attackCard.querySelector(".instant");
   console.log(instant);

@@ -10,6 +10,7 @@
   --card-height: 11em;
   --card-width: 9em;
   --organ-size: 44px;
+  --clr-light-red: hsl(0, 90%, 60%);
   --clr-red: hsl(348, 83%, 47%);
   --clr-red-alpha-30: hsla(348, 83%, 47%, 0.3);
   --clr-dark-red: hsl(355, 85%, 30%);
@@ -19,6 +20,8 @@
   --clr-gray-alpha-30: hsla(0, 0%, 30%.0.34);
   --clr-light-gray: hsl(0, 0%, 65%);
   --clr-blue-alpha-30: hsla(189, 100%, 80%, 0.3);
+  --clr-violet: hsl(275, 80%, 60%);
+  --clr-dark-violet: hsl(275, 90%, 30%);
 
   --clr-green: hsl(120, 50%, 50%);
 }
@@ -130,15 +133,15 @@ main {
 }
 
 [data-type="tactical"] {
-  background-image: radial-gradient(var(--clr-gray), var(--clr-gray));
+  background-image: radial-gradient(var(--clr-gray));
   color: var(--fg-color);
   border: 0.3em solid var(--clr-light-gray);
 }
 
 [data-type="cure"] {
   background-image: radial-gradient(
-    hsl(from hsl(197, 65%, 65%) h s calc(l + 20)),
-    hsl(197, 65%, 65%)
+    hsl(from hsl(210, 65%, 65%) h s calc(l * 1.2)),
+    hsl(210, 65%, 65%)
   );
   color: var(--fg-color);
   border: 0.3em solid hsl(0, 0%, 95%);
@@ -152,9 +155,9 @@ main {
 
 [data-type="dummy"],
 [data-type="wild"] {
-  background-image: radial-gradient(yellowgreen, var(--clr-gray));
-  color: var(--fg-color);
-  border: 0.3em solid var(--clr-light-gray);
+  background-image: radial-gradient(var(--clr-light-red), var(--clr-dark-red));
+  color: var(--clr-gold);
+  border: 0.3em solid var(--clr-gray);
 }
 
 [data-type="instant wild"] {
@@ -164,7 +167,7 @@ main {
 }
 
 [data-type="necrosis"] {
-  background-image: radial-gradient(violet, purple);
+  background-image: radial-gradient(var(--clr-violet), var(--clr-dark-violet));
   color: var(--fg-color);
   border: 0.3em solid var(--clr-gray);
 }
@@ -182,6 +185,7 @@ main {
   box-sizing: border-box;
   padding: 0.2em;
   cursor: pointer;
+  transition: 300ms;
 }
 
 .card-inner {
@@ -251,9 +255,46 @@ main {
   left: 5px;
   bottom: 5px;
 }
+.target-info-container {
+  width: 100%;
+}
+.attack-card .target-info {
+  position: absolute;
+  max-width: 100%;
+  bottom: 1.8em;
+}
+.attack-card .target-info > div {
+  display: flex;
+  font-size: 13px;
+  gap: 10px;
+}
+.attack-card .target-info > div > div {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.attack-card .target-info > div > div > div {
+  position: relative;
+  width: 1.5em;
+  height: 1.5em;
+
+  background-color: hsla(0, 0%, 100%, 0.7);
+  border-radius: 100vw;
+}
+.attack-card .target-info img {
+  position: absolute;
+  z-index: 1;
+  width: 2em;
+  height: 2em;
+  object-fit: contain;
+
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
 
 .card-desc {
-  font-size: 20px;
+  font-size: 16px;
   text-align: center;
   word-break: break-word;
   overflow-wrap: break-word;

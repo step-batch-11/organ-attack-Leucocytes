@@ -409,7 +409,7 @@
   },
   {
     "id": 32,
-    "name": "Necrosis 🔥 ",
+    "name": "Necrosis ",
     "isInstant": true,
     "afflictableOrgans": [
       1,
@@ -447,7 +447,7 @@
   },
   {
     "id": 50,
-    "name": "Clinical audit 🔥 ",
+    "name": "Clinical audit ",
     "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -460,7 +460,8 @@
   },
   {
     "id": 67,
-    "name": "Immunity Boost 🔥",
+    "name": "Immunity Boost",
+    "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -472,7 +473,7 @@
   },
   {
     "id": 68,
-    "name": "Contagious 🔥",
+    "name": "Contagious",
     "isInstant": true,
     "afflictableOrgans": [
       1,
@@ -510,7 +511,7 @@
   },
   {
     "id": 69,
-    "name": "Contagious 🔥",
+    "name": "Contagious",
     "isInstant": true,
     "afflictableOrgans": [
       1,
@@ -548,7 +549,7 @@
   },
   {
     "id": 70,
-    "name": "Contagious 🔥",
+    "name": "Contagious",
     "isInstant": true,
     "afflictableOrgans": [
       1,
@@ -586,7 +587,7 @@
   },
   {
     "id": 33,
-    "name": "Narcolepsy 🔥",
+    "name": "Narcolepsy",
     "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -612,7 +613,7 @@
   },
   {
     "id": 54,
-    "name": "Research 🔥",
+    "name": "Research",
     "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -625,7 +626,7 @@
   },
   {
     "id": 34,
-    "name": "Cryopreservation 🔥",
+    "name": "Cryopreservation",
     "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -651,7 +652,7 @@
   },
   {
     "id": 91,
-    "name": "Situs Inversus 🔥",
+    "name": "Situs Inversus",
     "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -677,7 +678,7 @@
   },
   {
     "id": 121,
-    "name": "Metastasis 🔥",
+    "name": "Metastasis",
     "isInstant": true,
     "afflictableOrgans": [
       1,
@@ -715,7 +716,7 @@
   },
   {
     "id": 122,
-    "name": "Metastasis 🔥",
+    "name": "Metastasis",
     "isInstant": true,
     "afflictableOrgans": [
       1,
@@ -842,7 +843,7 @@
   },
   {
     "id": 203,
-    "name": "Narcolepsy 🔥",
+    "name": "Narcolepsy",
     "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
@@ -881,7 +882,7 @@
   },
   {
     "id": 206,
-    "name": "Immunity Boost 🔥",
+    "name": "Immunity Boost",
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -893,7 +894,7 @@
   },
   {
     "id": 207,
-    "name": "Immunity Boost 🔥",
+    "name": "Immunity Boost",
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -905,7 +906,7 @@
   },
   {
     "id": 208,
-    "name": "Immunity Boost 🔥",
+    "name": "Immunity Boost",
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -917,7 +918,7 @@
   },
   {
     "id": 209,
-    "name": "Immunity Boost 🔥",
+    "name": "Immunity Boost",
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -942,7 +943,7 @@
   },
   {
     "id": 300,
-    "name": "Outbreak 🔥",
+    "name": "Outbreak",
     "afflictableOrgans": [
       1,
       4,
@@ -979,7 +980,7 @@
   },
   {
     "id": 301,
-    "name": "Outbreak 🔥",
+    "name": "Outbreak",
     "afflictableOrgans": [
       1,
       4,
@@ -1016,7 +1017,7 @@
   },
   {
     "id": 211,
-    "name": "Outbreak 🔥",
+    "name": "Outbreak",
     "afflictableOrgans": [
       1,
       4,
