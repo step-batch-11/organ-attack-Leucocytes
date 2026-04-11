@@ -258,9 +258,17 @@ const flashScreenForUsedOnOrganEvent = (eventData) => {
 
   return flashScreen;
 };
+const flashScreenForUsedOnPlayerEvent = (eventData) => {
+  const { flashScreen } = scaffoldFlashScreen(eventData);
+
+  flashScreen.querySelector(".target .organ").remove();
+
+  return flashScreen;
+};
 
 const FLASH_SCREENS = {
   "hybrid": flashScreenForUsedOnEvent,
+  "common-cold": flashScreenForUsedOnPlayerEvent,
   "remove": flashScreenForUsedOnEvent,
   "affliction": flashScreenForUsedOnEvent,
   "contagious": flashScreenForUsedOnEvent,
@@ -299,6 +307,7 @@ export const renderGame = async (isAlive) => {
   const { event, players, self } = gameState.snapshot();
   const livingPlayers = players.filter((player) => player.isAlive);
   console.log("self", self);
+  console.log("event", event);
 
   if (livingPlayers.length === 1) {
     const page = isAlive ? "pages/winner.html" : "pages/looser.html";

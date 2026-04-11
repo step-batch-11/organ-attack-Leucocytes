@@ -152,10 +152,11 @@ export class Game {
 
   #setAttackStatus(cards) {
     this.#setAllCardsStatus(cards, !this.#doesAnyoneHoldPoison());
+
     if (this.#event.card?.isBlockable && !this.#event.resolved) {
       cards.forEach((card) => {
         const action = card.action;
-        card.isActive = action === "immunity-boost" && !this.#event.resolved;
+        card.isActive = action === "immunity-boost";
       });
     }
   }

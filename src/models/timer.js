@@ -28,6 +28,7 @@ export default class Timer {
   end() {
     this.#resolve({ success: true });
     clearTimeout(this.#timeoutID);
+    this.#startTime = 0;
   }
 
   remaining() {

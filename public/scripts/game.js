@@ -10,19 +10,10 @@ import { handlePoison } from "./listeners/attack_card_actions.js";
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
 const ACTION_HANDLERS = {
-  "chart-mixup": NA.performChartMixup,
-  "by-the-book": NA.performByTheBook,
-  "Vaccine": NA.performVaccine,
-  // "affliction": displayOrgans,
-  // "remove": displayOrgans,
-  "transplant": displayOrgans,
   "medicine": displayOrgans,
   "medical-miracle": displayOrgans,
-  "hybrid": displayOrgans,
-  "itsAlive": displayOrgans,
   "sedate": displayOpponents,
   "narcolepsy": displayOpponents,
-  "common-cold": displayOpponents,
   "clinical-audit": NA.displayOpponentsHands,
   "cryopreservation": NA.performCryopreservation,
   "research": displayAttackDeckDiscardPile,
