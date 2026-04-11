@@ -3,7 +3,9 @@
     "id": 1,
     "name": "Conjunctivitis",
     "isInstant": false,
-    "afflictableOrgans": [11],
+    "afflictableOrgans": [
+      11
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -16,7 +18,9 @@
     "id": 2,
     "name": "Hypersplenism!",
     "isInstant": false,
-    "afflictableOrgans": [10],
+    "afflictableOrgans": [
+      10
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -29,7 +33,9 @@
     "id": 5,
     "name": "Enamel Erosion!",
     "isInstant": false,
-    "afflictableOrgans": [5],
+    "afflictableOrgans": [
+      5
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -42,7 +48,9 @@
     "id": 6,
     "name": "Heart Attack!",
     "isInstant": false,
-    "afflictableOrgans": [7],
+    "afflictableOrgans": [
+      7
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -55,7 +63,9 @@
     "id": 7,
     "name": "Kidney Donor!",
     "isInstant": false,
-    "afflictableOrgans": [1],
+    "afflictableOrgans": [
+      1
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -68,7 +78,9 @@
     "id": 8,
     "name": "Arrhythmia!",
     "isInstant": false,
-    "afflictableOrgans": [7],
+    "afflictableOrgans": [
+      7
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -81,7 +93,9 @@
     "id": 9,
     "name": "Foreign Object in Eye!",
     "isInstant": false,
-    "afflictableOrgans": [11],
+    "afflictableOrgans": [
+      11
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -94,7 +108,9 @@
     "id": 10,
     "name": "Cirrhosis",
     "isInstant": false,
-    "afflictableOrgans": [12],
+    "afflictableOrgans": [
+      12
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -107,7 +123,9 @@
     "id": 11,
     "name": "Scalding coffee",
     "isInstant": false,
-    "afflictableOrgans": [4],
+    "afflictableOrgans": [
+      4
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -120,8 +138,13 @@
     "id": 13,
     "name": "Love",
     "isInstant": false,
-    "afflictableOrgans": [7, 3],
-    "removableOrgans": [18],
+    "afflictableOrgans": [
+      7,
+      3
+    ],
+    "removableOrgans": [
+      18
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Love affecting organs",
@@ -133,7 +156,12 @@
     "id": 14,
     "name": "Vomit!",
     "isInstant": false,
-    "afflictableOrgans": [16, 3, 4, 5],
+    "afflictableOrgans": [
+      16,
+      3,
+      4,
+      5
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -146,7 +174,10 @@
     "id": 15,
     "name": "Hepatospleenomegaly!",
     "isInstant": false,
-    "afflictableOrgans": [10, 12],
+    "afflictableOrgans": [
+      10,
+      12
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -159,7 +190,10 @@
     "id": 16,
     "name": "Urinary Tract Infection!",
     "isInstant": false,
-    "afflictableOrgans": [1, 21],
+    "afflictableOrgans": [
+      1,
+      21
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -289,7 +323,9 @@
     "name": "Removes Heart",
     "isInstant": false,
     "afflictableOrgans": [],
-    "removableOrgans": [7],
+    "removableOrgans": [
+      7
+    ],
     "isWild": false,
     "afflictPoints": 2,
     "Desc": "Removes heart",
@@ -302,7 +338,9 @@
     "name": "Removes kidney",
     "isInstant": false,
     "afflictableOrgans": [],
-    "removableOrgans": [1],
+    "removableOrgans": [
+      1
+    ],
     "isWild": false,
     "afflictPoints": 2,
     "Desc": "Removes Kidney",
@@ -314,8 +352,12 @@
     "id": 28,
     "name": "Afflicts Kidney or Removes Spleen",
     "isInstant": false,
-    "afflictableOrgans": [1],
-    "removableOrgans": [10],
+    "afflictableOrgans": [
+      1
+    ],
+    "removableOrgans": [
+      10
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Removes kidney or spleen",
@@ -327,8 +369,12 @@
     "id": 29,
     "name": "Afflicts Tongue or Removes Teeth",
     "isInstant": false,
-    "afflictableOrgans": [4],
-    "removableOrgans": [5],
+    "afflictableOrgans": [
+      4
+    ],
+    "removableOrgans": [
+      5
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Removes heart",
@@ -588,7 +634,7 @@
     "afflictPoints": 0,
     "Desc": "Causes extreme sleep for next two turns for every player except the player who owns this card",
     "action": "cryopreservation",
-    "type": "tactical",
+    "type": "resistance",
     "isBlockable": true
   },
   {
@@ -665,7 +711,7 @@
     "afflictPoints": 1,
     "Desc": "The spreading of a disease such as cancer to the other areas",
     "action": "metastasis",
-    "type": "tactical",
+    "type": "metastasis",
     "isBlockable": true
   },
   {
@@ -703,7 +749,7 @@
     "afflictPoints": 1,
     "Desc": "The spreading of a disease such as cancer to the other areas",
     "action": "metastasis",
-    "type": "tactical",
+    "type": "metastasis",
     "isBlockable": true
   },
   {
@@ -837,6 +883,7 @@
   {
     "id": 206,
     "name": "Immunity Boost",
+    "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -849,6 +896,7 @@
   {
     "id": 207,
     "name": "Immunity Boost",
+    "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -861,6 +909,7 @@
   {
     "id": 208,
     "name": "Immunity Boost",
+    "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -873,6 +922,7 @@
   {
     "id": 209,
     "name": "Immunity Boost",
+    "isInstant": true,
     "afflictableOrgans": [],
     "removableOrgans": [],
     "isWild": false,
@@ -1345,7 +1395,10 @@
   {
     "id": 221,
     "name": "Tendonitis",
-    "afflictableOrgans": [24, 22],
+    "afflictableOrgans": [
+      24,
+      22
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1357,7 +1410,10 @@
   {
     "id": 222,
     "name": "Muscle Contusion",
-    "afflictableOrgans": [24, 6],
+    "afflictableOrgans": [
+      24,
+      6
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1369,7 +1425,10 @@
   {
     "id": 223,
     "name": "Day Old Burrito!",
-    "afflictableOrgans": [20, 3],
+    "afflictableOrgans": [
+      20,
+      3
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1381,7 +1440,10 @@
   {
     "id": 224,
     "name": "Walking Pneumonia!",
-    "afflictableOrgans": [13, 2],
+    "afflictableOrgans": [
+      13,
+      2
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1394,7 +1456,9 @@
     "id": 225,
     "name": "Ruptured Appendix",
     "afflictableOrgans": [],
-    "removableOrgans": [19],
+    "removableOrgans": [
+      19
+    ],
     "isWild": false,
     "afflictPoints": 2,
     "Desc": "Need help",
@@ -1405,8 +1469,12 @@
   {
     "id": 227,
     "name": "Total Colectomy",
-    "afflictableOrgans": [20],
-    "removableOrgans": [19],
+    "afflictableOrgans": [
+      20
+    ],
+    "removableOrgans": [
+      19
+    ],
     "isWild": false,
     "afflictPoints": 1,
     "Desc": "Need help",
@@ -1417,7 +1485,11 @@
   {
     "id": 229,
     "name": "Upper Respiratory Infection!",
-    "afflictableOrgans": [13, 14, 2],
+    "afflictableOrgans": [
+      13,
+      14,
+      2
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1429,7 +1501,10 @@
   {
     "id": 230,
     "name": "Calcium Stones!",
-    "afflictableOrgans": [1, 21],
+    "afflictableOrgans": [
+      1,
+      21
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1441,7 +1516,10 @@
   {
     "id": 232,
     "name": "Cystic Fibrosis",
-    "afflictableOrgans": [13, 23],
+    "afflictableOrgans": [
+      13,
+      23
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1453,7 +1531,10 @@
   {
     "id": 233,
     "name": "Asthma",
-    "afflictableOrgans": [13, 2],
+    "afflictableOrgans": [
+      13,
+      2
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1465,7 +1546,10 @@
   {
     "id": 234,
     "name": "Pancreatitis!",
-    "afflictableOrgans": [17, 23],
+    "afflictableOrgans": [
+      17,
+      23
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1477,7 +1561,9 @@
   {
     "id": 235,
     "name": "Psoriasis",
-    "afflictableOrgans": [6],
+    "afflictableOrgans": [
+      6
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1489,7 +1575,9 @@
   {
     "id": 236,
     "name": "Fracture",
-    "afflictableOrgans": [22],
+    "afflictableOrgans": [
+      22
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1501,7 +1589,9 @@
   {
     "id": 237,
     "name": "Congestion!",
-    "afflictableOrgans": [14],
+    "afflictableOrgans": [
+      14
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1513,7 +1603,9 @@
   {
     "id": 238,
     "name": "Nosebleed!",
-    "afflictableOrgans": [14],
+    "afflictableOrgans": [
+      14
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1525,7 +1617,9 @@
   {
     "id": 239,
     "name": "Acne!",
-    "afflictableOrgans": [6],
+    "afflictableOrgans": [
+      6
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1537,7 +1631,9 @@
   {
     "id": 240,
     "name": "Biliary Dyskinesia!",
-    "afflictableOrgans": [17],
+    "afflictableOrgans": [
+      17
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1549,7 +1645,9 @@
   {
     "id": 241,
     "name": "Osteoporosis!",
-    "afflictableOrgans": [22],
+    "afflictableOrgans": [
+      22
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1561,7 +1659,9 @@
   {
     "id": 242,
     "name": "Muscular Dystrophy!",
-    "afflictableOrgans": [24],
+    "afflictableOrgans": [
+      24
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1573,7 +1673,9 @@
   {
     "id": 244,
     "name": "Stroke!",
-    "afflictableOrgans": [18],
+    "afflictableOrgans": [
+      18
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1585,7 +1687,9 @@
   {
     "id": 245,
     "name": "Tonsil Stones!",
-    "afflictableOrgans": [9],
+    "afflictableOrgans": [
+      9
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1597,7 +1701,9 @@
   {
     "id": 246,
     "name": "Appendicitis!",
-    "afflictableOrgans": [19],
+    "afflictableOrgans": [
+      19
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1609,7 +1715,9 @@
   {
     "id": 247,
     "name": "Hyperthyroidism!",
-    "afflictableOrgans": [15],
+    "afflictableOrgans": [
+      15
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1621,7 +1729,9 @@
   {
     "id": 248,
     "name": "Esophageal Stricture!",
-    "afflictableOrgans": [16],
+    "afflictableOrgans": [
+      16
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1633,7 +1743,9 @@
   {
     "id": 249,
     "name": "Inflamed Taste Bud!",
-    "afflictableOrgans": [4],
+    "afflictableOrgans": [
+      4
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1645,7 +1757,9 @@
   {
     "id": 250,
     "name": "IBS-d!",
-    "afflictableOrgans": [20],
+    "afflictableOrgans": [
+      20
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1657,7 +1771,9 @@
   {
     "id": 251,
     "name": "Diabetes!",
-    "afflictableOrgans": [23],
+    "afflictableOrgans": [
+      23
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1669,7 +1785,9 @@
   {
     "id": 252,
     "name": "Overactive Bladder!",
-    "afflictableOrgans": [21],
+    "afflictableOrgans": [
+      21
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1681,7 +1799,9 @@
   {
     "id": 253,
     "name": "Gallstones!",
-    "afflictableOrgans": [17],
+    "afflictableOrgans": [
+      17
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1693,7 +1813,9 @@
   {
     "id": 254,
     "name": "Tonsillitis!",
-    "afflictableOrgans": [9],
+    "afflictableOrgans": [
+      9
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1705,7 +1827,9 @@
   {
     "id": 255,
     "name": "Thyroiditis!",
-    "afflictableOrgans": [15],
+    "afflictableOrgans": [
+      15
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1717,7 +1841,9 @@
   {
     "id": 256,
     "name": "Glaucoma!",
-    "afflictableOrgans": [11],
+    "afflictableOrgans": [
+      11
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1729,7 +1855,9 @@
   {
     "id": 257,
     "name": "Mental Ilness!",
-    "afflictableOrgans": [18],
+    "afflictableOrgans": [
+      18
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1741,7 +1869,9 @@
   {
     "id": 258,
     "name": "Lacerated Spleen!",
-    "afflictableOrgans": [10],
+    "afflictableOrgans": [
+      10
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1753,7 +1883,9 @@
   {
     "id": 259,
     "name": "Hypothyroidism!",
-    "afflictableOrgans": [15],
+    "afflictableOrgans": [
+      15
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1765,7 +1897,9 @@
   {
     "id": 261,
     "name": "Chronic strep Throat!",
-    "afflictableOrgans": [9],
+    "afflictableOrgans": [
+      9
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1777,7 +1911,9 @@
   {
     "id": 262,
     "name": "Tracheal Stenosis!",
-    "afflictableOrgans": [2],
+    "afflictableOrgans": [
+      2
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1789,7 +1925,9 @@
   {
     "id": 263,
     "name": "Cavity!",
-    "afflictableOrgans": [5],
+    "afflictableOrgans": [
+      5
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1801,7 +1939,9 @@
   {
     "id": 264,
     "name": "Stomach Ulcer!",
-    "afflictableOrgans": [3],
+    "afflictableOrgans": [
+      3
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1813,7 +1953,9 @@
   {
     "id": 265,
     "name": "Crohn's!",
-    "afflictableOrgans": [20],
+    "afflictableOrgans": [
+      20
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1825,7 +1967,9 @@
   {
     "id": 266,
     "name": "Heartburn!",
-    "afflictableOrgans": [16],
+    "afflictableOrgans": [
+      16
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
@@ -1837,7 +1981,9 @@
   {
     "id": 267,
     "name": "Fatty Liver!",
-    "afflictableOrgans": [12],
+    "afflictableOrgans": [
+      12
+    ],
     "removableOrgans": [],
     "isWild": false,
     "afflictPoints": 1,
