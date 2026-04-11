@@ -458,7 +458,7 @@ popup-removable-organs img:hover,
 }
 
 /* flash screen */
-.flash-screen-container {
+/* .flash-screen-container {
   z-index: 1000;
 
   position: absolute;
@@ -528,7 +528,7 @@ popup-removable-organs img:hover,
 
 .popup-players {
   padding: 2em;
-}
+} */
 
 /* clinical audit */
 .clinical-popup {

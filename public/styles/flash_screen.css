@@ -20,34 +20,37 @@
 }
 
 .flash-screen {
+  min-width: 400px;
   border-radius: 0.4em;
   display: flex;
   padding: 1em;
   gap: 5em;
+  box-shadow: 0 0 8px var(--clr-dark-gray);
+  background-color: var(--clr-gray);
 }
 
 .flash-screen[data-cardtype="affliction"] {
-  background-color: var(--clr-red-alpha-30);
+  border: 3px solid var(--clr-red);
 }
 
 .flash-screen[data-cardtype="resistance"] {
-  background-color: var(--clr-blue-alpha-30);
+  border: 3px solid var(--clr-blue);
 }
 
 .flash-screen[data-cardtype="poison"] {
-  background-color: var(--clr-red-alpha-30);
+  border: 3px solid var(--clr-red);
 }
 
 .flash-screen[data-cardtype="bureaucracy"] {
-  background-color: var(--clr-gray);
+  border: 3px solid var(--clr-gold);
 }
 
 .flash-screen[data-cardtype="tactical"] {
-  background-color: var(--clr-gray);
+  border: 3px solid var(--clr-gray);
 }
 
 .flash-screen[data-cardtype="wild"] {
-  background-color: var(--clr-gray);
+  border: 3px solid var(--clr-red);
 }
 
 .flash-screen .actor {
@@ -92,8 +95,9 @@
   width: 100%;
   height: 6px;
   position: absolute;
+  padding-inline: 8px;
   left: 0;
-  bottom: 0px;
+  bottom:8px;
   border-radius: 100vw;
 }
 .bar {
