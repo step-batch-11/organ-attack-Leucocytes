@@ -1,6 +1,7 @@
 import { getCookie } from "hono/cookie";
 import { updateGameState } from "../app.js";
 import { createEvent } from "../utils.js";
+import { Game } from "../models/game.js";
 
 const constructAction = (game, body) => {
   const { attackerID, attackCardID } = body;
@@ -18,7 +19,9 @@ const constructAction = (game, body) => {
   };
 };
 
-const playCard = (roomID, gameController, game, action) => {
+const playCard = (roomID, gameController, game = new Game(), action) => {
+  game.currentTurnPlayed(action);
+
   const done = gameController.playCard(action, game);
 
   done.then(() => {

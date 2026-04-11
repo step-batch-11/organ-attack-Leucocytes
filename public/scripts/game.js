@@ -66,9 +66,10 @@ const manageTurn = async (gameState) => {
 
   // 🎴 animate from deck
   newCards.forEach((id, index) => {
-    const cardElement = document.querySelector(
-      `.attack-card[data-id="${id}"]`,
-    );
+    const cardElement = document
+      .querySelector(
+        `.attack-card[data-id="${id}"]`,
+      );
     setTimeout(() => {
       if (cardElement) animateFromDeck(cardElement);
     }, index * 200);

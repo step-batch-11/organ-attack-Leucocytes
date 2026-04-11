@@ -25,21 +25,38 @@ export class Game {
     this.#afflictionHandler = afflictionHandler;
     this.#event = {};
     this.#turnManager = turnManager;
+    this.currentPlayedCard = false;
   }
 
   passTurn() {
-    this.#currentPlayer = this.#turnManager.passTurn();
+    if (this.currentPlayedCard) {
+      this.#currentPlayer = this.#turnManager.passTurn();
+      this.currentPlayedCard = false;
+    }
   }
 
   setFirstPlayer() {
-    this.#currentPlayer = this.#players
-      .findIndex((player) => player.holdsWild()) || 0;
+    const idx = this.#players
+      .findIndex((player) => player.holdsWild());
+    this.#currentPlayer = idx !== -1 ? idx : 0;
     this.#turnManager.setTurn(this.#currentPlayer);
     return this.#currentPlayer;
   }
 
   dealCards() {
     this.#dealer.dealCards();
+  }
+
+  currentTurnPlayed({ attackerID, card, opponentID }) {
+    const currentPlayer = this.#players[this.#currentPlayer];
+    const { action } = card;
+
+    const isNarcolepsyPlayedOnMe = action === "narcolepsy" &&
+      opponentID === currentPlayer.getID();
+
+    this.currentPlayedCard = this.currentPlayedCard ||
+      action === "cryopreservation" || isNarcolepsyPlayedOnMe ||
+      attackerID === currentPlayer.getID() && !card.isInstant;
   }
 
   discardAttackCard(attackerID, attackCardID) {
