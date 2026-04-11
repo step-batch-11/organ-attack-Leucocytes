@@ -177,11 +177,12 @@ const renderPlayerProfile = (name, avatarContainer) => {
 
 const createOppFragment = (
   template,
-  { name, organCards, id, isMyTurn, vaccinePoints },
+  { name, organCards, id, isMyTurn, vaccinePoints, isSleeping },
   position,
 ) => {
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".opponent");
+  element.dataset.sleeping = isSleeping ? "true" : "false";
   element.dataset.position = position;
   element.setAttribute("id", `player-${id}`);
 
