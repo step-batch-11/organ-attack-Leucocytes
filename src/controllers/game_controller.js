@@ -18,6 +18,11 @@ export default class GameController {
       poison: this.#handlePoison,
       transplant: this.#handleTransplant,
       "medical-miracle": this.#handleMedicalMiracle,
+      "itsAlive": this.#handleItsAlive,
+      "Vaccine": this.#handleVaccine,
+      "common-cold": this.#handleCommonCold,
+      "chart-mixup": this.#handleChartMixup,
+      "by-the-book": this.#handleBythebook,
     };
   }
 
@@ -37,6 +42,11 @@ export default class GameController {
     return this.#timer.start();
   }
 
+  #handleCommonCold(game, { attackerID, attackCardID, opponentID }) {
+    game.exchangeCard(attackerID, attackCardID, opponentID);
+    return ({ success: true });
+  }
+
   #handleAffliction(game, { opponentID, organCardID, card }) {
     const { removableOrgans } = card;
     const afflictionPoints =
@@ -49,6 +59,11 @@ export default class GameController {
       organCardID,
       afflictionPoints,
     );
+  }
+
+  #handleVaccine(game, { attackerID }) {
+    game.applyVaccine(attackerID);
+    return ({ success: true });
   }
 
   #handleTransplant = (game, { attackerID, opponentID, organCardID }) => {
@@ -69,6 +84,21 @@ export default class GameController {
     return ({ success: true });
   }
 
+  #handleChartMixup(game) {
+    game.chartMixup();
+    return ({ success: true });
+  }
+
+  #handleBythebook(game) {
+    game.bythebook();
+    return ({ success: true });
+  }
+
+  #handleItsAlive(game, { attackerID, organCardID }) {
+    const organ = game.itsAlive(attackerID, organCardID);
+    return { success: !(organ.isDead()) };
+  }
+
   #applyAction(game, action) {
     // has to call different cards action accordingly(needs validation)
     const { action: cardAction } = action.card;
@@ -85,6 +115,7 @@ export default class GameController {
       this.#applyAction(game, action);
     });
     // should be rich in validation
+    if (actions[0]?.card.action === "poison") return;
     game.passTurn();
   }
 

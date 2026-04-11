@@ -12,6 +12,19 @@ const createOrganNodes = (afflictableOrgans) => {
   return organNodes;
 };
 
+const createOpponentNodes = (opponents) => {
+  const opponentElement = cloneFromTemplate("#player-template");
+
+  const opponentNodes = opponents.map(({ id, name }) => {
+    const opponentNode = opponentElement.cloneNode(true);
+    opponentNode.dataset.id = id;
+    console.log(opponentNode);
+    opponentNode.querySelector(".name").textContent = name;
+    return opponentNode;
+  });
+  return opponentNodes;
+};
+
 const renderOrganNodes = (popup, organs, query) => {
   if (organs.length === 0) {
     popup.querySelector(query).remove();
@@ -23,9 +36,23 @@ const renderOrganNodes = (popup, organs, query) => {
   organsContainer.append(...organNodes);
 };
 
+const renderOpponentNodes = (popup, opponents) => {
+  if (opponents.length === 0) {
+    popup.querySelector(".players").remove();
+    return;
+  }
+
+  const opponentNodes = createOpponentNodes(opponents);
+  const opponentsContainer = popup.querySelector(`.players`);
+  opponentsContainer.append(...opponentNodes);
+};
+
 export const affliction = (card) => {
   const cardID = parseInt(card.dataset.id);
   const gameState = window.gameState;
+  console.log("isMyTurn", gameState.isMyTurn());
+  console.log("isInstant", gameState.isInstant(cardID), cardID);
+  console.log("isCard", gameState.isCardActive(cardID));
 
   if (
     (!gameState.isMyTurn() && !gameState.isInstant(cardID)) ||
@@ -72,6 +99,50 @@ export const transplant = (card) => {
   popupContainer.replaceChildren(popup);
 };
 
+export const commonCold = (card) => {
+  const cardID = parseInt(card.dataset.id);
+  const gameState = window.gameState;
+
+  if (!gameState.isMyTurn() || !gameState.isCardActive(cardID)) return;
+
+  const popup = cloneFromTemplate("#popup-players-template");
+
+  popup.dataset.action = "common-cold";
+  popup.dataset.for = cardID;
+
+  const opponents = gameState.getOpponents();
+
+  renderOpponentNodes(popup, opponents);
+
+  const popupContainer = document.querySelector(".popup");
+
+  popupContainer.replaceChildren(popup);
+};
+
+export const itsAlive = (card) => {
+  const cardID = parseInt(card.dataset.id);
+  const gameState = window.gameState;
+
+  if (
+    (!gameState.isMyTurn() && !gameState.isInstant(cardID)) ||
+    !gameState.isCardActive(cardID)
+  ) return;
+
+  const popup = cloneFromTemplate("#popup-organs-template");
+  popup.querySelector(".afflicts-organ").remove();
+
+  popup.dataset.action = "itsAlive";
+  popup.dataset.for = cardID;
+
+  const discardedOrgans = gameState.getDiscardedOrgans();
+
+  renderOrganNodes(popup, discardedOrgans, ".removes-organ");
+
+  const popupContainer = document.querySelector(".popup");
+
+  popupContainer.replaceChildren(popup);
+};
+
 // poison
 export const handlePoison = () => {
   const gameState = window.gameState;
@@ -92,6 +163,8 @@ export const handlePoison = () => {
 // immunity boost
 export const immunityBoost = (card) => {
   const gameState = window.gameState;
+
+  if (!gameState.canPlayImmunityBoost()) return;
   const cardID = parseInt(card.dataset.id);
 
   const body = {
@@ -101,6 +174,43 @@ export const immunityBoost = (card) => {
   };
 
   postJSON("/action", body);
+};
+
+// chart-mixup
+export const chartMixupOrByTheBook = (card) => {
+  const gameState = window.gameState;
+  const cardID = parseInt(card.dataset.id);
+
+  if (!gameState.isMyTurn() || !gameState.isCardActive(cardID)) return;
+
+  const body = {
+    attackerID: gameState.getSelfID(),
+    attackCardID: cardID,
+  };
+
+  postJSON("/action", body);
+};
+
+// vaccine
+export const vaccine = async (card) => {
+  console.log("are mai yaha hu");
+  const cardID = parseInt(card.dataset.id);
+  console.log(cardID, card);
+
+  const gameState = window.gameState;
+  if (!gameState.isMyTurn() || !gameState.isCardActive(cardID)) return;
+
+  const body = {
+    attackerID: gameState.getSelfID(),
+    attackCardID: cardID,
+  };
+
+  const { success } = await postJSON("/action", body);
+
+  if (success) {
+    const organsArea = document.querySelector(".organs");
+    organsArea.dataset.vaccine = 2;
+  }
 };
 
 // contagious

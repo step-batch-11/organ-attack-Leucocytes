@@ -47,7 +47,7 @@ export default class GameState {
     const player = players
       .find((player) => player.organCards.some(({ id }) => id === organID));
 
-    return player.id;
+    return player?.id;
   }
 
   getSelfID() {
@@ -105,6 +105,10 @@ export default class GameState {
       (event.name === "affliction" || event.name === "contagious");
   }
 
+  canPlayImmunityBoost() {
+    return this.#state.event.name !== "poison";
+  }
+
   canPlayMetastasis() {
     const { self, event } = this.#state;
     return self.id === event.actor.id && !event.resolved &&
@@ -120,6 +124,10 @@ export default class GameState {
   getUnharmedOrgan(playerID, organID) {
     const organCards = this.getPlayerOrgans(playerID);
     return organCards.filter(({ id }) => id !== organID);
+  }
+
+  getDiscardedOrgans() {
+    return this.#state.organDiscardPile;
   }
 
   getPoisonID() {

@@ -4,21 +4,11 @@ import { updateGameState } from "../app.js";
 import { createEvent } from "../utils.js";
 
 const ACTIONS = {
-  transplant: handlers.handleTransplant,
-  affliction: handlers.handleNormalAffliction,
-  "chart-mixup": handlers.handleChartMixup,
-  Vaccine: handlers.handleVaccine,
   medicine: handlers.handleMedicine,
   "medical-miracle": handlers.handleMedicalMiracle,
-  "by-the-book": handlers.handleBythebook,
-  poison: handlers.handlePoison,
-  remove: handlers.handleRemoveOrgan,
-  hybrid: handlers.handleHybridAffliction,
-  itsAlive: handlers.handleItsAlive,
   sedate: handlers.handleSedate,
   narcolepsy: handlers.handleNarcolepsy,
   cryopreservation: handlers.handleCryopreservation,
-  "common-cold": handlers.handleCommonCold,
   "clinical-audit": handlers.handleRefillSelfPostAudit,
   research: handlers.handleResearch,
   "situs-inversus": handlers.handleSitusInversus,

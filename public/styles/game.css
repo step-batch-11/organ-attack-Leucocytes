@@ -579,7 +579,7 @@ popup-removable-organs img:hover,
   height: 10.5em;
   transform: translate(-50%, -50%);
   border-radius: 10px;
-  overflow: hidden; /* 🔥 IMPORTANT */
+  overflow: hidden;
 
 }
 
@@ -597,7 +597,7 @@ popup-removable-organs img:hover,
   height: 100%;
 
     position: absolute;
-    inset: 0; /* fill parent perfectly */
+    inset: 0; 
 }
 
 .deck {
@@ -651,30 +651,6 @@ popup-removable-organs img:hover,
 .flash-screen-container {
   z-index: 100;
 }
-/* .deck::before,
-.deck::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 10px;
-  background: inherit;
-  z-index: -1;
-}
-
-.deck::before {
-  transform: translate(3px, 3px);
-  opacity: 0.6;
-}
-
-.deck::after {
-  transform: translate(6px, 6px);
-  opacity: 0.3;
-}
-
-.deck:hover {
-  transform: translate(-50%, -50%) scale(1.05);
-  cursor: pointer;
-} */
 
 .discard-top .attack-card {
   position: absolute;
@@ -696,9 +672,4 @@ popup-removable-organs img:hover,
 /* discard deck */
 .discard-deck {
   z-index: 40;
-}
-
-/* flash screen (always above) */
-.flash-screen-container {
-  z-index: 100;
 }

@@ -316,7 +316,7 @@
     "Desc": "Removes an own organ",
     "action": "poison",
     "type": "poison",
-    "isBlockable": true
+    "isBlockable": false
   },
   {
     "id": 26,
@@ -944,6 +944,7 @@
   {
     "id": 300,
     "name": "Outbreak",
+    "isInstant": true,
     "afflictableOrgans": [
       1,
       4,
@@ -981,6 +982,7 @@
   {
     "id": 301,
     "name": "Outbreak",
+    "isInstant": true,
     "afflictableOrgans": [
       1,
       4,
@@ -1018,6 +1020,7 @@
   {
     "id": 211,
     "name": "Outbreak",
+    "isInstant": true,
     "afflictableOrgans": [
       1,
       4,

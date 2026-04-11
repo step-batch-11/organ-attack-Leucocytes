@@ -4,8 +4,10 @@ import { createEvent } from "../utils.js";
 
 const constructAction = (game, body) => {
   const { attackerID, attackCardID } = body;
+  console.log("body", body);
 
   const card = game.getAttackCardData(attackerID, attackCardID);
+  console.log("here is the card details", card);
 
   const { action } = card;
 
@@ -19,10 +21,11 @@ const constructAction = (game, body) => {
 const playCard = (roomID, gameController, game, action) => {
   const done = gameController.playCard(action, game);
 
-  if (!action.card.isBlockable) gameController.resolveNow();
-
   done.then(() => {
     gameController.resolveAction(game);
+
+    console.log("action after resolve", action.name);
+
     // should go inside game controller
     gameController.updateEventStatus(game);
     const gameState = game.getGameState();
