@@ -29,7 +29,7 @@
 
 ## 🌐 Try the Game
 
-> [Play Here]([#](https://organ-attack-leucocytes.onrender.com/))
+> [Play Here](https://organ-attack-leucocytes.onrender.com/)
 
 Experience the game live in your browser! No installation needed—just gather
 your friends, The version supports:
