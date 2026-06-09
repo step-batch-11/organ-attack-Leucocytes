@@ -18,8 +18,8 @@ export const gameSetup = async (ctx) => {
 
   if (!(roomID in rooms)) return ctx.json({ message: "Invalid roomID" }, 400);
 
-  const players = rooms[roomID].players.map(({ name, id }) =>
-    new Player(name, id)
+  const players = rooms[roomID].players.map(
+    ({ name, id }) => new Player(name, id),
   );
   const attackCards = new Deck(attacks, shuffle);
 
@@ -37,6 +37,7 @@ export const gameSetup = async (ctx) => {
     organDeck,
     players,
   );
+
   const turnManager = new TurnManager(players);
 
   const game = new Game(

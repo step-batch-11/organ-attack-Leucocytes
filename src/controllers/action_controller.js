@@ -6,19 +6,23 @@ export default class ActionController {
 
   add(action) {
     const responseActions = new Set([
+      // i think these are for the defense or replying for the attack
       "IMMUNITY_BOOST",
       "METASTASIS",
       "CONTAGIOUS",
     ]);
 
-    const afflictionResponses = new Set(["METASTASIS", "CONTAGIOUS"]);
+    const afflictionResponses = new Set(["METASTASIS", "CONTAGIOUS"]); // these are for the affliction,
+    // so they can only be played after affliction
 
-    if (this.#stack.length() === 0 && responseActions.has(action.name)) {
+    const itemCount = this.#stack.length();
+
+    if (itemCount === 0 && responseActions.has(action.name)) {
       return { success: false, message: "response cannot be the first action" };
     }
 
     if (
-      this.#stack.length() > 0 &&
+      itemCount > 0 &&
       this.#stack.peek().name !== "AFFLICTION" &&
       afflictionResponses.has(action.name)
     ) {
@@ -29,6 +33,7 @@ export default class ActionController {
     }
 
     this.#stack.add(action);
+
     return { success: true };
   }
 
@@ -41,10 +46,11 @@ export default class ActionController {
       return { success: true, data: this.#stack.flush() };
     }
 
-    while (this.#stack.length() >= 0) {
+    while (this.#stack.length() > 0) {
+      const topMostElement = this.#stack.peek();
       if (
-        this.#stack.peek() === undefined ||
-        this.#stack.peek().name !== "IMMUNITY_BOOST"
+        topMostElement === undefined ||
+        topMostElement.name !== "IMMUNITY_BOOST"
       ) {
         return { success: true, data: this.#stack.flush() };
       }
