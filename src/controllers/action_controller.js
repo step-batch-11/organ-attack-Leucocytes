@@ -41,11 +41,11 @@ export default class ActionController {
     if (this.#stack.length() === 0) {
       return { success: false, message: "Nothing to resolve in stack" };
     }
-
+    
     if (this.#stack.length() === 1) {
       return { success: true, data: this.#stack.flush() };
     }
-
+    
     while (this.#stack.length() > 0) {
       const topMostElement = this.#stack.peek();
       if (
@@ -54,9 +54,10 @@ export default class ActionController {
       ) {
         return { success: true, data: this.#stack.flush() };
       }
-
+      
       this.#stack.consume();
       this.#stack.consume();
     }
+    return { success: false, message: "Nothing to resolve in stack" };
   }
 }

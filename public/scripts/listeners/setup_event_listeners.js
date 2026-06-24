@@ -30,21 +30,25 @@ const attackCardsListener = (event) => {
   const cardAction = attackCard.dataset.action;
   const cardType = attackCard.dataset.type;
 
-  if (cardAction === "affliction") affliction(attackCard);
-  if (cardAction === "medicine") medicine(attackCard);
-  if (cardAction === "transplant") transplant(attackCard);
-  if (cardAction === "contagious") contagious(attackCard);
-  if (cardAction === "metastasis") metastasis(attackCard);
-  if (cardAction === "immunity-boost") immunityBoost(attackCard);
-  if (cardAction === "itsAlive") itsAlive(attackCard);
-  if (cardAction === "Vaccine") vaccine(attackCard);
-  if (cardAction === "common-cold") commonColdOrSedate(attackCard);
-  if (cardAction === "sedate") commonColdOrSedate(attackCard);
-  if (cardAction === "chart-mixup") chartMixupOrByTheBook(attackCard);
-  if (cardAction === "by-the-book") chartMixupOrByTheBook(attackCard);
-  if (cardAction === "situs-inversus") situsInversusOrCryo(attackCard);
-  if (cardAction === "cryopreservation") situsInversusOrCryo(attackCard);
-  if (cardAction === "narcolepsy") narcolepsy(attackCard);
+  const actions = {
+    "affliction": affliction,
+    "medicine": medicine,
+    "transplant": transplant,
+    "contagious": contagious,
+    "metastasis": metastasis,
+    "immunity-boost": immunityBoost,
+    "itsAlive": itsAlive,
+    "Vaccine": vaccine,
+    "common-cold": commonColdOrSedate,
+    "sedate": commonColdOrSedate,
+    "chart-mixup": chartMixupOrByTheBook,
+    "by-the-book": chartMixupOrByTheBook,
+    "situs-inversus": situsInversusOrCryo,
+    "cryopreservation": situsInversusOrCryo,
+    "narcolepsy": narcolepsy
+  };
+
+  actions[cardAction](attackCard);
   // if (cardAction === "medical-miracle") medicalMiracle(attackCard);
 };
 

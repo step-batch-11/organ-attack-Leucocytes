@@ -140,19 +140,18 @@ const poll = async () => {
 };
 
 window.onload = async () => {
-  const players = await fetchPlayersData();
-  if (players.status === false) {
+  const gameState = await fetchPlayersData();
+  if (gameState.status === false) {
     window.location.href = "/";
     return;
   }
-  console.log(players);
 
-  window.gameState = new GameState(players);
+  window.gameState = new GameState(gameState);
 
-  if (holdsPoison(players.self.attackCards)) handlePoison();
+  if (holdsPoison(gameState.self.attackCards)) handlePoison();
 
   setupEventListeners();
 
-  await manageTurn(players);
+  await manageTurn(gameState);
   poll();
 };
