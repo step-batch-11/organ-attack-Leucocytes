@@ -50,6 +50,8 @@ const attachEventListener = async (
 const holdsPoison = (cards) => cards.some((card) => card.type === "poison");
 
 let prevCardIDs = [];
+let realtimeSocket = null;
+let reconnectAttempts = 0;
 
 const manageTurn = async (gameState) => {
   const { self, players, organDiscardPile } = gameState;
@@ -119,7 +121,7 @@ const manageTurn = async (gameState) => {
     .filter((card) => Number(card.getAttribute("is-instant")) === 1);
 
   if (self.isSleeping) {
-    instantCards.forEach((card) => card.onclick = () => {});
+    instantCards.forEach((card) => card.onclick = () => { });
     return;
   }
 
@@ -128,15 +130,41 @@ const manageTurn = async (gameState) => {
   });
 };
 
-const poll = async () => {
-  const res = await fetch("/poll");
-  if (res.status === 200) {
-    const gameState = await res.json();
-    window.gameState.update(gameState);
-    if (holdsPoison(gameState.self.attackCards)) handlePoison();
-    await manageTurn(gameState);
+const connectRealtime = () => {
+  if (realtimeSocket && [WebSocket.CONNECTING, WebSocket.OPEN].includes(realtimeSocket.readyState)) {
+    return;
   }
-  poll();
+
+  const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+  realtimeSocket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+
+  realtimeSocket.onmessage = async (event) => {
+    try {
+      const { type, payload } = JSON.parse(event.data);
+      if (type !== "game-state") return;
+
+      const gameState = typeof payload === "string"
+        ? JSON.parse(payload)
+        : payload;
+
+      window.gameState.update(gameState);
+      if (holdsPoison(gameState.self.attackCards)) handlePoison();
+      await manageTurn(gameState);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  realtimeSocket.onclose = () => {
+    if (reconnectAttempts < 5) {
+      reconnectAttempts += 1;
+      setTimeout(connectRealtime, 1000 * reconnectAttempts);
+    }
+  };
+
+  realtimeSocket.onerror = (error) => {
+    console.error("Realtime connection error", error);
+  };
 };
 
 window.onload = async () => {
@@ -153,5 +181,5 @@ window.onload = async () => {
   setupEventListeners();
 
   await manageTurn(gameState);
-  poll();
+  connectRealtime();
 };

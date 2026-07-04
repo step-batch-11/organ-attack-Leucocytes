@@ -58,8 +58,9 @@ export const serveGameState = (c) => {
   }
 
   const game = games[roomID];
-  console.log({ game});
-  game.registerEvent({name:"idle"});
+  if (typeof game.registerEvent === "function") {
+    game.registerEvent({ name: "idle" });
+  }
   const publicGameState = game.getGameState();
 
   const res = getPlayerData(c);

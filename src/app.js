@@ -24,10 +24,15 @@ import {
 import { serveUserDetails } from "./handlers/userHandler.js";
 import { createRoom, joinRoom, leaveLobby } from "./handlers/room_handler.js";
 import { getCookie } from "hono/cookie";
+import { RealtimeHub } from "./realtime.js";
 
 const waitingList = new Set();
+const realtimeHub = new RealtimeHub();
 
 export const updateGameState = (roomID, publicGameState) => {
+  const payload = JSON.stringify(publicGameState);
+  realtimeHub.broadcast(roomID, { type: "game-state", payload });
+
   for (const client of waitingList) {
     const { resolve, c } = client;
     const clientRoomID = getCookie(c, "roomID");
@@ -88,6 +93,24 @@ export const createApp = ({
 
   app.get("/poll", (c) => {
     return new Promise((resolve) => waitingList.add({ resolve, c }));
+  });
+
+  app.get("/ws", (c) => {
+    const roomID = getCookie(c, "roomID");
+    const { socket, response } = Deno.upgradeWebSocket(c.req.raw);
+
+    if (!roomID) {
+      socket.close();
+      return response;
+    }
+
+    realtimeHub.registerClient(roomID, { playerID: null, socket });
+
+    socket.addEventListener("close", () => {
+      realtimeHub.removeClient(roomID, socket);
+    });
+
+    return response;
   });
 
   app.post("/remove-card", async (c) => {

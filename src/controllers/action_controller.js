@@ -41,23 +41,30 @@ export default class ActionController {
     if (this.#stack.length() === 0) {
       return { success: false, message: "Nothing to resolve in stack" };
     }
-    
-    if (this.#stack.length() === 1) {
-      return { success: true, data: this.#stack.flush() };
-    }
-    
-    while (this.#stack.length() > 0) {
-      const topMostElement = this.#stack.peek();
-      if (
-        topMostElement === undefined ||
-        topMostElement.name !== "IMMUNITY_BOOST"
-      ) {
-        return { success: true, data: this.#stack.flush() };
+
+    const actions = this.#stack.flush();
+    const resolvedActions = [];
+    let immunityBoostCount = 0;
+
+    for (let index = actions.length - 1; index >= 0; index--) {
+      const action = actions[index];
+
+      if (action.name === "IMMUNITY_BOOST") {
+        immunityBoostCount += 1;
+        continue;
       }
-      
-      this.#stack.consume();
-      this.#stack.consume();
+
+      if (immunityBoostCount > 0) {
+        if (immunityBoostCount % 2 === 1) {
+          immunityBoostCount = 0;
+          continue;
+        }
+        immunityBoostCount = 0;
+      }
+
+      resolvedActions.push(action);
     }
-    return { success: false, message: "Nothing to resolve in stack" };
+
+    return { success: true, data: resolvedActions.reverse() };
   }
 }
