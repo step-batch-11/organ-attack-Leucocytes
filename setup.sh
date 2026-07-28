@@ -2,25 +2,12 @@
 
 set -eu
 
-echo "========================================="
-echo " Setting up Claude Code Agentic Workflow "
-echo "========================================="
-
-###############################################################################
-# Create directory structure
-###############################################################################
-
-mkdir -p .claude
-mkdir -p .claude/skills
-mkdir -p .claude/skills/architect
-mkdir -p .claude/skills/writer
-mkdir -p .claude/skills/critic
-mkdir -p .claude/skills/tester
-mkdir -p .claude/skills/documenter
-
-###############################################################################
-# Architect Skill
-###############################################################################
+mkdir -p \
+  .claude/skills/architect \
+  .claude/skills/writer \
+  .claude/skills/critic \
+  .claude/skills/tester \
+  .claude/skills/documenter
 
 cat > .claude/skills/architect/SKILL.md <<'EOF'
 # Role: Expert Software Architect & Code Analyzer
@@ -75,10 +62,6 @@ Ensure support for every game mechanic including:
 - Future expansion
 EOF
 
-###############################################################################
-# Writer Skill
-###############################################################################
-
 cat > .claude/skills/writer/SKILL.md <<'EOF'
 # Role: Senior TypeScript Developer
 
@@ -123,10 +106,6 @@ After each completed module output:
 git add .
 git commit -m "feat(module): description"
 EOF
-
-###############################################################################
-# Critic Skill
-###############################################################################
 
 cat > .claude/skills/critic/SKILL.md <<'EOF'
 # Role: Ruthless Code Reviewer
@@ -173,10 +152,6 @@ Never rewrite code.
 
 Only provide actionable review comments.
 EOF
-
-###############################################################################
-# Tester Skill
-###############################################################################
 
 cat > .claude/skills/tester/SKILL.md <<'EOF'
 # Role: QA Automation Engineer
@@ -233,10 +208,6 @@ If implementation fails,
 report bugs instead of weakening tests.
 EOF
 
-###############################################################################
-# Documenter Skill
-###############################################################################
-
 cat > .claude/skills/documenter/SKILL.md <<'EOF'
 # Role: Technical Writer
 
@@ -268,10 +239,6 @@ Never describe legacy architecture except for comparison.
 
 Base documentation only on the new TypeScript implementation.
 EOF
-
-###############################################################################
-# CLAUDE.md
-###############################################################################
 
 cat > .claude/CLAUDE.md <<'EOF'
 # Organ Attack! TypeScript Refactor
@@ -365,24 +332,3 @@ Never introduce framework dependencies into the game engine.
 
 Always finish by suggesting an incremental git commit.
 EOF
-
-###############################################################################
-# Done
-###############################################################################
-
-echo
-echo "========================================="
-echo " Claude Code setup complete!"
-echo "========================================="
-echo
-echo "Created:"
-echo "  .claude/"
-echo "  ├── CLAUDE.md"
-echo "  └── skills/"
-echo "      ├── architect/SKILL.md"
-echo "      ├── writer/SKILL.md"
-echo "      ├── critic/SKILL.md"
-echo "      ├── tester/SKILL.md"
-echo "      └── documenter/SKILL.md"
-echo
-echo "Claude Code will automatically detect these files when opened in this project."

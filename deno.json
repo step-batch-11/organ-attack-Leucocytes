@@ -1,6 +1,14 @@
 {
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "exactOptionalPropertyTypes": false,
+    "lib": ["deno.window", "dom", "dom.iterable"]
+  },
+
   "tasks": {
-    "dev": "deno run -A --watch --env-file=.env main.js",
+    "dev": "deno run -A --watch --env-file=.env main.ts",
     "test:watch": "deno test -A --watch",
     "test": "deno test -A",
     "test:coverage": "deno test -A --coverage --reporter=dot",
