@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+.deno/
+public/assets/
+package-lock.json
+deno.lock
+test/app_test.js
