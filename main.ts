@@ -25,7 +25,7 @@ const main = () => {
   const appUtils = { session, players, games, rooms, shuffle, gameController };
 
   const app = createApp({ ...generators, ...appUtils }, logger);
-  const port = Deno.env.get("PORT") || 8000;
+  const port = 8000;
   Deno.serve({ port }, app.fetch);
 };
 

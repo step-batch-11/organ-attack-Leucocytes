@@ -8,7 +8,8 @@
   },
 
   "tasks": {
-    "dev": "deno run -A --watch --env-file=.env main.ts",
+    "run": "deno run -A main.ts",
+    "dev": "deno run -A --watch main.ts",
     "test:watch": "deno test -A --watch",
     "test": "deno test -A",
     "test:coverage": "deno test -A --coverage --reporter=dot",
@@ -29,7 +30,12 @@
   },
 
   "fmt": {
-    "exclude": ["public/**/*.html", "public/**/*.css", "deno.*","public/assets/icons/*"]
+    "exclude": [
+      "public/**/*.html",
+      "public/**/*.css",
+      "deno.*",
+      "public/assets/icons/*"
+    ]
   },
   "lint": {
     "exclude": ["public/"]
