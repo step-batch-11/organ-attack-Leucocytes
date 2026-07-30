@@ -136,6 +136,10 @@ export default class GameState {
     return this.#state.organDiscardPile;
   }
 
+  getAttackDiscardPile() {
+    return this.#state.discardPile ?? [];
+  }
+
   getPoisonID() {
     const { self } = this.#state;
     const poison = self.attackCards.find((card) => card.type === "poison");

@@ -28,7 +28,8 @@ export default class GameController {
       "narcolepsy": this.#handleNarcolepsy,
       "research": this.#handleResearch,
       "medicine": this.#handleMedicine,
-      "handleCryopreservation": this.#handleCryopreservation,
+      "cryopreservation": this.#handleCryopreservation,
+      "clinical-audit": this.#handleClinicalAudit,
     };
   }
 
@@ -45,7 +46,15 @@ export default class GameController {
     const res = this.#actionController.add(action);
     if (!res.success) throw new Error(res.message);
 
-    return this.#timer.start();
+    const done = this.#timer.start();
+
+    // Non-blockable cards have no response window to wait out — resolve
+    // the pending timer immediately instead of holding the stack open.
+    if (action.card?.isBlockable === false) {
+      this.#timer.end();
+    }
+
+    return done;
   }
 
   #handleResearch(game, { attackCardID, attackerID, selectedCardID }) {
@@ -124,6 +133,14 @@ export default class GameController {
 
   #handleBythebook(game) {
     game.bythebook();
+    return ({ success: true });
+  }
+
+  // The opponent-hand reveal/discard for clinical-audit is driven by
+  // separate "query-opponent-hand"/"audit-discard" WS requests, not this
+  // dispatch table — this entry only exists so every card has one, and so
+  // playCard's non-blockable fast path applies to it.
+  #handleClinicalAudit() {
     return ({ success: true });
   }
 

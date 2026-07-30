@@ -1,5 +1,5 @@
 import { clearPopup } from "./afflict-organ.js";
-import { cloneFromTemplate, postJSON } from "./utils.js";
+import { cloneFromTemplate, sendAction } from "./utils.js";
 
 export const getTypes = (cards) => {
   const types = new Set();
@@ -95,7 +95,7 @@ const addListener = async (popup, cards, researchID, playerID) => {
 
     clearPopup();
 
-    return await postJSON("/action", {
+    return await sendAction({
       attackCardID: researchID,
       selectedCardID,
       attackerID: playerID,
@@ -107,8 +107,7 @@ export const displayAttackDeckDiscardPile = async (
   { player, attackCardID },
 ) => {
   clearPopup();
-  const response = await fetch("/discard-pile");
-  const cards = await response.json();
+  const cards = window.gameState.getAttackDiscardPile();
   const popup = document.querySelector("body .popup");
   const template = cloneFromTemplate("#research-template");
   const types = getTypes(cards);

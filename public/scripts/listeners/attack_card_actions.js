@@ -1,4 +1,4 @@
-import { cloneFromTemplate, postJSON, setOrganImage } from "../utils.js";
+import { cloneFromTemplate, sendAction, setOrganImage } from "../utils.js";
 
 const createOrganNodes = (afflictableOrgans) => {
   const organElement = cloneFromTemplate("#organ-card-template");
@@ -220,7 +220,7 @@ export const immunityBoost = (card) => {
     isInstant: gameState.isInstant(cardID),
   };
 
-  postJSON("/action", body);
+  sendAction(body);
 };
 
 // chart-mixup
@@ -235,7 +235,7 @@ export const chartMixupOrByTheBook = (card) => {
     attackCardID: cardID,
   };
 
-  postJSON("/action", body);
+  sendAction(body);
 };
 
 // situsInversus
@@ -253,7 +253,7 @@ export const situsInversusOrCryo = (card) => {
     attackCardID: cardID,
   };
 
-  postJSON("/action", body);
+  sendAction(body);
 };
 
 // vaccine
@@ -270,7 +270,7 @@ export const vaccine = async (card) => {
     attackCardID: cardID,
   };
 
-  const { success } = await postJSON("/action", body);
+  const { success } = await sendAction(body);
 
   if (success) {
     const organsArea = document.querySelector(".organs");

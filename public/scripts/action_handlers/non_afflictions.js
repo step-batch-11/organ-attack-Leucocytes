@@ -1,15 +1,16 @@
 import { clearPopup } from "../afflict-organ.js";
-import { cloneFromTemplate, postJSON } from "../utils.js";
+import { cloneFromTemplate, sendAction } from "../utils.js";
+import { sendRequest } from "../network.js";
 
 export const performChartMixup = async ({ player, attackCardID }) => {
   clearPopup();
   const body = { attackerID: player.id, attackCardID };
-  await postJSON("/attack", body);
+  await sendAction(body);
 };
 
 export const performVaccine = async ({ player, attackCardID }) => {
   const body = { attackerID: player.id, attackCardID };
-  const { success } = await postJSON("/attack", body);
+  const { success } = await sendAction(body);
 
   if (success) {
     const organsArea = document.querySelector(".organs");
@@ -19,7 +20,7 @@ export const performVaccine = async ({ player, attackCardID }) => {
 
 export const performByTheBook = async ({ player, attackCardID }) => {
   const body = { attackerID: player.id, attackCardID };
-  await postJSON("/attack", body);
+  await sendAction(body);
 };
 
 const setAttributes = (node, attackCard) => {
@@ -57,7 +58,7 @@ const highlight = (attackCards) => {
 
 const displayOpponentHand = (opponentID, opponentIDs) => {
   return new Promise(async (resolve) => {
-    const opponentHand = await postJSON("/opponent-hands", { opponentID });
+    const opponentHand = await sendRequest("query-opponent-hand", { opponentID });
     const clinicalAuditPopup = cloneFromTemplate(".clinical-audit-popup");
     const popup = document.querySelector(".popup");
 
@@ -82,7 +83,7 @@ const displayOpponentHand = (opponentID, opponentIDs) => {
 
       clearPopup();
 
-      await postJSON("/audit", {
+      await sendRequest("audit-discard", {
         attackCardID: selectedAttackCardID,
         opponentID,
       });
@@ -102,13 +103,13 @@ export const displayOpponentsHands = async (
   clearPopup();
   const opponentIDs = opponents.map((opponent) => opponent.id);
   await displayOpponentHand(opponentIDs.shift(), opponentIDs);
-  await postJSON("/attack", { attackerID: player.id, attackCardID });
+  await sendAction({ attackerID: player.id, attackCardID });
 };
 
 export const performCryopreservation = async ({ player, attackCardID }) => {
   const body = { attackerID: player.id, attackCardID, isInstant: true };
-  await postJSON("/attack", body);
+  await sendAction(body);
 };
 
 export const performSitusInversus = async ({ player, attackCardID }) =>
-  await postJSON("/attack", { attackerID: player.id, attackCardID });
+  await sendAction({ attackerID: player.id, attackCardID });

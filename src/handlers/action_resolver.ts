@@ -1,14 +1,8 @@
-import { getCookie } from "hono/cookie";
 import { createEvent } from "../utils.ts";
-import { Game } from "../models/game.ts";
 
 const constructAction = (game, body) => {
   const { attackerID, attackCardID } = body;
-  console.log("body", body);
-
   const card = game.getAttackCardData(attackerID, attackCardID);
-  console.log("here is the card details", card);
-
   const { action } = card;
 
   return {
@@ -18,47 +12,39 @@ const constructAction = (game, body) => {
   };
 };
 
-const playCard = (roomID, gameController, game = new Game(), action, updateGameState) => {
+const playCard = (roomID, gameController, game, action, updateGameState) => {
   game.currentTurnPlayed(action);
 
   const done = gameController.playCard(action, game);
 
   done.then(() => {
     gameController.resolveAction(game);
-
-    console.log("action after resolve", action.name);
-
-    // should go inside game controller
     gameController.updateEventStatus(game);
     updateGameState(roomID);
   }).catch((reject) => console.error({ reject }));
 };
 
-export const resolveAction = async (ctx, gameController) => {
-  const body = await ctx.req.json();
-
-  const roomID = getCookie(ctx, "roomID");
-  const game = ctx.get("games")[roomID];
-  const updateGameState = ctx.get("updateGameState");
-
+/**
+ * Plays a card submitted over the `/ws` "action" request. Mirrors the
+ * former `/action` HTTP handler's synchronous contract: throws (→
+ * `request-error`) if the action can't legally be added to the
+ * `ActionStack`, otherwise returns `{ success: true }` immediately — actual
+ * resolution (and the resulting `game-state` broadcast) happens later,
+ * asynchronously, once the response window elapses or is skipped.
+ */
+export const handleAction = (roomID, gameController, game, updateGameState, body) => {
   const action = constructAction(game, body);
 
-  try {
-    playCard(roomID, gameController, game, action, updateGameState);
+  playCard(roomID, gameController, game, action, updateGameState);
 
-    const { attackerID, attackCardID, isInstant } = body;
-
-    game.discardAttackCard(attackerID, attackCardID, isInstant);
-  } catch (error) {
-    console.error(error.message);
-    return ctx.json({ message: error.message }, 400);
-  }
+  const { attackerID, attackCardID, isInstant } = body;
+  game.discardAttackCard(attackerID, attackCardID, isInstant);
 
   const event = createEvent(action, game);
   game.registerEvent(event);
 
   gameController.updateEventStatus(game);
-
   updateGameState(roomID);
-  return ctx.json({ success: true });
+
+  return { success: true };
 };

@@ -5,13 +5,16 @@ import {
   getRemovableOrgans,
 } from "./utils.js";
 
-import { createAttackCardElement, getLastDiscardedCard } from "./utils.js";
+import { createAttackCardElement } from "./utils.js";
 
-const renderDiscardPile = async () => {
+const renderDiscardPile = () => {
   const discardTop = document.querySelector(".discard-top");
   if (!discardTop) return;
 
-  const cardData = await getLastDiscardedCard();
+  const discardPile = window.gameState.getAttackDiscardPile();
+  const cardData = discardPile.length > 0
+    ? discardPile[discardPile.length - 1]
+    : null;
 
   if (!cardData) return;
 

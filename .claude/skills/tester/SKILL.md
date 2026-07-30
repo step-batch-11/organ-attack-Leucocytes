@@ -48,6 +48,18 @@ Game
 
 Broadcast
 
+## WS Action Protocol
+
+- Every client→server WS message carries a `requestId`; assert the server's `request-ack`/
+  `request-error` echoes the same `requestId` back.
+- A rejected request (illegal move, out-of-turn, unknown request type, etc.) must produce a
+  `request-error` sent only to the originating socket (via `sendToPlayer`/direct send) — assert no
+  other socket in the room receives it.
+- There is no `/action`, `/attack`, `/audit`, `/opponent-hands`, `/discard-pile`, `/game-state`, or
+  `/remove-card` HTTP endpoint anymore — never write or extend a test that drives one over HTTP.
+  If a future change to `src/ws_request_handlers.ts` adds a new WS request type, test it the same
+  way: fake sockets, real in-memory `Game`, assert the ack/error and any resulting broadcast.
+
 ## Edge Cases
 
 - Out of turn

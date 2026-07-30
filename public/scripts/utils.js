@@ -1,4 +1,5 @@
 import { animateFromDeck, animateToDiscard } from "./animation.js";
+import { sendRequest } from "./network.js";
 
 export const getAfflictableOrgans = (opponents, attackCard) => {
   const afflictableOrgansIDs = attackCard.afflictableOrgans;
@@ -39,39 +40,16 @@ export const setLastPlayedCard = (card, cardPos, cardData) => {
   lastPlayedCardData = cardData;
 };
 
-export const getLastDiscardedCard = async () => {
-  const res = await fetch("/discard-pile");
-  const data = await res.json();
-  if (!data || data.length === 0) return null;
+/** Plays a card via the WS "action" request, then discards it to the pile. */
+export const sendAction = async (body) => {
+  const data = await sendRequest("action", body);
 
-  return data[data.length - 1];
-};
-
-export const postJSON = async (url, body) => {
-  const res = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(body),
-  });
-
-  const data = await res.json();
-
-  if ((url === "/attack" || url === "/action") && lastPlayedCard) {
+  if (lastPlayedCard) {
     await animateToDiscard(lastPlayedCard, rect);
     lastPlayedCard = null;
     rect = null;
   }
   return data;
-};
-
-export const fetchPlayersData = () => {
-  const mockData = { player: [], opponents: [], playerID: null };
-
-  return fetch("/game-state")
-    .then((res) => res.json())
-    .catch((err) => {
-      console.error(err);
-      return mockData;
-    });
 };
 
 export const setOrganImage = (organ, name, id) => {

@@ -69,23 +69,6 @@ Do not mock HTTP.
 
 Use memory-based game instances.
 
----
-
-## Phase 5 — Documentation
-
-Read:
-
-.claude/skills/documenter/SKILL.md
-
-Update:
-
-- Documentation
-- Comments
-- Navigation guides
-- Architecture guides
-
----
-
 ## General Rules
 
 Always state which phase you are executing.

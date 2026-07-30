@@ -1,4 +1,4 @@
-import { postJSON } from "../utils.js";
+import { sendAction } from "../utils.js";
 import { highlightOrgan, removeHighlightOrgan } from "./highlight.js";
 import {
   affliction,
@@ -64,7 +64,7 @@ const popupListenerForOpponents = (state, event, popupArea) => {
     isInstant: state.isInstant(attackCardID),
   };
 
-  postJSON("/action", body);
+  sendAction(body);
   popupArea.remove();
 };
 
@@ -89,6 +89,6 @@ const popupListener = (event) => {
     isInstant: state.isInstant(attackCardID),
   };
 
-  postJSON("/action", body);
+  sendAction(body);
   event.target.closest(".organs-popup").remove();
 };

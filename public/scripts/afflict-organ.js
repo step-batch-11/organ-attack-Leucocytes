@@ -1,4 +1,4 @@
-import { getAfflictableOrgans, getRemovableOrgans, postJSON } from "./utils.js";
+import { getAfflictableOrgans, getRemovableOrgans, sendAction } from "./utils.js";
 
 const createPopup = (collection) => {
   return collection.map((item) => {
@@ -40,13 +40,7 @@ const performAttack = async (
 
   clearPopup();
 
-  await postJSON("/action", body);
-  /**
-   * DO NOT REMOVE
-   * await postJSON("/action", body);
-   * need it for immunity boost
-   * it's the future!!!
-   */
+  await sendAction(body);
 };
 
 const createPopupFragment = (
@@ -128,7 +122,7 @@ export const displayOrgans = (
         ) {
           clearPopup();
 
-          await postJSON("/action", {
+          await sendAction({
             attackerID: player.id,
             attackCardID,
             organCardIDs: selectedCards,

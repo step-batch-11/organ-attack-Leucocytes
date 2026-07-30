@@ -1,12 +1,12 @@
 import { renderGame } from "./render_game.js";
 import * as NA from "./action_handlers/non_afflictions.js";
-import { fetchPlayersData } from "./utils.js";
 import { displayOpponents, displayOrgans } from "./afflict-organ.js";
 import { displayAttackDeckDiscardPile } from "./discard_pile.js";
 import { setupEventListeners } from "./listeners/setup_event_listeners.js";
 import GameState from "./game_state.js";
 import { handlePoison } from "./listeners/attack_card_actions.js";
 import { animateFromDeck } from "./animation.js";
+import { connectRealtime, onMessage, sendRequest } from "./network.js";
 
 import { setLastPlayedCard } from "./utils.js";
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
@@ -50,8 +50,6 @@ const attachEventListener = async (
 const holdsPoison = (cards) => cards.some((card) => card.type === "poison");
 
 let prevCardIDs = [];
-let realtimeSocket = null;
-let reconnectAttempts = 0;
 
 const manageTurn = async (gameState) => {
   const { self, players, organDiscardPile } = gameState;
@@ -99,21 +97,7 @@ const manageTurn = async (gameState) => {
     card.onclick = async (event) => {
       const attackCardElement = event.target.closest(".attack-card");
       const attackCardID = getCardID(attackCardElement);
-      await fetch("/remove-card", {
-        method: "post",
-        body: JSON.stringify({ attackCardID, playerID: self.id }),
-      });
-
-      const players = await fetchPlayersData();
-      if (players.status === false) {
-        window.location.href = "/";
-        return;
-      }
-
-      window.gameState = new GameState(players);
-      setupEventListeners();
-
-      await manageTurn(players);
+      await sendRequest("remove-card", { attackCardID, playerID: self.id });
     };
   });
 
@@ -130,60 +114,20 @@ const manageTurn = async (gameState) => {
   });
 };
 
-const connectRealtime = () => {
-  if (realtimeSocket && [WebSocket.CONNECTING, WebSocket.OPEN].includes(realtimeSocket.readyState)) {
-    return;
+const handleGameStateMessage = async (payload) => {
+  if (window.gameState === undefined) {
+    window.gameState = new GameState(payload);
+    setupEventListeners();
+  } else {
+    window.gameState.update(payload);
   }
 
-  const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-  realtimeSocket = new WebSocket(`${protocol}://${window.location.host}/ws`);
-
-  realtimeSocket.onopen = () => {
-    reconnectAttempts = 0;
-  };
-
-  realtimeSocket.onmessage = async (event) => {
-    try {
-      const { type, payload } = JSON.parse(event.data);
-      if (type !== "game-state") return;
-
-      window.gameState.update(payload);
-      if (holdsPoison(payload.self.attackCards)) handlePoison();
-      await manageTurn(payload);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  realtimeSocket.onclose = (event) => {
-    if (event.code === 4001) {
-      window.location.href = "/";
-      return;
-    }
-    if (reconnectAttempts < 5) {
-      reconnectAttempts += 1;
-      setTimeout(connectRealtime, 1000 * reconnectAttempts);
-    }
-  };
-
-  realtimeSocket.onerror = (error) => {
-    console.error("Realtime connection error", error);
-  };
+  if (holdsPoison(payload.self.attackCards)) handlePoison();
+  await manageTurn(payload);
 };
 
-window.onload = async () => {
-  const gameState = await fetchPlayersData();
-  if (gameState.status === false) {
-    window.location.href = "/";
-    return;
-  }
+onMessage("game-state", handleGameStateMessage);
 
-  window.gameState = new GameState(gameState);
-
-  if (holdsPoison(gameState.self.attackCards)) handlePoison();
-
-  setupEventListeners();
-
-  await manageTurn(gameState);
+window.onload = () => {
   connectRealtime();
 };
