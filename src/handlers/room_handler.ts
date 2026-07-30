@@ -1,6 +1,24 @@
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { getPlayerID } from "../utils.ts";
 
+const broadcastLobbyState = (c, roomID) => {
+  const realtimeHub = c.get("realtimeHub");
+  const room = c.get("rooms")[roomID];
+
+  for (const player of room.players) {
+    realtimeHub.sendToPlayer(roomID, player.id, {
+      type: "lobby-state",
+      payload: {
+        roomID,
+        players: room.players,
+        started: Boolean(room.started),
+        myID: player.id,
+        isHost: player.type === "host",
+      },
+    });
+  }
+};
+
 const createPlayer = (c, type) => {
   const sessionID = getCookie(c, "sessionID");
   const session = c.get("session");
@@ -34,6 +52,7 @@ export const joinRoom = async (c) => {
   const players = rooms[roomID].players;
   const player = createPlayer(c, "non-host");
   players.push(player);
+  broadcastLobbyState(c, roomID);
 
   return c.redirect("/pages/lobby.html");
 };
@@ -49,8 +68,15 @@ export const leaveLobby = async (c) => {
   const { isHost } = await c.req.json();
   const rooms = c.get("rooms");
   const roomID = getCookie(c, "roomID");
-  if (!isHost) removePlayer(c, rooms, roomID);
-  else delete rooms[roomID];
+
+  if (!isHost) {
+    removePlayer(c, rooms, roomID);
+    broadcastLobbyState(c, roomID);
+  } else {
+    c.get("realtimeHub").broadcast(roomID, { type: "room-closed" });
+    delete rooms[roomID];
+  }
+
   deleteCookie(c, "roomID");
   return c.json({ success: true });
 };

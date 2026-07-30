@@ -13,7 +13,12 @@ Analyze the current broken HTML/CSS/JS "Organ Attack!" codebase and design a str
 - Remove all Hono `ctx` usage from game logic.
 - Replace REST endpoints with a dedicated WebSocket communication layer.
 - Use a `RealtimeHub` abstraction.
-- Eliminate polling and waiting-list logic.
+- Eliminate polling and waiting-list logic (`/poll`, `waitingList`).
+- Design every action to flow through a single WebSocket dispatch path. Do not design around
+  separate `/action` and `/attack` endpoints — the two-endpoint split is legacy and must collapse
+  into one.
+- Label any decision about event ordering, reconnection behavior, or duplicate-event handling as
+  `[ASSUMPTION]` if the user hasn't specified it.
 
 ### 3. Commands
 - Consolidate game actions into an `ActionStack`.

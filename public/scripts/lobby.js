@@ -1,10 +1,4 @@
 import { renderPlayers } from "./renderer/render_players.js";
-import { renderTimeOut } from "./renderer/render_timeout.js";
-
-const amIHost = (players, myID) => {
-  const me = players.find((player) => player.id === myID);
-  return me && me.type === "host";
-};
 
 const triggerGameSetup = async (roomID) =>
   await fetch("/setup-game", {
@@ -12,11 +6,7 @@ const triggerGameSetup = async (roomID) =>
     body: JSON.stringify({ roomID }),
   });
 
-const renderTableFooter = (
-  initLobbyIntervalID,
-  roomID,
-  currentPlayersCount,
-) => {
+const renderTableFooter = (lobbySocket, roomID, currentPlayersCount) => {
   const tableFooter = document.querySelector("#table-footer");
   const button = document.createElement("button");
 
@@ -27,7 +17,7 @@ const renderTableFooter = (
     tableFooter.append(button);
 
     button.addEventListener("click", () => {
-      clearInterval(initLobbyIntervalID);
+      lobbySocket.close();
       triggerGameSetup(roomID);
       window.location.href = "/game-page";
     });
@@ -38,10 +28,11 @@ const renderTableFooter = (
   waitingMsg.textContent = "waiting for players to join";
 };
 
-const leaveLobby = (isHost) => {
+const leaveLobby = (lobbySocket, isHost) => {
   const button = document.querySelector(".exit-button");
 
   button.onclick = async () => {
+    lobbySocket.close();
     const { success } = await fetch("/leave-lobby", {
       method: "post",
       body: JSON.stringify({ isHost }),
@@ -62,23 +53,65 @@ const copyRoomID = () => {
 };
 
 (() => {
-  let initLobbyIntervalID;
+  let lobbySocket = null;
+  let reconnectAttempts = 0;
 
-  const initiateLobby = async () => {
-    const response = await fetch("/get-players").catch(() => {});
-    const { players, myID, roomID, redirectPath, roomAvailable, started } =
-      await response.json();
-    if (!roomAvailable) window.location.href = "/";
-    if (started) window.location.href = "/game-page";
+  const handleLobbyState = ({ roomID, players, myID, started, isHost }) => {
+    if (started) {
+      lobbySocket.close();
+      window.location.href = "/game-page";
+      return;
+    }
 
     renderPlayers(players, myID, roomID);
-    const isHost = amIHost(players, myID);
-    leaveLobby(isHost);
-    if (isHost) renderTableFooter(initLobbyIntervalID, roomID, players.length);
+    leaveLobby(lobbySocket, isHost);
+    if (isHost) renderTableFooter(lobbySocket, roomID, players.length);
+  };
+
+  const connectLobby = () => {
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    lobbySocket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+
+    lobbySocket.onopen = () => {
+      reconnectAttempts = 0;
+    };
+
+    lobbySocket.onmessage = (event) => {
+      try {
+        const { type, payload } = JSON.parse(event.data);
+
+        if (type === "lobby-state") {
+          handleLobbyState(payload);
+        } else if (type === "game-started") {
+          lobbySocket.close();
+          window.location.href = payload.redirectPath;
+        } else if (type === "room-closed") {
+          lobbySocket.close();
+          window.location.href = "/";
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    lobbySocket.onclose = (event) => {
+      if (event.code === 4001) {
+        window.location.href = "/";
+        return;
+      }
+      if (reconnectAttempts < 5) {
+        reconnectAttempts += 1;
+        setTimeout(connectLobby, 1000 * reconnectAttempts);
+      }
+    };
+
+    lobbySocket.onerror = (error) => {
+      console.error("Lobby connection error", error);
+    };
   };
 
   window.onload = () => {
     copyRoomID();
-    initLobbyIntervalID = setInterval(initiateLobby, 1000);
+    connectLobby();
   };
 })();

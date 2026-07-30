@@ -21,6 +21,8 @@ Reject bad architecture.
 
 ✓ No any
 
+✓ No lingering `/poll`, `waitingList`, or dual-endpoint (`/action` + `/attack`) logic in new code
+
 Review:
 
 - TurnManager

@@ -6,6 +6,7 @@ import GameController from "./src/controllers/game_controller.ts";
 import ActionController from "./src/controllers/action_controller.ts";
 import ActionStack from "./src/models/action_stack.ts";
 import Timer from "./src/models/timer.ts";
+import { RealtimeHub } from "./src/realtime.ts";
 
 const main = () => {
   const session = {};
@@ -13,6 +14,7 @@ const main = () => {
   const games = {};
   const rooms = { 101: [] };
   const timer = new Timer(5000);
+  const realtimeHub = new RealtimeHub();
 
   const idGenerator = () => Date.now() * Math.random();
   const playerIDGenerator = counter();
@@ -22,7 +24,15 @@ const main = () => {
   const gameController = new GameController(actionController, timer);
 
   const generators = { idGenerator, playerIDGenerator };
-  const appUtils = { session, players, games, rooms, shuffle, gameController };
+  const appUtils = {
+    session,
+    players,
+    games,
+    rooms,
+    shuffle,
+    gameController,
+    realtimeHub,
+  };
 
   const app = createApp({ ...generators, ...appUtils }, logger);
   const port = 8000;

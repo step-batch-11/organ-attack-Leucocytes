@@ -1,6 +1,5 @@
 import { getCookie } from "hono/cookie";
 import * as handlers from "./card_action_handler.ts";
-import { updateGameState } from "../app.ts";
 import { createEvent } from "../utils.ts";
 
 const ACTIONS = {
@@ -31,9 +30,8 @@ export const resolveAction = async (c) => {
     game.discardAttackHandOfPlayer(currentPlayerID);
     game.passTurn();
   }
-  const gameState = game.getGameState();
 
-  updateGameState(roomID, gameState);
+  c.get("updateGameState")(roomID);
   return c.json(res);
 };
 
@@ -118,9 +116,7 @@ export const handleOpponentAudit = async (c) => {
   const game = games[roomID];
   game.audit(opponentID, Number(attackCardID));
 
-  const gameState = game.getGameState();
-
-  updateGameState(roomID, gameState);
+  c.get("updateGameState")(roomID);
 
   return c.json({ success: true }, 200);
 };

@@ -4,4 +4,4 @@ COPY . .
 
 RUN deno install
 
-CMD ["deno", "run","-A", "main.js"]
+CMD ["deno", "run","-A", "main.ts"]

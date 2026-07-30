@@ -1,0 +1,61 @@
+/**
+ * Types for the WebSocket real-time transport layer (`RealtimeHub` and the
+ * `/ws` route). Kept free of any `Game`/`Player` model imports beyond the
+ * public payload shapes — `RealtimeHub` itself never touches game logic.
+ */
+
+import type { PlayerDetails, RoomPlayer } from "./entities.ts";
+import type { GameState } from "./game.ts";
+
+/**
+ * The minimal socket surface `RealtimeHub` depends on. Deliberately narrower
+ * than `WebSocket` so the hub stays testable with plain fake objects.
+ */
+export interface RealtimeSocket {
+  send(data: string): void;
+  close(code?: number, reason?: string): void;
+  readyState: number;
+  addEventListener(type: "close", listener: () => void): void;
+  addEventListener(type: "open", listener: () => void): void;
+}
+
+/**
+ * A single registered connection: which player it belongs to, and the
+ * socket used to reach them. A player may have more than one client
+ * (e.g. two open tabs) registered in the same room.
+ */
+export interface RealtimeClient {
+  playerID: number;
+  socket: RealtimeSocket;
+}
+
+/**
+ * Per-connection personalized game-state payload: the public snapshot plus
+ * this player's own hand/turn context.
+ */
+export type PersonalizedGameState = GameState & {
+  self: PlayerDetails & { isMyTurn: boolean };
+};
+
+/**
+ * Per-connection personalized lobby payload: room membership plus this
+ * player's own identity/host status.
+ */
+export interface LobbyStatePayload {
+  roomID: string;
+  players: RoomPlayer[];
+  started: boolean;
+  myID: number;
+  isHost: boolean;
+}
+
+/**
+ * Discriminated union of every envelope `RealtimeHub` can send. Callers pass
+ * the payload as a plain object — `RealtimeHub` stringifies exactly once, at
+ * the transport boundary.
+ */
+export type RealtimeMessage =
+  | { type: "game-state"; payload: PersonalizedGameState }
+  | { type: "lobby-state"; payload: LobbyStatePayload }
+  | { type: "game-started"; payload: { redirectPath: string } }
+  | { type: "room-closed" };

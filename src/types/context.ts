@@ -8,6 +8,7 @@
 
 import type { Game } from "../models/game.ts";
 import type { Room } from "./entities.ts";
+import type { RealtimeHub } from "../realtime.ts";
 
 /**
  * Shuffles an array, returning a new (or reordered) array of the same type.
@@ -32,6 +33,10 @@ export interface AppVariables {
   idGenerator: () => number;
   /** Generates sequential player ids. */
   playerIDGenerator: () => number;
+  /** Shared real-time transport for a room's connected WebSocket clients. */
+  realtimeHub: RealtimeHub;
+  /** Broadcasts a room's current game state, personalized per connected player. */
+  updateGameState: (roomID: string) => void;
 }
 
 /**

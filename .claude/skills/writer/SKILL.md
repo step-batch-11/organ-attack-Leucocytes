@@ -24,11 +24,18 @@ Convert:
 
 into strongly typed classes and interfaces.
 
-Replace REST routes with a single WebSocket dispatcher.
+Replace REST routes with a single WebSocket dispatcher — one inbound event type for all game
+actions, resolved through the `ActionStack`/`ActionController`, broadcast via `RealtimeHub`. Do not
+implement or extend the legacy dual-endpoint (`/action` + `/attack`) split.
 
 Generate client state exclusively from:
 
 Game.getGameState()
+
+When touching frontend code (`public/`), move logic into a Model-View-Controller split: network/
+WebSocket-event handling stays out of DOM-rendering code, and DOM-rendering code stays out of game
+state. Preserve existing UI behavior (e.g. `animateFromDeck` and other animations) unless the task
+is explicitly to change it.
 
 Every public method must include documentation.
 

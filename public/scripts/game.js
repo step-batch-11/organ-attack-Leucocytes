@@ -138,24 +138,28 @@ const connectRealtime = () => {
   const protocol = window.location.protocol === "https:" ? "wss" : "ws";
   realtimeSocket = new WebSocket(`${protocol}://${window.location.host}/ws`);
 
+  realtimeSocket.onopen = () => {
+    reconnectAttempts = 0;
+  };
+
   realtimeSocket.onmessage = async (event) => {
     try {
       const { type, payload } = JSON.parse(event.data);
       if (type !== "game-state") return;
 
-      const gameState = typeof payload === "string"
-        ? JSON.parse(payload)
-        : payload;
-
-      window.gameState.update(gameState);
-      if (holdsPoison(gameState.self.attackCards)) handlePoison();
-      await manageTurn(gameState);
+      window.gameState.update(payload);
+      if (holdsPoison(payload.self.attackCards)) handlePoison();
+      await manageTurn(payload);
     } catch (error) {
       console.error(error);
     }
   };
 
-  realtimeSocket.onclose = () => {
+  realtimeSocket.onclose = (event) => {
+    if (event.code === 4001) {
+      window.location.href = "/";
+      return;
+    }
     if (reconnectAttempts < 5) {
       reconnectAttempts += 1;
       setTimeout(connectRealtime, 1000 * reconnectAttempts);

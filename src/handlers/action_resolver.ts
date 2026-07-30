@@ -1,5 +1,4 @@
 import { getCookie } from "hono/cookie";
-import { updateGameState } from "../app.ts";
 import { createEvent } from "../utils.ts";
 import { Game } from "../models/game.ts";
 
@@ -19,7 +18,7 @@ const constructAction = (game, body) => {
   };
 };
 
-const playCard = (roomID, gameController, game = new Game(), action) => {
+const playCard = (roomID, gameController, game = new Game(), action, updateGameState) => {
   game.currentTurnPlayed(action);
 
   const done = gameController.playCard(action, game);
@@ -31,8 +30,7 @@ const playCard = (roomID, gameController, game = new Game(), action) => {
 
     // should go inside game controller
     gameController.updateEventStatus(game);
-    const gameState = game.getGameState();
-    updateGameState(roomID, gameState);
+    updateGameState(roomID);
   }).catch((reject) => console.error({ reject }));
 };
 
@@ -41,11 +39,12 @@ export const resolveAction = async (ctx, gameController) => {
 
   const roomID = getCookie(ctx, "roomID");
   const game = ctx.get("games")[roomID];
+  const updateGameState = ctx.get("updateGameState");
 
   const action = constructAction(game, body);
 
   try {
-    playCard(roomID, gameController, game, action);
+    playCard(roomID, gameController, game, action, updateGameState);
 
     const { attackerID, attackCardID, isInstant } = body;
 
@@ -60,9 +59,6 @@ export const resolveAction = async (ctx, gameController) => {
 
   gameController.updateEventStatus(game);
 
-  // should go inside controller
-  const gameState = game.getGameState();
-
-  updateGameState(roomID, gameState);
+  updateGameState(roomID);
   return ctx.json({ success: true });
 };

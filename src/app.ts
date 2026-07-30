@@ -10,7 +10,6 @@ import {
   resolveAction,
 } from "./handlers/attack_handler.ts";
 import {
-  getPlayerData,
   handleGetPlayers,
   serveAttackCardPile,
   serveGameState,
@@ -24,35 +23,37 @@ import {
 import { serveUserDetails } from "./handlers/userHandler.ts";
 import { createRoom, joinRoom, leaveLobby } from "./handlers/room_handler.ts";
 import { getCookie } from "hono/cookie";
-import { RealtimeHub } from "./realtime.ts";
+import { getPlayerID } from "./utils.ts";
+import { resolveWsConnection } from "./ws_connection.ts";
+import type { RealtimeHub } from "./realtime.ts";
+import type { Game } from "./models/game.ts";
+import type { Room } from "./types/entities.ts";
+import type { Shuffle } from "./types/context.ts";
 
-const waitingList = new Set();
-const realtimeHub = new RealtimeHub();
+/**
+ * Builds a per-room-broadcast function that personalizes the game-state
+ * payload for each connected socket (each player only sees their own hand).
+ */
+export const createUpdateGameState = (
+  realtimeHub: RealtimeHub,
+  games: Record<string, Game>,
+) =>
+  (roomID: string): void => {
+    const game = games[roomID];
+    const publicGameState = game.getGameState();
+    const seen = new Set<number>();
 
-export const updateGameState = (roomID, publicGameState) => {
-  const payload = JSON.stringify(publicGameState);
-  realtimeHub.broadcast(roomID, { type: "game-state", payload });
+    for (const { playerID } of realtimeHub.getClients(roomID)) {
+      if (seen.has(playerID)) continue;
+      seen.add(playerID);
 
-  for (const client of waitingList) {
-    const { resolve, c } = client;
-    const clientRoomID = getCookie(c, "roomID");
-
-    if (roomID === clientRoomID) {
-      const res = getPlayerData(c);
-
-      if (!res.success) {
-        resolve(c.json({ message: res.message }, 400));
-        return;
-      }
-      const { data: playerData } = res;
-      const gameState = { ...publicGameState, self: playerData };
-      resolve(c.json(gameState));
-      waitingList.delete(client);
+      const self = game.getPlayer(playerID);
+      realtimeHub.sendToPlayer(roomID, playerID, {
+        type: "game-state",
+        payload: { ...publicGameState, self },
+      });
     }
-  }
-
-  return;
-};
+  };
 
 export const createApp = ({
   session,
@@ -63,9 +64,24 @@ export const createApp = ({
   rooms,
   shuffle,
   gameController,
-}, logger) => {
+  realtimeHub,
+}: {
+  session: Record<string, number>;
+  players: Record<number, string>;
+  idGenerator: () => number;
+  playerIDGenerator: () => number;
+  games: Record<string, Game>;
+  rooms: Record<string, Room>;
+  shuffle: Shuffle;
+  // deno-lint-ignore no-explicit-any
+  gameController: any;
+  realtimeHub: RealtimeHub;
+  // deno-lint-ignore no-explicit-any
+}, logger: () => any) => {
   const app = new Hono();
   app.use(logger());
+
+  const updateGameState = createUpdateGameState(realtimeHub, games);
 
   app.use(async (c, next) => {
     c.set("session", session);
@@ -75,14 +91,23 @@ export const createApp = ({
     c.set("shuffle", shuffle);
     c.set("playerIDGenerator", playerIDGenerator);
     c.set("rooms", rooms);
+    c.set("realtimeHub", realtimeHub);
+    c.set("updateGameState", updateGameState);
     await next();
   });
 
-  app.post("/setup-game", (ctx) => {
+  app.post("/setup-game", async (ctx) => {
     const roomID = getCookie(ctx, "roomID");
     const rooms = ctx.get("rooms");
     rooms[roomID].started = true;
-    return gameSetup(ctx);
+    const result = await gameSetup(ctx);
+    if (roomID) {
+      realtimeHub.broadcast(roomID, {
+        type: "game-started",
+        payload: { redirectPath: "/game-page" },
+      });
+    }
+    return result;
   });
   app.get("/logout", logoutHandler);
   app.post("/login", loginHandler);
@@ -91,24 +116,12 @@ export const createApp = ({
   app.post("/audit", handleOpponentAudit);
   app.post("/action", (ctx) => resolveActionV2(ctx, gameController));
 
-  app.get("/poll", (c) => {
-    return new Promise((resolve) => waitingList.add({ resolve, c }));
-  });
-
   app.get("/ws", (c) => {
     const roomID = getCookie(c, "roomID");
+    const playerID = getPlayerID(c);
     const { socket, response } = Deno.upgradeWebSocket(c.req.raw);
 
-    if (!roomID) {
-      socket.close();
-      return response;
-    }
-
-    realtimeHub.registerClient(roomID, { playerID: null, socket });
-
-    socket.addEventListener("close", () => {
-      realtimeHub.removeClient(roomID, socket);
-    });
+    resolveWsConnection(roomID, playerID, socket, realtimeHub, c.get("rooms"));
 
     return response;
   });

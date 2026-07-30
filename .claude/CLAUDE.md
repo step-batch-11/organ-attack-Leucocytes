@@ -6,6 +6,19 @@ Whenever asked to modify this project, automatically execute the following phase
 
 ---
 
+## Phase 0 — Migration Planning (optional)
+
+Read:
+
+.claude/skills/migration-director/SKILL.md
+
+Use only when the user asks for a plan first, or the issue is large/ambiguous and spans multiple
+phases. Otherwise skip directly to Phase 1.
+
+Do not write code. Exit only once the user has agreed to the plan.
+
+---
+
 ## Phase 1 — Architecture
 
 Read:

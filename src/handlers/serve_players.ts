@@ -77,6 +77,9 @@ export const serveAttackCardPile = (c) => {
   return c.json(game.getDiscardAttackCards());
 };
 
+// Unreachable: no route registers this handler. GameController's private
+// #handleResearch (src/controllers/game_controller.ts) is what real /action
+// traffic uses instead.
 export const handleResearch = async (c) => {
   const { playerID, selectedCardID, researchID } = await c.req.json();
   const roomID = getCookie(c, "roomID");
@@ -86,8 +89,7 @@ export const handleResearch = async (c) => {
   game.research(playerID, selectedCardID, researchID);
   game.passTurn();
 
-  const gameState = game.getGameState();
-  updateGameState(roomID, gameState);
+  c.get("updateGameState")(roomID);
 
   return c.json({ success: true }, 200);
 };
