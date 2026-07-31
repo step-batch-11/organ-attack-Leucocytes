@@ -105,7 +105,7 @@ const manageTurn = async (gameState) => {
     .filter((card) => Number(card.getAttribute("is-instant")) === 1);
 
   if (self.isSleeping) {
-    instantCards.forEach((card) => card.onclick = () => { });
+    instantCards.forEach((card) => card.onclick = () => {});
     return;
   }
 

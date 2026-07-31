@@ -3,8 +3,13 @@ import { describe, it } from "@std/testing/bdd";
 import { createApp } from "../src/app.ts";
 import { RealtimeHub } from "../src/realtime.ts";
 import { counter } from "../src/utils.ts";
+import type { Game } from "../src/models/game.ts";
+import type GameController from "../src/controllers/game_controller.ts";
+import type { Room } from "../src/types/entities.ts";
+import type { MiddlewareHandler } from "hono";
+import type { AppBindings } from "../src/types/context.ts";
 
-const logger = () => (_, next) => next();
+const logger = () => ((_c, next) => next()) as MiddlewareHandler<AppBindings>;
 
 const makeFakeSocket = () => {
   const sent: string[] = [];
@@ -19,7 +24,10 @@ const makeFakeSocket = () => {
   };
 };
 
-const buildApp = (rooms, games = {}) => {
+const buildApp = (
+  rooms: Record<string, Room>,
+  games: Record<string, Game> = {},
+) => {
   const realtimeHub = new RealtimeHub();
   const session = { "1": 1, "2": 2 };
   const players = { 1: "chiru", 2: "kumar" };
@@ -31,7 +39,7 @@ const buildApp = (rooms, games = {}) => {
     games,
     rooms,
     shuffle: (x) => x,
-    gameController: {},
+    gameController: {} as GameController,
     realtimeHub,
   }, logger);
 
@@ -41,7 +49,12 @@ const buildApp = (rooms, games = {}) => {
 describe("room_handler lobby broadcasts", () => {
   describe("joinRoom", () => {
     it("sends a lobby-state message to every room member after a player joins", async () => {
-      const rooms = { 101: { players: [{ id: 1, name: "chiru", type: "host" }], started: false } };
+      const rooms = {
+        101: {
+          players: [{ id: 1, name: "chiru", type: "host" }],
+          started: false,
+        },
+      };
       const { app, realtimeHub } = buildApp(rooms);
 
       const hostSocket = makeFakeSocket();
@@ -60,7 +73,10 @@ describe("room_handler lobby broadcasts", () => {
 
       const message = JSON.parse(hostSocket.sent[0]);
       assertEquals(message.type, "lobby-state");
-      assertEquals(message.payload.players.map((p) => p.id), [1, 2]);
+      assertEquals(message.payload.players.map((p: { id: number }) => p.id), [
+        1,
+        2,
+      ]);
       assertEquals(message.payload.myID, 1);
       assertEquals(message.payload.isHost, true);
     });
@@ -110,7 +126,9 @@ describe("room_handler lobby broadcasts", () => {
 
       const message = JSON.parse(hostSocket.sent[0]);
       assertEquals(message.type, "lobby-state");
-      assertEquals(message.payload.players.map((p) => p.id), [1]);
+      assertEquals(message.payload.players.map((p: { id: number }) => p.id), [
+        1,
+      ]);
     });
 
     it("broadcasts room-closed to remaining sockets when the host leaves", async () => {
@@ -144,7 +162,9 @@ describe("room_handler lobby broadcasts", () => {
 
   describe("/setup-game", () => {
     it("broadcasts game-started to the room after setup completes", async () => {
-      const rooms = { 101: { players: [{ id: 1, name: "chiru" }], started: false } };
+      const rooms = {
+        101: { players: [{ id: 1, name: "chiru" }], started: false },
+      };
       const games = {};
       const { app, realtimeHub } = buildApp(rooms, games);
       const socket = makeFakeSocket();

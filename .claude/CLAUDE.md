@@ -2,7 +2,8 @@
 
 You are operating in an autonomous multi-step workflow.
 
-Whenever asked to modify this project, automatically execute the following phases.
+Whenever asked to modify this project, automatically execute the following
+phases.
 
 ---
 
@@ -12,8 +13,8 @@ Read:
 
 .claude/skills/migration-director/SKILL.md
 
-Use only when the user asks for a plan first, or the issue is large/ambiguous and spans multiple
-phases. Otherwise skip directly to Phase 1.
+Use only when the user asks for a plan first, or the issue is large/ambiguous
+and spans multiple phases. Otherwise skip directly to Phase 1.
 
 Do not write code. Exit only once the user has agreed to the plan.
 

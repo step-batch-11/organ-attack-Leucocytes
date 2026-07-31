@@ -1,4 +1,8 @@
-import { getAfflictableOrgans, getRemovableOrgans, sendAction } from "./utils.js";
+import {
+  getAfflictableOrgans,
+  getRemovableOrgans,
+  sendAction,
+} from "./utils.js";
 
 const createPopup = (collection) => {
   return collection.map((item) => {

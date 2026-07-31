@@ -5,7 +5,12 @@ import type { Deck } from "./deck.ts";
 import type { Dealer } from "./dealer.ts";
 import type { AfflictionHandler } from "./affliction_handler.ts";
 import type { AttackCard } from "../types/cards.ts";
-import type { ActionInput, GameEvent, PlayerDetails, PublicPlayer } from "../types/entities.ts";
+import type {
+  ActionInput,
+  GameEvent,
+  PlayerDetails,
+  PublicPlayer,
+} from "../types/entities.ts";
 import type { GameState } from "../types/game.ts";
 
 export class Game {

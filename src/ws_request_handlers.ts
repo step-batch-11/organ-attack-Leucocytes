@@ -1,5 +1,6 @@
 import { handleAction } from "./handlers/action_resolver.ts";
 import type { Game } from "./models/game.ts";
+import type GameController from "./controllers/game_controller.ts";
 import type { RequestHandlers } from "./types/realtime.ts";
 
 /**
@@ -10,13 +11,17 @@ import type { RequestHandlers } from "./types/realtime.ts";
  */
 export const createRequestHandlers = (
   games: Record<string, Game>,
-  // deno-lint-ignore no-explicit-any
-  gameController: any,
+  gameController: GameController,
   updateGameState: (roomID: string) => void,
 ): RequestHandlers => ({
   action: (roomID, _playerID, payload) => {
     const game = games[roomID];
-    return handleAction(roomID, gameController, game, updateGameState, payload);
+    const body = payload as {
+      attackerID: number;
+      attackCardID: number;
+      isInstant?: boolean;
+    };
+    return handleAction(roomID, gameController, game, updateGameState, body);
   },
 
   "remove-card": (roomID, _playerID, payload) => {

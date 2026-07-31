@@ -8,8 +8,11 @@ import { Dealer } from "./models/dealer.ts";
 
 import { AfflictionHandler } from "./models/affliction_handler.ts";
 import { TurnManager } from "./models/turn_manager.ts";
+import type { Context } from "hono";
+import type { AppBindings } from "./types/context.ts";
+import type { AttackCard } from "./types/cards.ts";
 
-export const gameSetup = async (ctx) => {
+export const gameSetup = async (ctx: Context<AppBindings>) => {
   const games = ctx.get("games");
   const shuffle = ctx.get("shuffle");
   const rooms = ctx.get("rooms");
@@ -21,9 +24,9 @@ export const gameSetup = async (ctx) => {
   const players = rooms[roomID].players.map(
     ({ name, id }) => new Player(name, id),
   );
-  const attackCards = new Deck(attacks, shuffle);
+  const attackCards = new Deck<AttackCard>(attacks as AttackCard[], shuffle);
 
-  const organCards = [];
+  const organCards: Organ[] = [];
 
   organs.forEach(({ name, id, health }) => {
     organCards.push(new Organ(name, id, health));

@@ -1,10 +1,18 @@
+import type ActionController from "./action_controller.ts";
+import type Timer from "../models/timer.ts";
+import type { Game } from "../models/game.ts";
+import type { ActionInput } from "../types/entities.ts";
+import type { ActionResult } from "../types/game.ts";
+
+type ActionHandler = (game: Game, action: ActionInput) => unknown;
+
 export default class GameController {
-  #actionController;
-  #timer;
-  #ACTIONS;
+  #actionController: ActionController;
+  #timer: Timer;
+  #ACTIONS: Record<string, ActionHandler>;
 
   // the game should be in the constructor
-  constructor(actionController, timer) {
+  constructor(actionController: ActionController, timer: Timer) {
     if (typeof actionController !== "object") {
       throw new Error("GameController requires valid ActionController");
     }
@@ -33,12 +41,12 @@ export default class GameController {
     };
   }
 
-  updateEventStatus(game) {
+  updateEventStatus(game: Game): void {
     const remainingTime = this.#timer.remaining();
     game.updateEventStatus(remainingTime);
   }
 
-  playCard(action) {
+  playCard(action: ActionInput): Promise<ActionResult> {
     if (typeof action !== "object") {
       throw new Error("requires a action to play a card");
     }
@@ -57,81 +65,108 @@ export default class GameController {
     return done;
   }
 
-  #handleResearch(game, { attackCardID, attackerID, selectedCardID }) {
-    game.research(attackerID, selectedCardID, attackCardID);
-    game.removeFromDiscardPile(selectedCardID);
+  #handleResearch(
+    game: Game,
+    { attackCardID, attackerID, selectedCardID }: ActionInput,
+  ) {
+    game.research(
+      attackerID as number,
+      selectedCardID as number,
+      attackCardID as number,
+    );
+    game.removeFromDiscardPile(selectedCardID as number);
     return { success: true };
   }
 
-  #handleMedicine(game, { attackerID, organCardID }) {
-    game.healOrgan(attackerID, organCardID);
+  #handleMedicine(game: Game, { attackerID, organCardID }: ActionInput) {
+    game.healOrgan(attackerID as number, organCardID as number);
     return ({ success: true });
   }
 
-  #handleSedate(game, { opponentID }) {
-    const sleepCount = game.applySedate(opponentID);
+  #handleSedate(game: Game, { opponentID }: ActionInput) {
+    const sleepCount = game.applySedate(opponentID as number);
     return { success: sleepCount > 0 };
   }
 
-  #handleCommonCold(game, { attackerID, attackCardID, opponentID }) {
-    game.exchangeCard(attackerID, attackCardID, opponentID);
+  #handleCommonCold(
+    game: Game,
+    { attackerID, attackCardID, opponentID }: ActionInput,
+  ) {
+    game.exchangeCard(
+      attackerID as number,
+      attackCardID as number,
+      opponentID as number,
+    );
     return ({ success: true });
   }
 
-  #handleAffliction(game, { opponentID, organCardID, card }) {
+  #handleAffliction(
+    game: Game,
+    { opponentID, organCardID, card }: ActionInput,
+  ) {
     const { removableOrgans } = card;
-    const afflictionPoints =
-      (removableOrgans.includes(organCardID) || card.type === "necrosis")
-        ? 2
-        : 1;
+    const afflictionPoints = (removableOrgans.includes(organCardID as number) ||
+        card.type === "necrosis")
+      ? 2
+      : 1;
 
     return game.afflictOrganOfOpponent(
-      opponentID,
-      organCardID,
+      opponentID as number,
+      organCardID as number,
       afflictionPoints,
     );
   }
 
-  #handleCryopreservation(game, { attackerID }) {
-    const result = game.applyCryopreservation(attackerID);
+  #handleCryopreservation(game: Game, { attackerID }: ActionInput) {
+    const result = game.applyCryopreservation(attackerID as number);
     return result;
   }
 
-  #handleVaccine(game, { attackerID }) {
-    game.applyVaccine(attackerID);
+  #handleVaccine(game: Game, { attackerID }: ActionInput) {
+    game.applyVaccine(attackerID as number);
     return ({ success: true });
   }
 
-  #handleTransplant = (game, { attackerID, opponentID, organCardID }) => {
-    game.transplantOrgan(attackerID, opponentID, organCardID);
+  #handleTransplant = (
+    game: Game,
+    { attackerID, opponentID, organCardID }: ActionInput,
+  ) => {
+    game.transplantOrgan(
+      attackerID as number,
+      opponentID as number,
+      organCardID as number,
+    );
     return ({ success: true });
   };
 
-  #handleNarcolepsy(game, { opponentID }) {
-    game.applyNarcolepsy(opponentID);
+  #handleNarcolepsy(game: Game, { opponentID }: ActionInput) {
+    game.applyNarcolepsy(opponentID as number);
 
     return { success: true };
   }
 
-  #handlePoison(game, { attackerID, organCardID }) {
-    game.removeOrgan(attackerID, organCardID);
+  #handlePoison(game: Game, { attackerID, organCardID }: ActionInput) {
+    game.removeOrgan(attackerID as number, organCardID as number);
     return ({ success: true });
   }
 
-  #handleMedicalMiracle(game, { attackerID, organCardIDs }) {
-    organCardIDs.forEach((organCardID) => {
-      game.healOrgan(attackerID, organCardID);
+  #handleMedicalMiracle(
+    game: Game,
+    { attackerID, organCardIDs }: ActionInput,
+  ) {
+    (organCardIDs as number[]).forEach((organCardID) => {
+      game.healOrgan(attackerID as number, organCardID);
     });
 
     return ({ success: true });
   }
 
-  #handleChartMixup(game) {
+  #handleChartMixup(game: Game) {
     game.chartMixup();
     return ({ success: true });
   }
 
-  #handleBythebook(game) {
+  #handleBythebook(game: Game) {
     game.bythebook();
     return ({ success: true });
   }
@@ -144,19 +179,21 @@ export default class GameController {
     return ({ success: true });
   }
 
-  #handleItsAlive(game, { attackerID, organCardID }) {
-    const organ = game.itsAlive(attackerID, organCardID);
-    return { success: !(organ.isDead()) };
+  #handleItsAlive(game: Game, { attackerID, organCardID }: ActionInput) {
+    const organ = game.itsAlive(attackerID as number, organCardID as number);
+    // Cast preserves broken state: `itsAlive` returns -1 when the discarded
+    // organ id isn't found, but the original code dereferences it unconditionally.
+    return { success: !((organ as { isDead(): boolean }).isDead()) };
   }
 
-  #handleSitusInversus(game) {
+  #handleSitusInversus(game: Game) {
     game.exchangeHeartAndLungs();
     game.changeOrderOfPlay();
 
     return ({ success: true });
   }
 
-  #applyAction(game, action) {
+  #applyAction(game: Game, action: ActionInput): unknown {
     // has to call different cards action accordingly(needs validation)
     const { action: cardAction } = action.card;
     if (!(cardAction in this.#ACTIONS)) {
@@ -167,7 +204,7 @@ export default class GameController {
     // ---
   }
 
-  #applyActions(game, actions) {
+  #applyActions(game: Game, actions: ActionInput[]): void {
     actions.forEach((action) => {
       this.#applyAction(game, action);
     });
@@ -176,18 +213,18 @@ export default class GameController {
     game.passTurn();
   }
 
-  resolveAction(game) {
+  resolveAction(game: Game): ActionResult {
     const result = this.#actionController.resolve();
 
     if (!result.success) return { success: false, message: result.message };
 
-    const applicableActions = result.data;
+    const applicableActions = result.data as ActionInput[];
     this.#applyActions(game, applicableActions);
 
     return { success: true };
   }
 
-  resolveNow() {
+  resolveNow(): void {
     this.#timer.end();
   }
 }

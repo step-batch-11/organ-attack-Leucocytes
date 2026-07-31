@@ -1,4 +1,8 @@
-import type { RealtimeClient, RealtimeMessage, RealtimeSocket } from "./types/realtime.ts";
+import type {
+  RealtimeClient,
+  RealtimeMessage,
+  RealtimeSocket,
+} from "./types/realtime.ts";
 
 // WebSocket readyState: OPEN. A socket may still be CONNECTING right after
 // registration (before its "open" event fires) — sending to it would throw.
@@ -19,7 +23,9 @@ export class RealtimeHub {
 
   removeClient(roomID: string, socket: RealtimeSocket): void {
     const roomClients = this.#clientsByRoom.get(roomID) ?? [];
-    const nextClients = roomClients.filter((client) => client.socket !== socket);
+    const nextClients = roomClients.filter((client) =>
+      client.socket !== socket
+    );
 
     if (nextClients.length === 0) {
       this.#clientsByRoom.delete(roomID);
@@ -37,11 +43,17 @@ export class RealtimeHub {
       .forEach(({ socket }) => socket.send(data));
   }
 
-  sendToPlayer(roomID: string, playerID: number, message: RealtimeMessage): void {
+  sendToPlayer(
+    roomID: string,
+    playerID: number,
+    message: RealtimeMessage,
+  ): void {
     const roomClients = this.#clientsByRoom.get(roomID) ?? [];
     const data = JSON.stringify(message);
     roomClients
-      .filter((client) => client.playerID === playerID && client.socket.readyState === OPEN)
+      .filter((client) =>
+        client.playerID === playerID && client.socket.readyState === OPEN
+      )
       .forEach(({ socket }) => socket.send(data));
   }
 

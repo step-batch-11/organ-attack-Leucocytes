@@ -12,7 +12,7 @@ const main = () => {
   const session = {};
   const players = {};
   const games = {};
-  const rooms = { 101: [] };
+  const rooms = { 101: { players: [], started: false } };
   const timer = new Timer(5000);
   const realtimeHub = new RealtimeHub();
 

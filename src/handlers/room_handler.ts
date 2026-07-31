@@ -1,7 +1,12 @@
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { getPlayerID } from "../utils.ts";
+import type { Context } from "hono";
+import type { AppBindings } from "../types/context.ts";
+import type { Room, RoomPlayer } from "../types/entities.ts";
 
-const broadcastLobbyState = (c, roomID) => {
+type AppContext = Context<AppBindings>;
+
+const broadcastLobbyState = (c: AppContext, roomID: string) => {
   const realtimeHub = c.get("realtimeHub");
   const room = c.get("rooms")[roomID];
 
@@ -19,16 +24,16 @@ const broadcastLobbyState = (c, roomID) => {
   }
 };
 
-const createPlayer = (c, type) => {
-  const sessionID = getCookie(c, "sessionID");
+const createPlayer = (c: AppContext, type: string): RoomPlayer => {
+  const sessionID = getCookie(c, "sessionID") as string;
   const session = c.get("session");
   const players = c.get("players");
   const id = session[sessionID];
   return { id, name: players[id], type };
 };
 
-export const createRoom = (c) => {
-  const roomID = Math.floor(Math.random() * 9000) + 1000;
+export const createRoom = (c: AppContext) => {
+  const roomID = String(Math.floor(Math.random() * 9000) + 1000);
   setCookie(c, "roomID", roomID);
 
   const rooms = c.get("rooms");
@@ -38,9 +43,11 @@ export const createRoom = (c) => {
   return c.redirect("/pages/lobby.html");
 };
 
-export const joinRoom = async (c) => {
+export const joinRoom = async (c: AppContext) => {
   const request = await c.req.formData();
-  const { "room-id": roomID } = Object.fromEntries(request.entries());
+  const { "room-id": roomID } = Object.fromEntries(
+    request.entries(),
+  ) as { "room-id": string };
   const rooms = c.get("rooms");
   if (!(roomID in rooms)) {
     deleteCookie(c, "roomID");
@@ -57,17 +64,21 @@ export const joinRoom = async (c) => {
   return c.redirect("/pages/lobby.html");
 };
 
-const removePlayer = (c, rooms, roomID) => {
+const removePlayer = (
+  c: AppContext,
+  rooms: Record<string, Room>,
+  roomID: string,
+) => {
   const id = getPlayerID(c);
   const players = rooms[roomID].players;
   const playerIndex = players.findIndex((player) => player.id === id);
   players.splice(playerIndex, 1);
 };
 
-export const leaveLobby = async (c) => {
+export const leaveLobby = async (c: AppContext) => {
   const { isHost } = await c.req.json();
   const rooms = c.get("rooms");
-  const roomID = getCookie(c, "roomID");
+  const roomID = getCookie(c, "roomID") as string;
 
   if (!isHost) {
     removePlayer(c, rooms, roomID);

@@ -112,7 +112,8 @@ export default class GameState {
   }
 
   canPlayImmunityBoost() {
-    return this.#state.event.name !== "poison" && this.#state.event.name !== "idle";
+    return this.#state.event.name !== "poison" &&
+      this.#state.event.name !== "idle";
   }
 
   canPlayMetastasis() {

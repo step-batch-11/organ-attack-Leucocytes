@@ -58,7 +58,9 @@ const highlight = (attackCards) => {
 
 const displayOpponentHand = (opponentID, opponentIDs) => {
   return new Promise(async (resolve) => {
-    const opponentHand = await sendRequest("query-opponent-hand", { opponentID });
+    const opponentHand = await sendRequest("query-opponent-hand", {
+      opponentID,
+    });
     const clinicalAuditPopup = cloneFromTemplate(".clinical-audit-popup");
     const popup = document.querySelector(".popup");
 

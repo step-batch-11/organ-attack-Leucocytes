@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import type { MiddlewareHandler } from "hono";
 import { serveStatic } from "hono/deno";
 import { gameSetup } from "./game_setup.ts";
 import {
@@ -16,7 +17,8 @@ import { createRequestHandlers } from "./ws_request_handlers.ts";
 import type { RealtimeHub } from "./realtime.ts";
 import type { Game } from "./models/game.ts";
 import type { Room } from "./types/entities.ts";
-import type { Shuffle } from "./types/context.ts";
+import type { AppBindings, Shuffle } from "./types/context.ts";
+import type GameController from "./controllers/game_controller.ts";
 
 /**
  * Builds one player's personalized game-state payload: the shared public
@@ -24,8 +26,8 @@ import type { Shuffle } from "./types/context.ts";
  * `discardPile` is folded in here rather than served via its own endpoint —
  * same reasoning as `self` for private data.
  */
-const buildGameStateSnapshot = (games: Record<string, Game>) =>
-  (roomID: string, playerID: number) => {
+const buildGameStateSnapshot =
+  (games: Record<string, Game>) => (roomID: string, playerID: number) => {
     const game = games[roomID];
     const publicGameState = game.getGameState();
     const discardPile = game.getDiscardAttackCards();
@@ -59,16 +61,18 @@ export const createUpdateGameState =
  * the WS equivalent of the retired `/game-state` GET, used by
  * `resolveWsConnection` when a client connects to an already-started room.
  */
-export const createSendGameStateSnapshot =
-  (realtimeHub: RealtimeHub, games: Record<string, Game>) => {
-    const buildSnapshot = buildGameStateSnapshot(games);
-    return (roomID: string, playerID: number): void => {
-      realtimeHub.sendToPlayer(roomID, playerID, {
-        type: "game-state",
-        payload: buildSnapshot(roomID, playerID),
-      });
-    };
+export const createSendGameStateSnapshot = (
+  realtimeHub: RealtimeHub,
+  games: Record<string, Game>,
+) => {
+  const buildSnapshot = buildGameStateSnapshot(games);
+  return (roomID: string, playerID: number): void => {
+    realtimeHub.sendToPlayer(roomID, playerID, {
+      type: "game-state",
+      payload: buildSnapshot(roomID, playerID),
+    });
   };
+};
 
 export const createApp = (
   {
@@ -89,14 +93,12 @@ export const createApp = (
     games: Record<string, Game>;
     rooms: Record<string, Room>;
     shuffle: Shuffle;
-    // deno-lint-ignore no-explicit-any
-    gameController: any;
+    gameController: GameController;
     realtimeHub: RealtimeHub;
-    // deno-lint-ignore no-explicit-any
   },
-  logger: () => any,
+  logger: () => MiddlewareHandler<AppBindings>,
 ) => {
-  const app = new Hono();
+  const app = new Hono<AppBindings>();
   app.use(logger());
   app.use((c, next) => {
     console.log(c.req.url);
@@ -107,7 +109,11 @@ export const createApp = (
   });
   const updateGameState = createUpdateGameState(realtimeHub, games);
   const sendGameStateSnapshot = createSendGameStateSnapshot(realtimeHub, games);
-  const requestHandlers = createRequestHandlers(games, gameController, updateGameState);
+  const requestHandlers = createRequestHandlers(
+    games,
+    gameController,
+    updateGameState,
+  );
 
   app.use(async (c, next) => {
     c.set("session", session);
@@ -124,8 +130,10 @@ export const createApp = (
 
   app.post("/setup-game", async (ctx) => {
     const roomID = getCookie(ctx, "roomID");
-    const rooms = ctx.get("rooms");
-    rooms[roomID].started = true;
+    if (roomID) {
+      const rooms = ctx.get("rooms");
+      rooms[roomID].started = true;
+    }
     const result = await gameSetup(ctx);
     if (roomID) {
       realtimeHub.broadcast(roomID, {

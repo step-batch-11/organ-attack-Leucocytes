@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@ashishkujoy/deno-coverage-checker@*": "0.0.9",
     "jsr:@ashishkujoy/deno-coverage-checker@^0.0.9": "0.0.9",
     "jsr:@sauber/table@0.1": "0.1.0",
     "jsr:@std/assert@1": "1.0.19",

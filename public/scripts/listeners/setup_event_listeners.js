@@ -45,7 +45,7 @@ const attackCardsListener = (event) => {
     "by-the-book": chartMixupOrByTheBook,
     "situs-inversus": situsInversusOrCryo,
     "cryopreservation": situsInversusOrCryo,
-    "narcolepsy": narcolepsy
+    "narcolepsy": narcolepsy,
   };
 
   actions[cardAction](attackCard);

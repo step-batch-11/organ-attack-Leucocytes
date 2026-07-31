@@ -1,45 +1,52 @@
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
+import type { Context, Next } from "hono";
+import type { AppBindings } from "../../types/context.ts";
+
+type AppContext = Context<AppBindings>;
 
 const ONE_HOUR_IN_SEC = 3600;
-const cookieAgeInSec = (hour) => ONE_HOUR_IN_SEC * hour;
+const cookieAgeInSec = (hour: number) => ONE_HOUR_IN_SEC * hour;
 
-const getUsername = async (c) => {
+const getUsername = async (c: AppContext): Promise<string> => {
   const payload = await c.req.formData();
-  const username = payload.get("username");
+  // Cast preserves broken state: a missing "username" field would already
+  // throw here (`.trim()` on null) before the caller's null check below.
+  const username = payload.get("username") as string;
   return username.trim();
 };
 
-const createSessionID = (c) => {
+const createSessionID = (c: AppContext): number => {
   const generateSessionID = c.get("idGenerator");
-  const sessionID = generateSessionID();
-  return sessionID;
+  return generateSessionID();
 };
 
-export const getPlayers = (c, roomID) => {
+export const getPlayers = (c: AppContext, roomID: string) => {
   const rooms = c.get("rooms");
-  const players = rooms[roomID].players;
-  return players;
+  return rooms[roomID].players;
 };
 
-export const setAuthCookies = (c, sessionID) => {
+export const setAuthCookies = (c: AppContext, sessionID: number) => {
   const maxAge = cookieAgeInSec(2);
-  setCookie(c, "sessionID", sessionID, { maxAge });
+  setCookie(c, "sessionID", String(sessionID), { maxAge });
 };
 
-export const logoutHandler = (c) => {
+export const logoutHandler = (c: AppContext) => {
   const session = c.get("session");
   const sessionID = getCookie(c, "sessionID");
-  const playerID = session[sessionID];
-  const players = c.get("players");
-  delete players[playerID];
+
+  if (sessionID !== undefined) {
+    const playerID = session[sessionID];
+    const players = c.get("players");
+    delete players[playerID];
+  }
 
   deleteCookie(c, "sessionID");
   return c.redirect("/");
 };
 
-export const loginHandler = async (c) => {
+export const loginHandler = async (c: AppContext) => {
   const username = await getUsername(c);
-  const isUsernameValid = username === null || username === "";
+  const isUsernameValid = username === "";
 
   if (isUsernameValid) {
     return c.json({ message: "invalid username" }, 401);
@@ -60,22 +67,22 @@ export const loginHandler = async (c) => {
   return c.redirect("/");
 };
 
-const redirectLoggedInUser = (c, next) => {
+const redirectLoggedInUser = (c: AppContext, next: Next) => {
   const session = c.get("session");
   const sessionID = getCookie(c, "sessionID");
 
-  if (sessionID in session) {
+  if (sessionID !== undefined && sessionID in session) {
     return c.redirect("/home_page.html");
   }
 
   return next();
 };
 
-const allowLoggedInUser = (c, next) => {
+const allowLoggedInUser = (c: AppContext, next: Next) => {
   const session = c.get("session");
   const sessionID = getCookie(c, "sessionID");
 
-  if (!(sessionID in session)) {
+  if (sessionID === undefined || !(sessionID in session)) {
     return c.redirect("/pages/login.html");
   }
 

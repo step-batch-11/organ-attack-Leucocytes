@@ -9,8 +9,23 @@ import { Deck } from "../src/models/deck.ts";
 import { Dealer } from "../src/models/dealer.ts";
 import { AfflictionHandler } from "../src/models/affliction_handler.ts";
 import { TurnManager } from "../src/models/turn_manager.ts";
+import type { AttackCard } from "../src/types/cards.ts";
 
-const shuffle = (cards) => cards;
+const shuffle = <T>(cards: T[]) => cards;
+
+const buildAttackCard = (
+  overrides: Pick<AttackCard, "id" | "action" | "type">,
+): AttackCard => ({
+  name: overrides.action,
+  isInstant: false,
+  afflictableOrgans: [],
+  removableOrgans: [],
+  isWild: false,
+  afflictPoints: 0,
+  Desc: "",
+  isBlockable: true,
+  ...overrides,
+});
 
 const buildGame = () => {
   const chiru = new Player("chiru", 1);
@@ -18,22 +33,33 @@ const buildGame = () => {
 
   chiru.fillHandWithOrgans([new Organ("Heart", 1, 2)]);
   chiru.fillHandWithAttacks([
-    { id: 101, action: "poison", type: "poison", afflictableOrgans: [], removableOrgans: [] },
+    buildAttackCard({ id: 101, action: "poison", type: "poison" }),
   ]);
 
   kumar.fillHandWithOrgans([new Organ("Lungs", 2, 2)]);
   kumar.fillHandWithAttacks([
-    { id: 102, action: "medicine", type: "medicine", afflictableOrgans: [], removableOrgans: [] },
+    buildAttackCard({ id: 102, action: "medicine", type: "medicine" }),
   ]);
 
   const players = [chiru, kumar];
   const attackCards = new Deck([], shuffle);
   const organCards = new Deck([], shuffle);
   const dealer = new Dealer(attackCards, organCards, players);
-  const afflictionHandler = new AfflictionHandler(attackCards, organCards, players);
+  const afflictionHandler = new AfflictionHandler(
+    attackCards,
+    organCards,
+    players,
+  );
   const turnManager = new TurnManager(players);
 
-  const game = new Game(players, attackCards, organCards, dealer, afflictionHandler, turnManager);
+  const game = new Game(
+    players,
+    attackCards,
+    organCards,
+    dealer,
+    afflictionHandler,
+    turnManager,
+  );
   game.setFirstPlayer();
 
   return game;
@@ -73,11 +99,17 @@ describe("createUpdateGameState (per-player game-state personalization)", () => 
 
     assertEquals(chiruMessage.type, "game-state");
     assertEquals(chiruMessage.payload.self.id, 1);
-    assertEquals(chiruMessage.payload.self.attackCards.map((card) => card.id), [101]);
+    assertEquals(
+      chiruMessage.payload.self.attackCards.map((card: AttackCard) => card.id),
+      [101],
+    );
     assertEquals(chiruMessage.payload.self.attackCards[0].action, "poison");
 
     assertEquals(kumarMessage.payload.self.id, 2);
-    assertEquals(kumarMessage.payload.self.attackCards.map((card) => card.id), [102]);
+    assertEquals(
+      kumarMessage.payload.self.attackCards.map((card: AttackCard) => card.id),
+      [102],
+    );
     assertEquals(kumarMessage.payload.self.attackCards[0].action, "medicine");
   });
 

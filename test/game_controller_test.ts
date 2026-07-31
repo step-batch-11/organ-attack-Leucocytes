@@ -10,8 +10,24 @@ import { Deck } from "../src/models/deck.ts";
 import { Dealer } from "../src/models/dealer.ts";
 import { AfflictionHandler } from "../src/models/affliction_handler.ts";
 import { TurnManager } from "../src/models/turn_manager.ts";
+import type { AttackCard } from "../src/types/cards.ts";
 
-const shuffle = (cards) => cards;
+const shuffle = <T>(cards: T[]) => cards;
+
+const buildAttackCard = (
+  overrides: Pick<AttackCard, "action" | "isBlockable">,
+): AttackCard => ({
+  id: 0,
+  name: overrides.action,
+  type: overrides.action,
+  isInstant: false,
+  afflictableOrgans: [],
+  removableOrgans: [],
+  isWild: false,
+  afflictPoints: 0,
+  Desc: "",
+  ...overrides,
+});
 
 const buildGameController = (duration = 999999) => {
   const actionStack = new ActionStack();
@@ -31,10 +47,21 @@ const buildThreePlayerGame = () => {
   const attackCards = new Deck([], shuffle);
   const organCards = new Deck([], shuffle);
   const dealer = new Dealer(attackCards, organCards, players);
-  const afflictionHandler = new AfflictionHandler(attackCards, organCards, players);
+  const afflictionHandler = new AfflictionHandler(
+    attackCards,
+    organCards,
+    players,
+  );
   const turnManager = new TurnManager(players);
 
-  const game = new Game(players, attackCards, organCards, dealer, afflictionHandler, turnManager);
+  const game = new Game(
+    players,
+    attackCards,
+    organCards,
+    dealer,
+    afflictionHandler,
+    turnManager,
+  );
   game.setFirstPlayer();
 
   return { game, players };
@@ -44,13 +71,16 @@ describe("GameController", () => {
   describe("playCard non-blockable fast path", () => {
     it("resolves immediately for a non-blockable card instead of waiting out the response timer", async () => {
       const { gameController } = buildGameController(999999);
-      const card = {
+      const card = buildAttackCard({
         action: "clinical-audit",
         isBlockable: false,
-        afflictableOrgans: [],
-        removableOrgans: [],
+      });
+      const action = {
+        name: "CLINICAL_AUDIT",
+        card,
+        attackerID: 1,
+        attackCardID: 50,
       };
-      const action = { name: "CLINICAL_AUDIT", card, attackerID: 1, attackCardID: 50 };
 
       // With a 999999ms timer, this would hang the test if playCard actually
       // waited it out instead of skipping the response window.
@@ -60,13 +90,16 @@ describe("GameController", () => {
 
     it("still waits out the response window for a blockable card", async () => {
       const { gameController, timer } = buildGameController(999999);
-      const card = {
+      const card = buildAttackCard({
         action: "medicine",
         isBlockable: true,
-        afflictableOrgans: [],
-        removableOrgans: [],
+      });
+      const action = {
+        name: "MEDICINE",
+        card,
+        attackerID: 1,
+        attackCardID: 60,
       };
-      const action = { name: "MEDICINE", card, attackerID: 1, attackCardID: 60 };
 
       const donePromise = gameController.playCard(action);
       const PENDING = Symbol("pending");
@@ -88,13 +121,15 @@ describe("GameController", () => {
       const { game, players } = buildThreePlayerGame();
       const [attacker, bystanderA, bystanderB] = players;
 
-      const card = {
+      const card = buildAttackCard({
         action: "cryopreservation",
         isBlockable: false,
-        afflictableOrgans: [],
-        removableOrgans: [],
+      });
+      const action = {
+        name: "CRYOPRESERVATION",
+        card,
+        attackerID: attacker.getID(),
       };
-      const action = { name: "CRYOPRESERVATION", card, attackerID: attacker.getID() };
 
       gameController.playCard(action);
       gameController.resolveAction(game);
@@ -108,13 +143,16 @@ describe("GameController", () => {
       const { gameController } = buildGameController();
       const { game } = buildThreePlayerGame();
 
-      const card = {
+      const card = buildAttackCard({
         action: "clinical-audit",
         isBlockable: false,
-        afflictableOrgans: [],
-        removableOrgans: [],
+      });
+      const action = {
+        name: "CLINICAL_AUDIT",
+        card,
+        attackerID: 1,
+        attackCardID: 50,
       };
-      const action = { name: "CLINICAL_AUDIT", card, attackerID: 1, attackCardID: 50 };
 
       gameController.playCard(action);
       const result = gameController.resolveAction(game);

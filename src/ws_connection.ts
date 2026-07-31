@@ -1,5 +1,9 @@
 import type { RealtimeHub } from "./realtime.ts";
-import type { ClientRequest, RealtimeSocket, RequestHandlers } from "./types/realtime.ts";
+import type {
+  ClientRequest,
+  RealtimeSocket,
+  RequestHandlers,
+} from "./types/realtime.ts";
 import type { Room } from "./types/entities.ts";
 
 /**
@@ -105,7 +109,9 @@ export const resolveWsConnection = (
           players: room.players,
           started: false,
           myID: playerID,
-          isHost: room.players.some((p) => p.id === playerID && p.type === "host"),
+          isHost: room.players.some((p) =>
+            p.id === playerID && p.type === "host"
+          ),
         },
       });
     };
@@ -123,7 +129,10 @@ export const resolveWsConnection = (
     if (socket.readyState === OPEN) {
       sendGameStateSnapshot(roomID, playerID);
     } else {
-      socket.addEventListener("open", () => sendGameStateSnapshot(roomID, playerID));
+      socket.addEventListener(
+        "open",
+        () => sendGameStateSnapshot(roomID, playerID),
+      );
     }
   }
 
