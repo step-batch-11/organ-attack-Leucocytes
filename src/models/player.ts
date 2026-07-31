@@ -72,7 +72,7 @@ export class Player {
     attackCardID: number | null,
     index?: number,
   ): AttackCard {
-    const attackIndex = index || this.#attackCards
+    const attackIndex = index ?? this.#attackCards
       .findIndex(({ id }) => id === attackCardID);
     const card = this.#attackCards.splice(attackIndex, 1);
 

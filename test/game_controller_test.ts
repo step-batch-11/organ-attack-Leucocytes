@@ -6,6 +6,7 @@ import ActionStack from "../src/models/action_stack.ts";
 import Timer from "../src/models/timer.ts";
 import { Game } from "../src/models/game.ts";
 import { Player } from "../src/models/player.ts";
+import { Organ } from "../src/models/organ.ts";
 import { Deck } from "../src/models/deck.ts";
 import { Dealer } from "../src/models/dealer.ts";
 import { AfflictionHandler } from "../src/models/affliction_handler.ts";
@@ -43,6 +44,10 @@ const buildThreePlayerGame = () => {
     new Player("bystanderA", 2),
     new Player("bystanderB", 3),
   ];
+
+  players.forEach((player, i) => {
+    player.fillHandWithOrgans([new Organ(`organ-${i}`, i, 2)]);
+  });
 
   const attackCards = new Deck([], shuffle);
   const organCards = new Deck([], shuffle);
@@ -158,6 +163,69 @@ describe("GameController", () => {
       const result = gameController.resolveAction(game);
 
       assertEquals(result, { success: true });
+    });
+
+    it("does not throw and reports failure when It's Alive targets an organCardID not in the discard pile (regression: sentinel -1 must not be dereferenced)", () => {
+      const { gameController } = buildGameController();
+      const { game, players } = buildThreePlayerGame();
+      const [attacker] = players;
+
+      const card = buildAttackCard({
+        action: "itsAlive",
+        isBlockable: false,
+      });
+      const action = {
+        name: "ITS_ALIVE",
+        card,
+        attackerID: attacker.getID(),
+        organCardID: 999999,
+      };
+
+      gameController.playCard(action);
+      game.currentTurnPlayed(action);
+
+      const before = game.getCurrentPlayerID();
+
+      // Must not throw — the bug this guards against was a thrown TypeError
+      // inside #applyActions (dereferencing the -1 sentinel) that prevented
+      // the game.passTurn() call further down in that same method from ever
+      // running, soft-locking the room.
+      const result = gameController.resolveAction(game);
+      assertEquals(result, { success: true });
+
+      assertEquals(game.getCurrentPlayerID() !== before, true);
+    });
+
+    it("puts the current player to sleep when Narcolepsy targets them, and that sleep survives this same resolution's passTurn (regression: TurnManager's pre-decrement used to cancel it immediately)", async () => {
+      const { gameController, timer } = buildGameController(999999);
+      const { game, players } = buildThreePlayerGame();
+      const [currentPlayer, nextPlayer] = players;
+
+      const card = buildAttackCard({
+        action: "narcolepsy",
+        isBlockable: true,
+      });
+      const action = {
+        name: "NARCOLEPSY",
+        card,
+        attackerID: nextPlayer.getID(),
+        opponentID: currentPlayer.getID(),
+      };
+
+      game.currentTurnPlayed(action);
+      const done = gameController.playCard(action);
+      timer.end();
+      await done;
+      gameController.resolveAction(game);
+
+      assertEquals(currentPlayer.getPlayerDetails().isSleeping, true);
+
+      game.passTurn();
+
+      // currentPlayer's own upcoming turn is what should consume the sleep
+      // point, not the pass that granted it — so they're skipped this pass,
+      // and only lose the sleep point once their turn actually comes around.
+      assertEquals(game.getCurrentPlayerID() !== currentPlayer.getID(), true);
     });
   });
 });

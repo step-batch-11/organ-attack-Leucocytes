@@ -22,7 +22,9 @@ export class Game {
   #currentPlayer!: number;
   #event: GameEvent;
   #turnManager: TurnManager;
+  #discardCounts: Map<number, number>;
   currentPlayedCard: boolean;
+  #skipNextSleepDecrement: boolean;
 
   constructor(
     players: Player[],
@@ -39,13 +41,18 @@ export class Game {
     this.#afflictionHandler = afflictionHandler;
     this.#event = {} as GameEvent;
     this.#turnManager = turnManager;
+    this.#discardCounts = new Map();
     this.currentPlayedCard = false;
+    this.#skipNextSleepDecrement = false;
   }
 
   passTurn(): void {
     if (this.currentPlayedCard) {
-      this.#currentPlayer = this.#turnManager.passTurn();
+      const skip = this.#skipNextSleepDecrement;
+      this.#skipNextSleepDecrement = false;
+      this.#currentPlayer = this.#turnManager.passTurn(skip);
       this.currentPlayedCard = false;
+      this.#discardCounts.delete(this.#players[this.#currentPlayer].getID());
     }
   }
 
@@ -75,11 +82,38 @@ export class Game {
     this.currentPlayedCard = this.currentPlayedCard ||
       !isCryoPlayedByMe || isNarcolepsyPlayedOnMe ||
       attackerID === playerID && !card.isInstant;
+
+    if (isNarcolepsyPlayedOnMe) {
+      this.#skipNextSleepDecrement = true;
+    }
   }
 
   discardAttackCard(attackerID: number, attackCardID: number): AttackCard {
     const attacker = this.#findPlayer(attackerID);
     return this.#afflictionHandler.discardAttackCard(attacker, attackCardID);
+  }
+
+  /** Up to 2 discards (via `remove-card`) are allowed per player per turn. */
+  canDiscardAttackCard(playerID: number): boolean {
+    return (this.#discardCounts.get(playerID) ?? 0) < 2;
+  }
+
+  recordDiscard(playerID: number): void {
+    this.#discardCounts.set(playerID, (this.#discardCounts.get(playerID) ?? 0) + 1);
+  }
+
+  /**
+   * A requester is only entitled to peek/discard from an opponent's hand
+   * over `query-opponent-hand`/`audit-discard` while they still hold an
+   * unplayed clinical-audit card — the client queries/discards for every
+   * opponent *before* sending the `"action"` request that actually plays
+   * (and discards) the card, so "holds the card" is the live signal for
+   * "mid clinical-audit flow," not a per-target event registration.
+   */
+  hasActiveClinicalAudit(playerID: number): boolean {
+    const player = this.#findPlayer(playerID);
+    return player.getPlayerDetails().attackCards
+      .some(({ action }) => action === "clinical-audit");
   }
 
   getAttackCardData(playerID: number, attackCardID: number): AttackCard {

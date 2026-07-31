@@ -72,6 +72,7 @@ const removePlayer = (
   const id = getPlayerID(c);
   const players = rooms[roomID].players;
   const playerIndex = players.findIndex((player) => player.id === id);
+  if (playerIndex === -1) return;
   players.splice(playerIndex, 1);
 };
 

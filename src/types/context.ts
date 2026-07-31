@@ -9,11 +9,23 @@
 import type { Game } from "../models/game.ts";
 import type { Room } from "./entities.ts";
 import type { RealtimeHub } from "../realtime.ts";
+import type GameController from "../controllers/game_controller.ts";
 
 /**
  * Shuffles an array, returning a new (or reordered) array of the same type.
  */
 export type Shuffle = <T>(items: T[]) => T[];
+
+/**
+ * A room's active {@link Game} plus the resolution collaborators
+ * (`ActionStack`/`ActionController`/`Timer` via `GameController`)
+ * constructed for that room alone — each room gets its own instance so two
+ * concurrent games never share pending-action or response-timer state.
+ */
+export interface RoomGame {
+  game: Game;
+  gameController: GameController;
+}
 
 /**
  * Variables shared across all requests via Hono's context.
@@ -23,14 +35,14 @@ export interface AppVariables {
   session: Record<string, number>;
   /** Maps a player id to a username. */
   players: Record<number, string>;
-  /** Maps a room id to its active {@link Game}. */
-  games: Record<string, Game>;
+  /** Maps a room id to its active {@link RoomGame}. */
+  games: Record<string, RoomGame>;
   /** Maps a room id to its {@link Room} membership record. */
   rooms: Record<string, Room>;
   /** Deterministic-injectable array shuffler. */
   shuffle: Shuffle;
   /** Generates unique session ids. */
-  idGenerator: () => number;
+  idGenerator: () => string;
   /** Generates sequential player ids. */
   playerIDGenerator: () => number;
   /** Shared real-time transport for a room's connected WebSocket clients. */
@@ -51,7 +63,4 @@ export interface AppBindings {
  * The dependency-injection container assembled in `main.ts` and threaded
  * into `createApp`.
  */
-export interface AppDeps extends AppVariables {
-  /** The shared game controller instance. */
-  gameController: import("../controllers/game_controller.ts").default;
-}
+export type AppDeps = AppVariables;

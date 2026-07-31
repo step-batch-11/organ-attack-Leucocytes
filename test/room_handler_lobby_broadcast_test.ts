@@ -3,11 +3,9 @@ import { describe, it } from "@std/testing/bdd";
 import { createApp } from "../src/app.ts";
 import { RealtimeHub } from "../src/realtime.ts";
 import { counter } from "../src/utils.ts";
-import type { Game } from "../src/models/game.ts";
-import type GameController from "../src/controllers/game_controller.ts";
 import type { Room } from "../src/types/entities.ts";
 import type { MiddlewareHandler } from "hono";
-import type { AppBindings } from "../src/types/context.ts";
+import type { AppBindings, RoomGame } from "../src/types/context.ts";
 
 const logger = () => ((_c, next) => next()) as MiddlewareHandler<AppBindings>;
 
@@ -26,7 +24,7 @@ const makeFakeSocket = () => {
 
 const buildApp = (
   rooms: Record<string, Room>,
-  games: Record<string, Game> = {},
+  games: Record<string, RoomGame> = {},
 ) => {
   const realtimeHub = new RealtimeHub();
   const session = { "1": 1, "2": 2 };
@@ -34,12 +32,11 @@ const buildApp = (
   const app = createApp({
     session,
     players,
-    idGenerator: counter(),
+    idGenerator: () => crypto.randomUUID(),
     playerIDGenerator: counter(),
     games,
     rooms,
     shuffle: (x) => x,
-    gameController: {} as GameController,
     realtimeHub,
   }, logger);
 
@@ -129,6 +126,30 @@ describe("room_handler lobby broadcasts", () => {
       assertEquals(message.payload.players.map((p: { id: number }) => p.id), [
         1,
       ]);
+    });
+
+    it("does not remove the last player when leaveLobby is hit with a stale/unknown session id (regression: findIndex(-1) used to splice the last player)", async () => {
+      const rooms = {
+        101: {
+          players: [
+            { id: 1, name: "chiru", type: "host" },
+            { id: 2, name: "kumar", type: "non-host" },
+          ],
+          started: false,
+        },
+      };
+      const { app } = buildApp(rooms);
+
+      // sessionID=999 has no entry in the session map, so getPlayerID
+      // resolves to undefined — a stale/unknown session hitting leaveLobby.
+      const response = await app.request("/leave-lobby", {
+        method: "POST",
+        headers: { cookie: "sessionID=999; roomID=101" },
+        body: JSON.stringify({ isHost: false }),
+      });
+
+      assertEquals(response.status, 200);
+      assertEquals(rooms[101].players.map((p) => p.id), [1, 2]);
     });
 
     it("broadcasts room-closed to remaining sockets when the host leaves", async () => {

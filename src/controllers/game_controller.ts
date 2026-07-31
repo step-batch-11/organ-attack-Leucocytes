@@ -181,9 +181,8 @@ export default class GameController {
 
   #handleItsAlive(game: Game, { attackerID, organCardID }: ActionInput) {
     const organ = game.itsAlive(attackerID as number, organCardID as number);
-    // Cast preserves broken state: `itsAlive` returns -1 when the discarded
-    // organ id isn't found, but the original code dereferences it unconditionally.
-    return { success: !((organ as { isDead(): boolean }).isDead()) };
+    if (organ === -1) return { success: false };
+    return { success: !organ.isDead() };
   }
 
   #handleSitusInversus(game: Game) {

@@ -29,11 +29,15 @@ const playCard = (
 
   const done = gameController.playCard(action);
 
-  done.then(() => {
-    gameController.resolveAction(game);
-    gameController.updateEventStatus(game);
-    updateGameState(roomID);
-  }).catch((reject) => console.error({ reject }));
+  done
+    .then(() => {
+      gameController.resolveAction(game);
+    })
+    .catch((reject) => console.error({ reject }))
+    .finally(() => {
+      gameController.updateEventStatus(game);
+      updateGameState(roomID);
+    });
 };
 
 /**

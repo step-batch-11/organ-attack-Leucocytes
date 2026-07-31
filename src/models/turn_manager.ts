@@ -27,10 +27,17 @@ export class TurnManager {
     return (this.#turn + this.#next + this.#playerCount) % this.#playerCount;
   }
 
-  passTurn(): number {
+  /**
+   * Advances the turn. `skipDecrementForCurrent` suppresses the outgoing
+   * player's sleep decrement — used when the pass is triggered by an instant
+   * (e.g. Narcolepsy) that just put the *current* player to sleep in this
+   * same resolution cycle, so that freshly-granted sleep isn't immediately
+   * canceled before it ever prevents their next turn.
+   */
+  passTurn(skipDecrementForCurrent = false): number {
     const currPlayer = this.#players[this.#turn];
 
-    if (currPlayer.isSleeping()) {
+    if (!skipDecrementForCurrent && currPlayer.isSleeping()) {
       currPlayer.decreaseSleep();
     }
 

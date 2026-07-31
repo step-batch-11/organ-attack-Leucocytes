@@ -3,6 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import { createUpdateGameState } from "../src/app.ts";
 import { RealtimeHub } from "../src/realtime.ts";
 import { Game } from "../src/models/game.ts";
+import type GameController from "../src/controllers/game_controller.ts";
 import { Player } from "../src/models/player.ts";
 import { Organ } from "../src/models/organ.ts";
 import { Deck } from "../src/models/deck.ts";
@@ -81,7 +82,7 @@ const makeFakeSocket = () => {
 describe("createUpdateGameState (per-player game-state personalization)", () => {
   it("sends each connected player their own hand as `self`, not each other's", () => {
     const game = buildGame();
-    const games = { 101: game };
+    const games = { 101: { game, gameController: {} as GameController } };
     const hub = new RealtimeHub();
     const chiruSocket = makeFakeSocket();
     const kumarSocket = makeFakeSocket();
@@ -115,7 +116,7 @@ describe("createUpdateGameState (per-player game-state personalization)", () => 
 
   it("keeps the public players[] identical across sockets and free of hand data", () => {
     const game = buildGame();
-    const games = { 101: game };
+    const games = { 101: { game, gameController: {} as GameController } };
     const hub = new RealtimeHub();
     const chiruSocket = makeFakeSocket();
     const kumarSocket = makeFakeSocket();
@@ -136,7 +137,7 @@ describe("createUpdateGameState (per-player game-state personalization)", () => 
 
   it("sends only one message per distinct player even with two sockets for the same player", () => {
     const game = buildGame();
-    const games = { 101: game };
+    const games = { 101: { game, gameController: {} as GameController } };
     const hub = new RealtimeHub();
     const tabOne = makeFakeSocket();
     const tabTwo = makeFakeSocket();

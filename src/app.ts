@@ -15,10 +15,8 @@ import { getPlayerID } from "./utils.ts";
 import { resolveWsConnection } from "./ws_connection.ts";
 import { createRequestHandlers } from "./ws_request_handlers.ts";
 import type { RealtimeHub } from "./realtime.ts";
-import type { Game } from "./models/game.ts";
 import type { Room } from "./types/entities.ts";
-import type { AppBindings, Shuffle } from "./types/context.ts";
-import type GameController from "./controllers/game_controller.ts";
+import type { AppBindings, RoomGame, Shuffle } from "./types/context.ts";
 
 /**
  * Builds one player's personalized game-state payload: the shared public
@@ -27,8 +25,8 @@ import type GameController from "./controllers/game_controller.ts";
  * same reasoning as `self` for private data.
  */
 const buildGameStateSnapshot =
-  (games: Record<string, Game>) => (roomID: string, playerID: number) => {
-    const game = games[roomID];
+  (games: Record<string, RoomGame>) => (roomID: string, playerID: number) => {
+    const { game } = games[roomID];
     const publicGameState = game.getGameState();
     const discardPile = game.getDiscardAttackCards();
     const self = game.getPlayer(playerID);
@@ -40,7 +38,7 @@ const buildGameStateSnapshot =
  * payload for each connected socket (each player only sees their own hand).
  */
 export const createUpdateGameState =
-  (realtimeHub: RealtimeHub, games: Record<string, Game>) =>
+  (realtimeHub: RealtimeHub, games: Record<string, RoomGame>) =>
   (roomID: string): void => {
     const buildSnapshot = buildGameStateSnapshot(games);
     const seen = new Set<number>();
@@ -63,7 +61,7 @@ export const createUpdateGameState =
  */
 export const createSendGameStateSnapshot = (
   realtimeHub: RealtimeHub,
-  games: Record<string, Game>,
+  games: Record<string, RoomGame>,
 ) => {
   const buildSnapshot = buildGameStateSnapshot(games);
   return (roomID: string, playerID: number): void => {
@@ -83,17 +81,15 @@ export const createApp = (
     games,
     rooms,
     shuffle,
-    gameController,
     realtimeHub,
   }: {
     session: Record<string, number>;
     players: Record<number, string>;
-    idGenerator: () => number;
+    idGenerator: () => string;
     playerIDGenerator: () => number;
-    games: Record<string, Game>;
+    games: Record<string, RoomGame>;
     rooms: Record<string, Room>;
     shuffle: Shuffle;
-    gameController: GameController;
     realtimeHub: RealtimeHub;
   },
   logger: () => MiddlewareHandler<AppBindings>,
@@ -109,11 +105,7 @@ export const createApp = (
   });
   const updateGameState = createUpdateGameState(realtimeHub, games);
   const sendGameStateSnapshot = createSendGameStateSnapshot(realtimeHub, games);
-  const requestHandlers = createRequestHandlers(
-    games,
-    gameController,
-    updateGameState,
-  );
+  const requestHandlers = createRequestHandlers(games, updateGameState);
 
   app.use(async (c, next) => {
     c.set("session", session);

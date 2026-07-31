@@ -2,10 +2,6 @@ import { createApp } from "./src/app.ts";
 import { counter } from "./src/utils.ts";
 import { logger } from "hono/logger";
 import { shuffle } from "@std/random";
-import GameController from "./src/controllers/game_controller.ts";
-import ActionController from "./src/controllers/action_controller.ts";
-import ActionStack from "./src/models/action_stack.ts";
-import Timer from "./src/models/timer.ts";
 import { RealtimeHub } from "./src/realtime.ts";
 
 const main = () => {
@@ -13,15 +9,10 @@ const main = () => {
   const players = {};
   const games = {};
   const rooms = { 101: { players: [], started: false } };
-  const timer = new Timer(5000);
   const realtimeHub = new RealtimeHub();
 
-  const idGenerator = () => Date.now() * Math.random();
+  const idGenerator = () => crypto.randomUUID();
   const playerIDGenerator = counter();
-
-  const actionStack = new ActionStack();
-  const actionController = new ActionController(actionStack);
-  const gameController = new GameController(actionController, timer);
 
   const generators = { idGenerator, playerIDGenerator };
   const appUtils = {
@@ -30,7 +21,6 @@ const main = () => {
     games,
     rooms,
     shuffle,
-    gameController,
     realtimeHub,
   };
 

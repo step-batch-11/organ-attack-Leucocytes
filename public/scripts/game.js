@@ -4,17 +4,54 @@ import { displayOpponents, displayOrgans } from "./afflict-organ.js";
 import { displayAttackDeckDiscardPile } from "./discard_pile.js";
 import { setupEventListeners } from "./listeners/setup_event_listeners.js";
 import GameState from "./game_state.js";
-import { handlePoison } from "./listeners/attack_card_actions.js";
+import {
+  affliction,
+  chartMixupOrByTheBook,
+  commonColdOrSedate,
+  contagious,
+  handlePoison,
+  immunityBoost,
+  itsAlive,
+  medicine,
+  metastasis,
+  narcolepsy,
+  situsInversusOrCryo,
+  transplant,
+  vaccine,
+} from "./listeners/attack_card_actions.js";
 import { animateFromDeck } from "./animation.js";
 import { connectRealtime, onMessage, sendRequest } from "./network.js";
 
 import { setLastPlayedCard } from "./utils.js";
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
+// Single dispatch table for every attack-card action — previously split
+// across this file (3 keys) and listeners/setup_event_listeners.js's own
+// delegated click listener (the other ~12 keys), which fired unconditionally
+// on every click and threw for the 3 keys it didn't recognize.
 const ACTION_HANDLERS = {
   "medical-miracle": displayOrgans,
   "clinical-audit": NA.displayOpponentsHands,
   "research": displayAttackDeckDiscardPile,
+  "affliction": ({ attackCardElement }) => affliction(attackCardElement),
+  "medicine": ({ attackCardElement }) => medicine(attackCardElement),
+  "transplant": ({ attackCardElement }) => transplant(attackCardElement),
+  "contagious": ({ attackCardElement }) => contagious(attackCardElement),
+  "metastasis": ({ attackCardElement }) => metastasis(attackCardElement),
+  "immunity-boost": ({ attackCardElement }) => immunityBoost(attackCardElement),
+  "itsAlive": ({ attackCardElement }) => itsAlive(attackCardElement),
+  "Vaccine": ({ attackCardElement }) => vaccine(attackCardElement),
+  "common-cold": ({ attackCardElement }) => commonColdOrSedate(attackCardElement),
+  "sedate": ({ attackCardElement }) => commonColdOrSedate(attackCardElement),
+  "chart-mixup": ({ attackCardElement }) =>
+    chartMixupOrByTheBook(attackCardElement),
+  "by-the-book": ({ attackCardElement }) =>
+    chartMixupOrByTheBook(attackCardElement),
+  "situs-inversus": ({ attackCardElement }) =>
+    situsInversusOrCryo(attackCardElement),
+  "cryopreservation": ({ attackCardElement }) =>
+    situsInversusOrCryo(attackCardElement),
+  "narcolepsy": ({ attackCardElement }) => narcolepsy(attackCardElement),
 };
 
 const attachEventListener = async (

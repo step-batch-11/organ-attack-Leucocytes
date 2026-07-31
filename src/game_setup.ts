@@ -8,9 +8,16 @@ import { Dealer } from "./models/dealer.ts";
 
 import { AfflictionHandler } from "./models/affliction_handler.ts";
 import { TurnManager } from "./models/turn_manager.ts";
+import ActionStack from "./models/action_stack.ts";
+import ActionController from "./controllers/action_controller.ts";
+import Timer from "./models/timer.ts";
+import GameController from "./controllers/game_controller.ts";
 import type { Context } from "hono";
 import type { AppBindings } from "./types/context.ts";
 import type { AttackCard } from "./types/cards.ts";
+
+/** Duration (ms) of the response window for blockable cards, per room. */
+export const RESPONSE_WINDOW_MS = 5000;
 
 export const gameSetup = async (ctx: Context<AppBindings>) => {
   const games = ctx.get("games");
@@ -55,7 +62,12 @@ export const gameSetup = async (ctx: Context<AppBindings>) => {
   game.dealCards();
   game.setFirstPlayer();
 
-  games[roomID] = game;
+  const actionStack = new ActionStack();
+  const actionController = new ActionController(actionStack);
+  const timer = new Timer(RESPONSE_WINDOW_MS);
+  const gameController = new GameController(actionController, timer);
+
+  games[roomID] = { game, gameController };
 
   return ctx.json(game.getAllPlayersDetails(), 201);
 };

@@ -15,7 +15,7 @@ const getUsername = async (c: AppContext): Promise<string> => {
   return username.trim();
 };
 
-const createSessionID = (c: AppContext): number => {
+const createSessionID = (c: AppContext): string => {
   const generateSessionID = c.get("idGenerator");
   return generateSessionID();
 };
@@ -25,9 +25,9 @@ export const getPlayers = (c: AppContext, roomID: string) => {
   return rooms[roomID].players;
 };
 
-export const setAuthCookies = (c: AppContext, sessionID: number) => {
+export const setAuthCookies = (c: AppContext, sessionID: string) => {
   const maxAge = cookieAgeInSec(2);
-  setCookie(c, "sessionID", String(sessionID), { maxAge });
+  setCookie(c, "sessionID", sessionID, { maxAge });
 };
 
 export const logoutHandler = (c: AppContext) => {
