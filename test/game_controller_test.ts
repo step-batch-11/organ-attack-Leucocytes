@@ -229,6 +229,114 @@ describe("GameController", () => {
     });
   });
 
+  describe("#handleAffliction (organ-targeting validation)", () => {
+    it("does not mutate state when organCardID doesn't belong to the targeted opponent (regression: unguarded find+cast used to crash)", () => {
+      const { gameController } = buildGameController();
+      const { game, players } = buildThreePlayerGame();
+      const [attacker, opponent] = players;
+      const before = opponent.getPlayerDetails().organCards[0].health;
+
+      const card = {
+        ...buildAttackCard({ action: "affliction", isBlockable: true }),
+        afflictableOrgans: [opponent.getPlayerDetails().organCards[0].id],
+      };
+      const action = {
+        name: "AFFLICTION",
+        card,
+        attackerID: attacker.getID(),
+        opponentID: opponent.getID(),
+        organCardID: 999999,
+      };
+
+      gameController.playCard(action);
+      const result = gameController.resolveAction(game);
+
+      assertEquals(result, { success: true });
+      assertEquals(opponent.getPlayerDetails().organCards[0].health, before);
+    });
+
+    it("rejects targeting an organ the opponent holds but that isn't in the card's own afflictableOrgans/removableOrgans list", () => {
+      const { gameController } = buildGameController();
+      const { game, players } = buildThreePlayerGame();
+      const [attacker, opponent] = players;
+      opponent.fillHandWithOrgans([
+        new Organ("allowed", 1, 2),
+        new Organ("not-allowed", 50, 2),
+      ]);
+
+      const card = {
+        ...buildAttackCard({ action: "affliction", isBlockable: true }),
+        afflictableOrgans: [1],
+      };
+      const action = {
+        name: "AFFLICTION",
+        card,
+        attackerID: attacker.getID(),
+        opponentID: opponent.getID(),
+        organCardID: 50,
+      };
+
+      gameController.playCard(action);
+      gameController.resolveAction(game);
+
+      const targetOrgan = opponent.getPlayerDetails().organCards
+        .find((organ) => organ.id === 50);
+      assertEquals(targetOrgan?.health, 2);
+    });
+
+    it("still allows targeting the universal Wild organ (id 100) even when it isn't in the card's own list", () => {
+      const { gameController } = buildGameController();
+      const { game, players } = buildThreePlayerGame();
+      const [attacker, opponent] = players;
+      opponent.fillHandWithOrgans([new Organ("Wild", 100, 4, 4)]);
+
+      const card = {
+        ...buildAttackCard({ action: "affliction", isBlockable: true }),
+        afflictableOrgans: [1],
+      };
+      const action = {
+        name: "AFFLICTION",
+        card,
+        attackerID: attacker.getID(),
+        opponentID: opponent.getID(),
+        organCardID: 100,
+      };
+
+      gameController.playCard(action);
+      gameController.resolveAction(game);
+
+      const wildOrgan = opponent.getPlayerDetails().organCards
+        .find((organ) => organ.id === 100);
+      assertEquals(wildOrgan?.health, 3);
+    });
+
+    it("still applies the affliction normally when the organ is a legal target (baseline)", () => {
+      const { gameController } = buildGameController();
+      const { game, players } = buildThreePlayerGame();
+      const [attacker, opponent] = players;
+      const organID = opponent.getPlayerDetails().organCards[0].id;
+
+      const card = {
+        ...buildAttackCard({ action: "affliction", isBlockable: true }),
+        afflictableOrgans: [organID],
+      };
+      const action = {
+        name: "AFFLICTION",
+        card,
+        attackerID: attacker.getID(),
+        opponentID: opponent.getID(),
+        organCardID: organID,
+      };
+
+      gameController.playCard(action);
+      gameController.resolveAction(game);
+
+      const organ = opponent.getPlayerDetails().organCards
+        .find((o) => o.id === organID);
+      assertEquals(organ?.health, 1);
+    });
+  });
+
   describe("Game#currentTurnPlayed (regression: instant/out-of-turn cards must not advance the turn)", () => {
     it("does not advance the turn when an instant card is played by someone other than the current player", () => {
       const { game, players } = buildThreePlayerGame();

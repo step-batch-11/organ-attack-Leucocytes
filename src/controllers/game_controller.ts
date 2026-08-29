@@ -100,11 +100,36 @@ export default class GameController {
     return ({ success: true });
   }
 
+  // Every player is always dealt one universal "Wild" organ (id 100), which
+  // every affliction-family card can target in addition to its own
+  // afflictableOrgans/removableOrgans list — matches
+  // public/scripts/action_handlers/afflict-organ.js's getAfflictableOrgans.
+  static #WILD_ORGAN_ID = 100;
+
   #handleAffliction(
     game: Game,
     { opponentID, organCardID, card }: ActionInput,
   ) {
-    const { removableOrgans } = card;
+    const { removableOrgans, afflictableOrgans } = card;
+    const opponent = game.getPlayer(opponentID as number);
+    const targetExists = opponent.organCards
+      .some((organ) => organ.id === organCardID);
+
+    if (!targetExists) {
+      return { success: false, message: "target organ not found" };
+    }
+
+    const isLegalTarget = afflictableOrgans.includes(organCardID as number) ||
+      removableOrgans.includes(organCardID as number) ||
+      organCardID === GameController.#WILD_ORGAN_ID;
+
+    if (!isLegalTarget) {
+      return {
+        success: false,
+        message: "this card cannot target that organ",
+      };
+    }
+
     const afflictionPoints = (removableOrgans.includes(organCardID as number) ||
         card.type === "necrosis")
       ? 2

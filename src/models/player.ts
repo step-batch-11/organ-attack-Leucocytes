@@ -53,11 +53,10 @@ export class Player {
       return { isDead: false };
     }
 
-    // Cast preserves broken state: `find` may return undefined when the
-    // targeted organ id is not held by this player, but the original code
-    // dereferences it unconditionally.
     const organ = this.#organCards
-      .find((organ) => organ.getID() === organCardID) as Organ;
+      .find((organ) => organ.getID() === organCardID);
+
+    if (organ === undefined) return { isDead: false };
 
     organ.afflict(afflictPoints);
     const organIndex = this.#organCards

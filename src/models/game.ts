@@ -218,7 +218,11 @@ export class Game {
   // Cast preserves broken state: callers dereference the result without a
   // guard, so a missing id would already have thrown at runtime.
   #findPlayer(id: number): Player {
-    return this.#players.find((player) => player.getID() === id) as Player;
+    const player = this.#players.find((player) => player.getID() === id);
+    if (player === undefined) {
+      throw new Error(`No player found with id ${id}`);
+    }
+    return player;
   }
 
   getAllPlayersDetails(): PublicPlayer[] {

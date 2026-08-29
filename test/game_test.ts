@@ -87,6 +87,20 @@ describe("Game#research", () => {
   });
 });
 
+describe("Game#getPlayer / #findPlayer", () => {
+  it("throws a clear error instead of crashing with an unguarded-cast TypeError when the id doesn't match any player", () => {
+    const player = new Player("attacker", 1);
+    const attackCards = new Deck<AttackCard>([], shuffle);
+    const game = buildGame([player], attackCards);
+
+    assertThrows(
+      () => game.getPlayer(999),
+      Error,
+      "No player found with id 999",
+    );
+  });
+});
+
 describe("Game#passTurn (dead player's hand)", () => {
   it("returns a dead player's discarded hand to the attack deck's discard pile instead of dropping it (regression: TurnManager used to discard cards into nothing)", () => {
     const alive1 = new Player("alive1", 1);
