@@ -139,8 +139,8 @@ export class Player {
   }
 
   healOrgan(id: number): void {
-    // Cast preserves broken state: organ may be undefined for an id not held.
-    const organ = this.#organCards.find((card) => card.getID() === id) as Organ;
+    const organ = this.#organCards.find((card) => card.getID() === id);
+    if (organ === undefined) return;
     organ.heal();
   }
 

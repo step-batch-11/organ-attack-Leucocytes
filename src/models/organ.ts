@@ -18,7 +18,7 @@ export class Organ {
   }
 
   heal(): void {
-    this.#health += 1;
+    this.#health = Math.min(this.#health + 1, this.#maxHealth);
   }
 
   isDead(): boolean {

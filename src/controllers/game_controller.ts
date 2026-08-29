@@ -175,13 +175,21 @@ export default class GameController {
     return ({ success: true });
   }
 
+  // Medical Miracle grants 2 heal points total (matches
+  // public/scripts/action_handlers/afflict-organ.js's
+  // shouldSubmitMedicalMiracle) — a raw WS client sending more entries in
+  // organCardIDs must not be able to heal past that budget.
+  static #MEDICAL_MIRACLE_TOTAL_HEAL = 2;
+
   #handleMedicalMiracle(
     game: Game,
     { attackerID, organCardIDs }: ActionInput,
   ) {
-    (organCardIDs as number[]).forEach((organCardID) => {
-      game.healOrgan(attackerID as number, organCardID);
-    });
+    (organCardIDs as number[])
+      .slice(0, GameController.#MEDICAL_MIRACLE_TOTAL_HEAL)
+      .forEach((organCardID) => {
+        game.healOrgan(attackerID as number, organCardID);
+      });
 
     return ({ success: true });
   }

@@ -112,3 +112,23 @@ describe("Player#removeOrgan", () => {
     );
   });
 });
+
+describe("Player#healOrgan", () => {
+  it("does not throw and does nothing when the id doesn't match any held organ (regression: unguarded find+cast used to crash)", () => {
+    const player = new Player("attacker", 1);
+    player.fillHandWithOrgans([new Organ("Heart", 7, 1, 2)]);
+
+    player.healOrgan(999);
+
+    assertEquals(player.getPlayerDetails().organCards[0].health, 1);
+  });
+
+  it("heals the matching organ by id", () => {
+    const player = new Player("attacker", 1);
+    player.fillHandWithOrgans([new Organ("Heart", 7, 1, 2)]);
+
+    player.healOrgan(7);
+
+    assertEquals(player.getPlayerDetails().organCards[0].health, 2);
+  });
+});

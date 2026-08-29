@@ -337,6 +337,40 @@ describe("GameController", () => {
     });
   });
 
+  describe("#handleMedicalMiracle (heal budget)", () => {
+    it("caps the total heal at 2 points even when organCardIDs holds more entries (regression: a raw WS client could send extra entries to heal past the card's own budget)", () => {
+      const { gameController } = buildGameController();
+      const { game, players } = buildThreePlayerGame();
+      const [attacker] = players;
+      attacker.fillHandWithOrgans([
+        new Organ("Heart", 10, 1, 4),
+        new Organ("Kidneys", 11, 1, 4),
+        new Organ("Liver", 12, 1, 4),
+      ]);
+
+      const card = buildAttackCard({
+        action: "medical-miracle",
+        isBlockable: true,
+      });
+      const action = {
+        name: "MEDICAL_MIRACLE",
+        card,
+        attackerID: attacker.getID(),
+        organCardIDs: [10, 11, 12],
+      };
+
+      gameController.playCard(action);
+      gameController.resolveAction(game);
+
+      const healthByID = new Map(
+        attacker.getPlayerDetails().organCards.map((o) => [o.id, o.health]),
+      );
+      assertEquals(healthByID.get(10), 2);
+      assertEquals(healthByID.get(11), 2);
+      assertEquals(healthByID.get(12), 1);
+    });
+  });
+
   describe("Game#currentTurnPlayed (regression: instant/out-of-turn cards must not advance the turn)", () => {
     it("does not advance the turn when an instant card is played by someone other than the current player", () => {
       const { game, players } = buildThreePlayerGame();
