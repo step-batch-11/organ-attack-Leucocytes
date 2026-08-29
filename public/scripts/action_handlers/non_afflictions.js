@@ -1,6 +1,6 @@
-import { clearPopup } from "../afflict-organ.js";
-import { cloneFromTemplate, sendAction } from "../utils.js";
-import { sendRequest } from "../network.js";
+import { clearPopup } from "./afflict-organ.js";
+import { cloneFromTemplate, sendAction } from "../utils/utils.js";
+import { sendRequest } from "../network/network.js";
 
 export const performChartMixup = async ({ player, attackCardID }) => {
   clearPopup();

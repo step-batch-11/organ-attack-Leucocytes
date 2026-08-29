@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import { shouldSubmitMedicalMiracle } from "../public/scripts/afflict-organ.js";
+import { shouldSubmitMedicalMiracle } from "../public/scripts/action_handlers/afflict-organ.js";
 
 describe("shouldSubmitMedicalMiracle", () => {
   it("does not submit after 1 click when the only damaged organ still needs a 2nd heal point (regression: the old misnamed `isWild` check submitted early here, silently losing the 2nd heal point)", () => {

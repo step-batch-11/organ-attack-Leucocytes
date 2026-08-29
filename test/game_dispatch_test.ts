@@ -10,7 +10,7 @@ const fakeWindow: any = {};
 // deno-lint-ignore no-explicit-any
 (globalThis as any).window = fakeWindow;
 
-const { attachEventListener } = await import("../public/scripts/game.js");
+const { attachEventListener } = await import("../public/scripts/pages/game.js");
 
 const makeFakeCardElement = (id: number) => ({
   dataset: { id: String(id) },

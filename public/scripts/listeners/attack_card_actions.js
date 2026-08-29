@@ -1,4 +1,8 @@
-import { cloneFromTemplate, sendAction, setOrganImage } from "../utils.js";
+import {
+  cloneFromTemplate,
+  sendAction,
+  setOrganImage,
+} from "../utils/utils.js";
 
 const createOrganNodes = (afflictableOrgans) => {
   const organElement = cloneFromTemplate("#organ-card-template");

@@ -1,5 +1,5 @@
 import { clearPopup } from "./afflict-organ.js";
-import { cloneFromTemplate, sendAction } from "./utils.js";
+import { cloneFromTemplate, sendAction } from "../utils/utils.js";
 
 export const getTypes = (cards) => {
   const types = new Set();

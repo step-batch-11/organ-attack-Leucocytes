@@ -33,7 +33,12 @@ const playCard = (
     .then(() => {
       gameController.resolveAction(game);
     })
-    .catch((reject) => console.error({ reject }))
+    // Timer.start() rejects whatever promise is currently pending whenever a
+    // legitimate response (e.g. Immunity Boost) re-opens the window —
+    // expected control flow now that ActionController.add() rejects any
+    // unrelated action outright, not a real error. The response's own
+    // promise chain is the one that goes on to resolve the whole exchange.
+    .catch(() => {})
     .finally(() => {
       gameController.updateEventStatus(game);
       updateGameState(roomID);

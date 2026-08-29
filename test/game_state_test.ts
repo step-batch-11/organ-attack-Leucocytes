@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
-import GameState from "../public/scripts/game_state.js";
+import GameState from "../public/scripts/state/game_state.js";
 
 const EMPTY_EVENT = {};
 

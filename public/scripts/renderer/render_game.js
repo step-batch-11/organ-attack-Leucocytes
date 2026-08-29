@@ -1,11 +1,11 @@
-import { getAvatarClosure } from "./avatar.js";
+import { getAvatarClosure } from "../utils/avatar.js";
 import {
   cloneFromTemplate,
   getAfflictableOrgans,
   getRemovableOrgans,
-} from "./utils.js";
+} from "../utils/utils.js";
 
-import { createAttackCardElement } from "./utils.js";
+import { createAttackCardElement } from "../utils/utils.js";
 
 const renderDiscardPile = () => {
   const discardTop = document.querySelector(".discard-top");

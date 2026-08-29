@@ -1,4 +1,4 @@
-import { getAvatarClosure } from "./avatar.js";
+import { getAvatarClosure } from "../utils/avatar.js";
 
 const fetchUserdata = async () => {
   return fetch("/user-details");

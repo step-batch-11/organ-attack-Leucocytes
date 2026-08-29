@@ -1,4 +1,4 @@
-import { getAvatarClosure } from "../avatar.js";
+import { getAvatarClosure } from "../utils/avatar.js";
 
 const renderPlayerProfile = (name, avatarContainer) => {
   const getAvatarURL = getAvatarClosure();

@@ -159,6 +159,86 @@ describe("createRequestHandlers", () => {
     });
   });
 
+  describe("action — concurrent double-action race (regression)", () => {
+    it("rejects a second, unrelated action while the first's response window is still open, instead of merging both into one resolution pass", () => {
+      const { game, gameController, attacker, opponent } = buildRoomGame();
+      attacker.fillHandWithAttacks([
+        buildAttackCard({ id: 80, action: "medicine", isBlockable: true }),
+      ]);
+      opponent.fillHandWithAttacks([
+        buildAttackCard({
+          id: 81,
+          action: "cryopreservation",
+          isInstant: true,
+          isBlockable: false,
+        }),
+      ]);
+      const games: Record<string, RoomGame> = { 101: { game, gameController } };
+      const handlers = createRequestHandlers(games, () => {});
+
+      // Attacker plays a blockable card — opens a response window that won't
+      // resolve on its own (buildRoomGame's Timer duration is 999999ms).
+      handlers.action("101", attacker.getID(), { attackCardID: 80 });
+
+      // A second, unrelated instant card from the opponent must be rejected
+      // outright rather than silently joining the same still-open window.
+      let error: Error | undefined;
+      try {
+        handlers.action("101", opponent.getID(), {
+          attackCardID: 81,
+          isInstant: true,
+        });
+      } catch (e) {
+        error = e as Error;
+      }
+
+      assertEquals(
+        error?.message,
+        "another action is still awaiting resolution",
+      );
+      // Rejected before ever being removed from the opponent's hand.
+      assertEquals(
+        opponent.getPlayerDetails().attackCards.some((c) => c.id === 81),
+        true,
+      );
+    });
+
+    it("still allows a legitimate response (e.g. Immunity Boost) to join the same still-open window", () => {
+      const { game, gameController, attacker, opponent } = buildRoomGame();
+      attacker.fillHandWithAttacks([
+        buildAttackCard({ id: 90, action: "affliction", isBlockable: true }),
+      ]);
+      opponent.fillHandWithAttacks([
+        buildAttackCard({
+          id: 91,
+          action: "immunity-boost",
+          isInstant: true,
+          isBlockable: false,
+        }),
+      ]);
+      const games: Record<string, RoomGame> = { 101: { game, gameController } };
+      const handlers = createRequestHandlers(games, () => {});
+
+      handlers.action("101", attacker.getID(), {
+        attackCardID: 90,
+        opponentID: opponent.getID(),
+        organCardID: 1,
+      });
+
+      let error: Error | undefined;
+      try {
+        handlers.action("101", opponent.getID(), {
+          attackCardID: 91,
+          isInstant: true,
+        });
+      } catch (e) {
+        error = e as Error;
+      }
+
+      assertEquals(error, undefined);
+    });
+  });
+
   describe("remove-card", () => {
     it("discards using the authenticated playerID, ignoring a spoofed playerID in the payload", () => {
       const { game, gameController, attacker, opponent } = buildRoomGame();

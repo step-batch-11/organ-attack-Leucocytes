@@ -3,7 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import {
   setLastPlayedCard,
   takePendingPlayedCard,
-} from "../public/scripts/utils.js";
+} from "../public/scripts/utils/utils.js";
 
 describe("setLastPlayedCard / takePendingPlayedCard", () => {
   it("keys pending discard-animation state per attackCardID, not a single shared slot (regression: a second card played while the first's WS round-trip was still pending used to overwrite the first's animation state)", () => {

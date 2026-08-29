@@ -1,4 +1,4 @@
-import { renderPlayers } from "./renderer/render_players.js";
+import { renderPlayers } from "../renderer/render_players.js";
 
 const triggerGameSetup = async (roomID) =>
   await fetch("/setup-game", {

@@ -1,9 +1,12 @@
-import { renderGame } from "./render_game.js";
-import * as NA from "./action_handlers/non_afflictions.js";
-import { displayOpponents, displayOrgans } from "./afflict-organ.js";
-import { displayAttackDeckDiscardPile } from "./discard_pile.js";
-import { setupEventListeners } from "./listeners/setup_event_listeners.js";
-import GameState from "./game_state.js";
+import { renderGame } from "../renderer/render_game.js";
+import * as NA from "../action_handlers/non_afflictions.js";
+import {
+  displayOpponents,
+  displayOrgans,
+} from "../action_handlers/afflict-organ.js";
+import { displayAttackDeckDiscardPile } from "../action_handlers/discard_pile.js";
+import { setupEventListeners } from "../listeners/setup_event_listeners.js";
+import GameState from "../state/game_state.js";
 import {
   affliction,
   chartMixupOrByTheBook,
@@ -18,11 +21,11 @@ import {
   situsInversusOrCryo,
   transplant,
   vaccine,
-} from "./listeners/attack_card_actions.js";
-import { animateFromDeck } from "./animation.js";
-import { connectRealtime, onMessage, sendRequest } from "./network.js";
+} from "../listeners/attack_card_actions.js";
+import { animateFromDeck } from "../utils/animation.js";
+import { connectRealtime, onMessage, sendRequest } from "../network/network.js";
 
-import { setLastPlayedCard } from "./utils.js";
+import { setLastPlayedCard } from "../utils/utils.js";
 const getCardID = (attackCard) => Number(attackCard.dataset.id);
 
 // Single dispatch table for every attack-card action — previously split

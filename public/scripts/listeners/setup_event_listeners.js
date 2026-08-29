@@ -1,4 +1,4 @@
-import { sendAction } from "../utils.js";
+import { sendAction } from "../utils/utils.js";
 import { highlightOrgan, removeHighlightOrgan } from "./highlight.js";
 
 export const setupEventListeners = () => {

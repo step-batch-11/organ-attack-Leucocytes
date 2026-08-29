@@ -25,6 +25,21 @@ export default class ActionController {
       return { success: false, message: "response cannot be the first action" };
     }
 
+    // A response window is already open (something is on the stack awaiting
+    // resolution) — only a legitimate response to it may join the stack. A
+    // second, unrelated non-response action must be rejected outright rather
+    // than silently merged into the same resolution pass: Timer.start() would
+    // otherwise restart the window and GameController#applyActions would run
+    // both exchanges' effects together with passTurn() firing once instead of
+    // twice, and immunity-boost's stack-adjacency cancellation could pair
+    // across the two unrelated actions.
+    if (itemCount > 0 && !responseActions.has(action.name)) {
+      return {
+        success: false,
+        message: "another action is still awaiting resolution",
+      };
+    }
+
     if (
       itemCount > 0 &&
       this.#stack.peek()?.name !== "AFFLICTION" &&

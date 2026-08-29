@@ -2,7 +2,7 @@ import {
   getAfflictableOrgans,
   getRemovableOrgans,
   sendAction,
-} from "./utils.js";
+} from "../utils/utils.js";
 
 const createPopup = (collection) => {
   return collection.map((item) => {

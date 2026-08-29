@@ -1,5 +1,5 @@
 import { animateFromDeck, animateToDiscard } from "./animation.js";
-import { sendRequest } from "./network.js";
+import { sendRequest } from "../network/network.js";
 
 export const getAfflictableOrgans = (opponents, attackCard) => {
   const afflictableOrgansIDs = attackCard.afflictableOrgans;
