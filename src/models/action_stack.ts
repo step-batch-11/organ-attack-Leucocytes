@@ -20,6 +20,11 @@ export default class ActionStack {
     return this.#stack.at(-1);
   }
 
+  /** Read-only snapshot of the stack, bottom to top. */
+  toArray(): ActionInput[] {
+    return [...this.#stack];
+  }
+
   flush(): ActionInput[] {
     const result = [...this.#stack];
     this.#stack = [];

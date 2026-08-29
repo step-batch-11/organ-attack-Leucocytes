@@ -51,9 +51,47 @@ export default class ActionController {
       };
     }
 
+    if (action.name === "IMMUNITY_BOOST" && itemCount > 0) {
+      const { target, boostsAbove } = this.#findBoostTarget();
+      // Boosts alternate ownership: the action's own target boosts first to
+      // cancel it, then (if contested) the action's original attacker can
+      // counter-boost to cancel that cancellation, and so on. Stack
+      // adjacency alone (the pre-fix behaviour) let any player's boost
+      // cancel anyone's action regardless of who they actually were.
+      const expectedBooster = boostsAbove % 2 === 0
+        ? target?.opponentID
+        : target?.attackerID;
+
+      if (action.attackerID !== expectedBooster) {
+        return {
+          success: false,
+          message:
+            "you are not eligible to play Immunity Boost against this action",
+        };
+      }
+    }
+
     this.#stack.add(action);
 
     return { success: true };
+  }
+
+  /**
+   * Walks down from the top of the stack past any contiguous run of
+   * IMMUNITY_BOOSTs to find the non-boost action they apply against, and how
+   * many boosts are already stacked on top of it.
+   */
+  #findBoostTarget(): { target: ActionInput | undefined; boostsAbove: number } {
+    const stack = this.#stack.toArray();
+    let boostsAbove = 0;
+    let index = stack.length - 1;
+
+    while (index >= 0 && stack[index].name === "IMMUNITY_BOOST") {
+      boostsAbove += 1;
+      index -= 1;
+    }
+
+    return { target: stack[index], boostsAbove };
   }
 
   resolve(): ActionResult<ActionInput[]> {
