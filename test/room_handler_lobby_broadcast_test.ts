@@ -95,6 +95,44 @@ describe("room_handler lobby broadcasts", () => {
       assertEquals(response.status, 400);
       assertEquals(socket.sent.length, 0);
     });
+
+    it("redirects to login instead of injecting a phantom player when the session doesn't resolve (regression: an unresolved session produced {id:undefined,name:undefined})", async () => {
+      const rooms = {
+        101: {
+          players: [{ id: 1, name: "chiru", type: "host" }],
+          started: false,
+        },
+      };
+      const { app } = buildApp(rooms);
+
+      const formData = new FormData();
+      formData.append("room-id", "101");
+      const response = await app.request("/join-room", {
+        method: "POST",
+        headers: { cookie: "sessionID=does-not-exist" },
+        body: formData,
+      });
+
+      assertEquals(response.status, 302);
+      assertEquals(response.headers.get("location"), "/pages/login.html");
+      assertEquals(rooms[101].players.map((p) => p.id), [1]);
+    });
+  });
+
+  describe("createRoom", () => {
+    it("redirects to login instead of creating a room when the session doesn't resolve", async () => {
+      const rooms: Record<string, Room> = {};
+      const { app } = buildApp(rooms);
+
+      const response = await app.request("/create-room", {
+        method: "GET",
+        headers: { cookie: "sessionID=does-not-exist" },
+      });
+
+      assertEquals(response.status, 302);
+      assertEquals(response.headers.get("location"), "/pages/login.html");
+      assertEquals(Object.keys(rooms).length, 0);
+    });
   });
 
   describe("leaveLobby", () => {
@@ -150,6 +188,36 @@ describe("room_handler lobby broadcasts", () => {
 
       assertEquals(response.status, 200);
       assertEquals(rooms[101].players.map((p) => p.id), [1, 2]);
+    });
+
+    it("does not close the room when a non-host client falsely claims isHost:true (regression: isHost was trusted straight from the request body)", async () => {
+      const rooms = {
+        101: {
+          players: [
+            { id: 1, name: "chiru", type: "host" },
+            { id: 2, name: "kumar", type: "non-host" },
+          ],
+          started: false,
+        },
+      };
+      const { app, realtimeHub } = buildApp(rooms);
+      const hostSocket = makeFakeSocket();
+      realtimeHub.registerClient("101", { playerID: 1, socket: hostSocket });
+
+      // sessionID=2 resolves to playerID 2, the non-host — the client lies
+      // and claims isHost:true anyway.
+      const response = await app.request("/leave-lobby", {
+        method: "POST",
+        headers: { cookie: "sessionID=2; roomID=101" },
+        body: JSON.stringify({ isHost: true }),
+      });
+
+      assertEquals(response.status, 200);
+      assertEquals("101" in rooms, true);
+      assertEquals(rooms[101].players.map((p) => p.id), [1]);
+
+      const message = JSON.parse(hostSocket.sent[0]);
+      assertEquals(message.type, "lobby-state");
     });
 
     it("broadcasts room-closed to remaining sockets when the host leaves", async () => {

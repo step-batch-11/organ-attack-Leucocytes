@@ -1,6 +1,7 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { Player } from "../src/models/player.ts";
+import { Organ } from "../src/models/organ.ts";
 import type { AttackCard } from "../src/types/cards.ts";
 
 const buildAttackCard = (id: number): AttackCard => ({
@@ -20,7 +21,11 @@ const buildAttackCard = (id: number): AttackCard => ({
 describe("Player#removeAttackCard", () => {
   it("removes the card at index 0, not the last card (regression: `index || fallback` treated a valid index of 0 as falsy)", () => {
     const player = new Player("attacker", 1);
-    const cards = [buildAttackCard(10), buildAttackCard(20), buildAttackCard(30)];
+    const cards = [
+      buildAttackCard(10),
+      buildAttackCard(20),
+      buildAttackCard(30),
+    ];
     player.fillHandWithAttacks(cards);
 
     const removed = player.removeAttackCard(null, 0);
@@ -43,6 +48,67 @@ describe("Player#removeAttackCard", () => {
     assertEquals(
       player.getPlayerDetails().attackCards.map((c) => c.id),
       [10],
+    );
+  });
+
+  it("throws instead of silently removing the last card when attackCardID doesn't match any held card (regression: findIndex(-1) used to splice the last card)", () => {
+    const player = new Player("attacker", 1);
+    const cards = [
+      buildAttackCard(10),
+      buildAttackCard(20),
+      buildAttackCard(30),
+    ];
+    player.fillHandWithAttacks(cards);
+
+    assertThrows(() => player.removeAttackCard(999));
+
+    // The hand must be untouched — no card was wrongly removed.
+    assertEquals(
+      player.getPlayerDetails().attackCards.map((c) => c.id),
+      [10, 20, 30],
+    );
+  });
+
+  it("throws instead of silently removing the last card when an out-of-range index is given", () => {
+    const player = new Player("attacker", 1);
+    player.fillHandWithAttacks([buildAttackCard(10), buildAttackCard(20)]);
+
+    assertThrows(() => player.removeAttackCard(null, 5));
+
+    assertEquals(
+      player.getPlayerDetails().attackCards.map((c) => c.id),
+      [10, 20],
+    );
+  });
+});
+
+describe("Player#removeOrgan", () => {
+  it("throws instead of silently removing the last organ when the id doesn't match any held organ (regression: findIndex(-1) used to splice the last organ)", () => {
+    const player = new Player("attacker", 1);
+    const organs = [new Organ("Heart", 7, 2), new Organ("Kidneys", 1, 2)];
+    player.fillHandWithOrgans(organs);
+
+    assertThrows(() => player.removeOrgan(999));
+
+    assertEquals(
+      player.getPlayerDetails().organCards.map((o) => o.id),
+      [7, 1],
+    );
+  });
+
+  it("removes the matching organ by id", () => {
+    const player = new Player("attacker", 1);
+    player.fillHandWithOrgans([
+      new Organ("Heart", 7, 2),
+      new Organ("Kidneys", 1, 2),
+    ]);
+
+    const removed = player.removeOrgan(7);
+
+    assertEquals(removed.getID(), 7);
+    assertEquals(
+      player.getPlayerDetails().organCards.map((o) => o.id),
+      [1],
     );
   });
 });

@@ -41,7 +41,8 @@ const ACTION_HANDLERS = {
   "immunity-boost": ({ attackCardElement }) => immunityBoost(attackCardElement),
   "itsAlive": ({ attackCardElement }) => itsAlive(attackCardElement),
   "Vaccine": ({ attackCardElement }) => vaccine(attackCardElement),
-  "common-cold": ({ attackCardElement }) => commonColdOrSedate(attackCardElement),
+  "common-cold": ({ attackCardElement }) =>
+    commonColdOrSedate(attackCardElement),
   "sedate": ({ attackCardElement }) => commonColdOrSedate(attackCardElement),
   "chart-mixup": ({ attackCardElement }) =>
     chartMixupOrByTheBook(attackCardElement),
@@ -54,7 +55,7 @@ const ACTION_HANDLERS = {
   "narcolepsy": ({ attackCardElement }) => narcolepsy(attackCardElement),
 };
 
-const attachEventListener = async (
+export const attachEventListener = async (
   event,
   player,
   opponents,
@@ -66,22 +67,36 @@ const attachEventListener = async (
   //  prevent double click
   attackCardElement.style.pointerEvents = "none";
   const rect = attackCardElement.getBoundingClientRect();
-  console.log({ rect }, "in the listener");
   const attackCardID = getCardID(attackCardElement);
   const attackCard = player.attackCards.find(({ id }) => id === attackCardID);
-  console.log("in cards", { attackCard });
-  setLastPlayedCard(attackCardElement, rect, attackCard);
-  if (!(attackCard.action in ACTION_HANDLERS) || gameState.amISleeping()) {
+
+  if (!attackCard) {
+    // The clicked element isn't actually in this player's hand — nothing to
+    // play, so undo the click-guard instead of leaving the card stuck.
+    attackCardElement.style.pointerEvents = "";
     return;
   }
-  await ACTION_HANDLERS[attackCard.action]({
-    player,
-    opponents,
-    attackCardID,
-    isInstant,
-    attackCardElement,
-    organDiscardPile,
-  });
+
+  setLastPlayedCard(attackCardElement, rect, attackCard);
+
+  if (!(attackCard.action in ACTION_HANDLERS) || gameState.amISleeping()) {
+    attackCardElement.style.pointerEvents = "";
+    return;
+  }
+
+  try {
+    await ACTION_HANDLERS[attackCard.action]({
+      player,
+      opponents,
+      attackCardID,
+      isInstant,
+      attackCardElement,
+      organDiscardPile,
+    });
+  } catch (error) {
+    console.error("Failed to handle card action", error);
+    attackCardElement.style.pointerEvents = "";
+  }
 };
 
 const holdsPoison = (cards) => cards.some((card) => card.type === "poison");
@@ -138,8 +153,9 @@ const manageTurn = async (gameState) => {
     };
   });
 
-  const instantCards = [...document.querySelectorAll(".attack-card")]
-    .filter((card) => Number(card.getAttribute("is-instant")) === 1);
+  const instantCards = [
+    ...document.querySelectorAll(".player-area .attack-card"),
+  ].filter((card) => Number(card.getAttribute("is-instant")) === 1);
 
   if (self.isSleeping) {
     instantCards.forEach((card) => card.onclick = () => {});

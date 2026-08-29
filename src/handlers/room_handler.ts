@@ -24,20 +24,25 @@ const broadcastLobbyState = (c: AppContext, roomID: string) => {
   }
 };
 
-const createPlayer = (c: AppContext, type: string): RoomPlayer => {
+const createPlayer = (c: AppContext, type: string): RoomPlayer | undefined => {
   const sessionID = getCookie(c, "sessionID") as string;
   const session = c.get("session");
   const players = c.get("players");
   const id = session[sessionID];
+
+  if (id === undefined) return undefined;
+
   return { id, name: players[id], type };
 };
 
 export const createRoom = (c: AppContext) => {
+  const player = createPlayer(c, "host");
+  if (player === undefined) return c.redirect("/pages/login.html");
+
   const roomID = String(Math.floor(Math.random() * 9000) + 1000);
   setCookie(c, "roomID", roomID);
 
   const rooms = c.get("rooms");
-  const player = createPlayer(c, "host");
   rooms[roomID] = { players: [player], started: false };
 
   return c.redirect("/pages/lobby.html");
@@ -54,10 +59,12 @@ export const joinRoom = async (c: AppContext) => {
     return c.text("Room Not Found", 400);
   }
 
+  const player = createPlayer(c, "non-host");
+  if (player === undefined) return c.redirect("/pages/login.html");
+
   setCookie(c, "roomID", roomID);
 
   const players = rooms[roomID].players;
-  const player = createPlayer(c, "non-host");
   players.push(player);
   broadcastLobbyState(c, roomID);
 
@@ -76,17 +83,25 @@ const removePlayer = (
   players.splice(playerIndex, 1);
 };
 
-export const leaveLobby = async (c: AppContext) => {
-  const { isHost } = await c.req.json();
+export const leaveLobby = (c: AppContext) => {
   const rooms = c.get("rooms");
   const roomID = getCookie(c, "roomID") as string;
 
-  if (!isHost) {
-    removePlayer(c, rooms, roomID);
-    broadcastLobbyState(c, roomID);
-  } else {
-    c.get("realtimeHub").broadcast(roomID, { type: "room-closed" });
-    delete rooms[roomID];
+  if (roomID in rooms) {
+    // Derived from actual room membership, never trusted from the request
+    // body — a non-host client claiming `isHost: true` must not be able to
+    // unilaterally close the room and kick every other player out.
+    const id = getPlayerID(c);
+    const isHost = rooms[roomID].players
+      .some((player) => player.id === id && player.type === "host");
+
+    if (!isHost) {
+      removePlayer(c, rooms, roomID);
+      broadcastLobbyState(c, roomID);
+    } else {
+      c.get("realtimeHub").broadcast(roomID, { type: "room-closed" });
+      delete rooms[roomID];
+    }
   }
 
   deleteCookie(c, "roomID");

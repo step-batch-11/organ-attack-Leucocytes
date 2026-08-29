@@ -228,4 +228,69 @@ describe("GameController", () => {
       assertEquals(game.getCurrentPlayerID() !== currentPlayer.getID(), true);
     });
   });
+
+  describe("Game#currentTurnPlayed (regression: instant/out-of-turn cards must not advance the turn)", () => {
+    it("does not advance the turn when an instant card is played by someone other than the current player", () => {
+      const { game, players } = buildThreePlayerGame();
+      const [currentPlayer, responder] = players;
+      const before = game.getCurrentPlayerID();
+
+      const card = buildAttackCard({ action: "contagious", isBlockable: true });
+      card.isInstant = true;
+      const action = {
+        name: "CONTAGIOUS",
+        card,
+        attackerID: responder.getID(),
+        opponentID: currentPlayer.getID(),
+      };
+
+      game.currentTurnPlayed(action);
+      game.passTurn();
+
+      assertEquals(game.getCurrentPlayerID(), before);
+    });
+
+    it("does not advance the turn when the current player plays an instant card on themselves (e.g. self-played Cryopreservation)", () => {
+      const { game, players } = buildThreePlayerGame();
+      const [currentPlayer] = players;
+      const before = game.getCurrentPlayerID();
+
+      const card = buildAttackCard({
+        action: "cryopreservation",
+        isBlockable: false,
+      });
+      card.isInstant = true;
+      const action = {
+        name: "CRYOPRESERVATION",
+        card,
+        attackerID: currentPlayer.getID(),
+      };
+
+      game.currentTurnPlayed(action);
+      game.passTurn();
+
+      assertEquals(game.getCurrentPlayerID(), before);
+    });
+
+    it("does advance the turn when the current player plays a normal (non-instant) card themselves", () => {
+      const { game, players } = buildThreePlayerGame();
+      const [currentPlayer] = players;
+      const before = game.getCurrentPlayerID();
+
+      const card = buildAttackCard({
+        action: "by-the-book",
+        isBlockable: false,
+      });
+      const action = {
+        name: "BY_THE_BOOK",
+        card,
+        attackerID: currentPlayer.getID(),
+      };
+
+      game.currentTurnPlayed(action);
+      game.passTurn();
+
+      assertEquals(game.getCurrentPlayerID() !== before, true);
+    });
+  });
 });

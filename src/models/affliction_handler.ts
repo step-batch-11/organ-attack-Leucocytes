@@ -36,14 +36,12 @@ export class AfflictionHandler {
     const opponents = this.#players.filter((player) =>
       player.getID() !== attacker.getID()
     );
-    console.log(opponents);
     let attackCard = this.#attackCards.getCard();
 
     while (
       this.#isNormalAffliction(attackCard) &&
       !this.#canAfflictOpponents(attackCard, opponents)
     ) {
-      console.log("I have ");
       this.#attackCards.addToDiscardPile(attackCard);
       attackCard = this.#attackCards.getCard();
     }

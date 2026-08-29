@@ -23,6 +23,21 @@ export const clearPopup = () => {
   popup.forEach((container) => container.remove());
 };
 
+/**
+ * Medical Miracle grants 2 heal points total. Submit once both are used, or
+ * once every damaged organ shown in the popup is back to full health — at
+ * that point no further click could add any more heal, so waiting for a
+ * second click (as the old, misnamed `isWild` check effectively did for a
+ * single non-Wild organ needing 2 points) would either hang forever or,
+ * worse, submit early with only 1 of the 2 points spent.
+ */
+export const shouldSubmitMedicalMiracle = (organCards, totalHeal) => {
+  const noMoreHealableOrgans = organCards.every(
+    ({ health, maxHealth }) => health >= maxHealth,
+  );
+  return totalHeal === 2 || noMoreHealableOrgans;
+};
+
 const performAttack = async (
   attackCardID,
   player,
@@ -118,12 +133,9 @@ export const displayOrgans = (
         selectedCards.push(organID);
         totalHeal++;
         organ.setAttribute("data-selected", "true");
-        const isWild = !(organCards.map(({ name }) => name).includes("Wild"));
         organData.health += 1;
-        if (
-          totalHeal === 2 ||
-          (organCards.length === 1 && isWild)
-        ) {
+
+        if (shouldSubmitMedicalMiracle(organCards, totalHeal)) {
           clearPopup();
 
           await sendAction({

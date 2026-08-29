@@ -34,6 +34,19 @@ const handleClientMessage = (
     return;
   }
 
+  // A frame that's valid JSON but not a well-formed request (e.g. the
+  // literal text "null", a bare string, or an array) parses successfully —
+  // guard the shape explicitly so a malformed-but-parseable frame is
+  // ignored the same way invalid JSON is, instead of throwing uncaught
+  // below (there's no requestId to correlate a request-error to anyway).
+  if (
+    request === null || typeof request !== "object" ||
+    typeof (request as ClientRequest).requestId !== "string" ||
+    typeof (request as ClientRequest).type !== "string"
+  ) {
+    return;
+  }
+
   const { requestId, type, payload } = request;
   const handler = requestHandlers[type];
 

@@ -35,8 +35,8 @@ export const gameSetup = async (ctx: Context<AppBindings>) => {
 
   const organCards: Organ[] = [];
 
-  organs.forEach(({ name, id, health }) => {
-    organCards.push(new Organ(name, id, health));
+  organs.forEach(({ name, id, health, maxHealth }) => {
+    organCards.push(new Organ(name, id, health, maxHealth));
   });
 
   const organDeck = new Deck(organCards, shuffle);

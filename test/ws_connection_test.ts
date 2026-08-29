@@ -440,5 +440,34 @@ describe("resolveWsConnection", () => {
       assertEquals(error.type, "request-error");
       assertEquals(error.requestId, "req-3");
     });
+
+    it("ignores a message that parses to valid JSON but isn't a well-formed request, instead of throwing (regression: destructuring a bare `null`/array/string frame threw uncaught)", () => {
+      const hub = new RealtimeHub();
+      const socket = makeFakeSocket();
+      const rooms = {
+        101: { players: [{ id: 5, name: "chiru" }], started: true },
+      };
+      const { sendGameStateSnapshot } = makeSnapshotSpy();
+
+      resolveWsConnection(
+        "101",
+        5,
+        socket,
+        hub,
+        rooms,
+        noopRequestHandlers,
+        sendGameStateSnapshot,
+      );
+      socket.sent.length = 0;
+
+      // Each of these is valid JSON but not a { requestId, type, payload }
+      // object — must not throw inside the socket's message listener.
+      socket.triggerMessage("null");
+      socket.triggerMessage("42");
+      socket.triggerMessage('"just a string"');
+      socket.triggerMessage("[]");
+
+      assertEquals(socket.sent.length, 0);
+    });
   });
 });

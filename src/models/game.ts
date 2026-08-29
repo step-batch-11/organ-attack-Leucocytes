@@ -50,7 +50,9 @@ export class Game {
     if (this.currentPlayedCard) {
       const skip = this.#skipNextSleepDecrement;
       this.#skipNextSleepDecrement = false;
-      this.#currentPlayer = this.#turnManager.passTurn(skip);
+      const { turn, discardedCards } = this.#turnManager.passTurn(skip);
+      this.#currentPlayer = turn;
+      discardedCards.forEach((card) => this.#attackDeck.addToDiscardPile(card));
       this.currentPlayedCard = false;
       this.#discardCounts.delete(this.#players[this.#currentPlayer].getID());
     }
@@ -76,12 +78,13 @@ export class Game {
     const isNarcolepsyPlayedOnMe = action === "narcolepsy" &&
       opponentID === playerID;
 
-    const isCryoPlayedByMe = action === "cryopreservation" &&
-      attackerID === playerID;
-
+    // Instants (including self-played cryopreservation) never consume the
+    // current player's turn on their own — only the current player actually
+    // playing a non-instant card does, except Narcolepsy landing on the
+    // current player, which cuts their turn short regardless of who played it.
     this.currentPlayedCard = this.currentPlayedCard ||
-      !isCryoPlayedByMe || isNarcolepsyPlayedOnMe ||
-      attackerID === playerID && !card.isInstant;
+      isNarcolepsyPlayedOnMe ||
+      (attackerID === playerID && !card.isInstant);
 
     if (isNarcolepsyPlayedOnMe) {
       this.#skipNextSleepDecrement = true;
@@ -99,7 +102,10 @@ export class Game {
   }
 
   recordDiscard(playerID: number): void {
-    this.#discardCounts.set(playerID, (this.#discardCounts.get(playerID) ?? 0) + 1);
+    this.#discardCounts.set(
+      playerID,
+      (this.#discardCounts.get(playerID) ?? 0) + 1,
+    );
   }
 
   /**
@@ -191,9 +197,16 @@ export class Game {
     researchCardID: number,
   ): void {
     const player = this.#findPlayer(playerID);
-    player.removeAttackCard(researchCardID);
     const selectedCard = this.#attackDeck.getCardByID(selectedCardID);
-    player.refillHand(selectedCard as AttackCard);
+
+    if (selectedCard === undefined) {
+      throw new Error(
+        `No card ${selectedCardID} in the discard pile to research`,
+      );
+    }
+
+    player.removeAttackCard(researchCardID);
+    player.refillHand(selectedCard);
   }
 
   removeOrgan(playerID: number, organCardID: number): void {

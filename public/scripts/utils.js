@@ -30,24 +30,31 @@ export const cloneFromTemplate = (templateID, element = "*") => {
   return template.content.cloneNode(true).querySelector(element);
 };
 
-let lastPlayedCard = null;
-let rect = null;
-let lastPlayedCardData = null;
+// Keyed by attackCardID (present on every sendAction body) rather than a
+// single shared "last" slot — two cards played close enough together that
+// the first's WS round-trip is still pending when the second is clicked
+// used to stomp on each other's pending discard-animation state.
+const pendingPlayedCards = new Map();
 
 export const setLastPlayedCard = (card, cardPos, cardData) => {
-  lastPlayedCard = card;
-  rect = cardPos;
-  lastPlayedCardData = cardData;
+  pendingPlayedCards.set(cardData.id, { element: card, rect: cardPos });
+};
+
+/** Removes and returns the pending discard-animation state for one card, if any. */
+export const takePendingPlayedCard = (attackCardID) => {
+  const pending = pendingPlayedCards.get(attackCardID);
+  pendingPlayedCards.delete(attackCardID);
+  return pending;
 };
 
 /** Plays a card via the WS "action" request, then discards it to the pile. */
 export const sendAction = async (body) => {
+  const pending = takePendingPlayedCard(body.attackCardID);
+
   const data = await sendRequest("action", body);
 
-  if (lastPlayedCard) {
-    await animateToDiscard(lastPlayedCard, rect);
-    lastPlayedCard = null;
-    rect = null;
+  if (pending) {
+    await animateToDiscard(pending.element, pending.rect);
   }
   return data;
 };

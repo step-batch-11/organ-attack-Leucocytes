@@ -105,20 +105,32 @@ export default class GameState {
 
   canPlayContagious() {
     const { self, event } = this.#state;
+    // `event` starts as the server's empty initial object until the first
+    // card is ever played this game — `event.target`/`event.actor` are
+    // undefined until then, so guard before dereferencing.
     return !self.isSleeping &&
-      self.id === event.target.player.id &&
+      event.target?.player?.id === self.id &&
       !event.resolved &&
       (event.name === "affliction" || event.name === "contagious");
   }
 
   canPlayImmunityBoost() {
-    return this.#state.event.name !== "poison" &&
-      this.#state.event.name !== "idle";
+    const { self, event } = this.#state;
+    if (event.name === "poison" || event.name === "idle" || event.resolved) {
+      return false;
+    }
+    // If the pending event names a specific target player, Immunity Boost
+    // only blocks an attack actually aimed at you — otherwise any player in
+    // the room could cancel an attack that was never targeting them.
+    if (event.target?.player) {
+      return event.target.player.id === self.id;
+    }
+    return true;
   }
 
   canPlayMetastasis() {
     const { self, event } = this.#state;
-    return self.id === event.actor.id && !event.resolved &&
+    return event.actor?.id === self.id && !event.resolved &&
       event.name === "affliction";
   }
 

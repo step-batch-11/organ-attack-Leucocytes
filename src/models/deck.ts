@@ -42,6 +42,7 @@ export class Deck<T = any> {
     const index = this.#discardPile.findIndex((card: any) =>
       card.id === cardID
     );
+    if (index === -1) return;
     this.#discardPile.splice(index, 1);
   }
 

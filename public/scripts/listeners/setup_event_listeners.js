@@ -8,9 +8,18 @@ export const setupEventListeners = () => {
   popup.addEventListener("mouseout", removeHighlightOrgan);
 };
 
-const popupListenerForOpponents = (state, event, popupArea) => {
+export const popupListenerForOpponents = (state, event, popupArea) => {
   const opponent = event.target.closest(".player");
-  const opponentID = parseInt(opponent?.dataset.id);
+
+  if (!opponent) {
+    // Click landed inside the popup but missed an actual player icon —
+    // treat it as a dismiss, not as a malformed action with a NaN/undefined
+    // target.
+    popupArea.remove();
+    return;
+  }
+
+  const opponentID = parseInt(opponent.dataset.id);
   const attackCardID = parseInt(popupArea.dataset?.for);
 
   const body = {
@@ -24,7 +33,7 @@ const popupListenerForOpponents = (state, event, popupArea) => {
   popupArea.remove();
 };
 
-const popupListener = (event) => {
+export const popupListener = (event) => {
   const state = window.gameState;
   const popupArea = event.target.closest(".players-popup");
   if (popupArea) {
@@ -32,9 +41,23 @@ const popupListener = (event) => {
     return;
   }
 
-  const organ = event.target.closest(".organ");
   const popup = event.target.closest(".organs-popup");
-  const organCardID = parseInt(organ?.dataset.id);
+  if (!popup) {
+    // Not a click inside an organs/players popup at all — e.g. it bubbled
+    // up from a self-contained popup (Medical Miracle's heal-organ picker)
+    // that already handled the click with its own listener. Nothing to do.
+    return;
+  }
+
+  const organ = event.target.closest(".organ");
+  if (!organ) {
+    // Click landed inside the popup but missed an organ icon — dismiss
+    // instead of sending a malformed action with a NaN organCardID.
+    popup.remove();
+    return;
+  }
+
+  const organCardID = parseInt(organ.dataset.id);
   const attackCardID = parseInt(popup.dataset?.for);
 
   const body = {
@@ -46,5 +69,5 @@ const popupListener = (event) => {
   };
 
   sendAction(body);
-  event.target.closest(".organs-popup").remove();
+  popup.remove();
 };

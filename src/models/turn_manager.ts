@@ -1,4 +1,11 @@
 import { Player } from "./player.ts";
+import type { AttackCard } from "../types/cards.ts";
+
+export interface PassTurnResult {
+  turn: number;
+  /** Hands discarded from players skipped this pass because they died. */
+  discardedCards: AttackCard[];
+}
 
 export class TurnManager {
   #players: Player[];
@@ -34,7 +41,7 @@ export class TurnManager {
    * same resolution cycle, so that freshly-granted sleep isn't immediately
    * canceled before it ever prevents their next turn.
    */
-  passTurn(skipDecrementForCurrent = false): number {
+  passTurn(skipDecrementForCurrent = false): PassTurnResult {
     const currPlayer = this.#players[this.#turn];
 
     if (!skipDecrementForCurrent && currPlayer.isSleeping()) {
@@ -42,13 +49,14 @@ export class TurnManager {
     }
 
     let nextIndex = this.#getNextIndex();
+    const discardedCards: AttackCard[] = [];
 
     while (
       this.#players[nextIndex].isSleeping() ||
       !this.#players[nextIndex].isAlive()
     ) {
       if (!(this.#players[nextIndex].isAlive())) {
-        this.#players[nextIndex].discardAttackHand();
+        discardedCards.push(...this.#players[nextIndex].discardAttackHand());
       } else {
         this.#players[nextIndex].decreaseSleep();
       }
@@ -58,6 +66,6 @@ export class TurnManager {
     }
 
     this.#turn = nextIndex;
-    return this.#turn;
+    return { turn: this.#turn, discardedCards };
   }
 }

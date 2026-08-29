@@ -74,9 +74,14 @@ export class Player {
   ): AttackCard {
     const attackIndex = index ?? this.#attackCards
       .findIndex(({ id }) => id === attackCardID);
-    const card = this.#attackCards.splice(attackIndex, 1);
 
-    return card[0];
+    if (attackIndex < 0 || attackIndex >= this.#attackCards.length) {
+      throw new Error(
+        `Player ${this.#id} does not hold attack card ${attackCardID}`,
+      );
+    }
+
+    return this.#attackCards.splice(attackIndex, 1)[0];
   }
 
   removeAttackCardIfOrganDead(organ: Organ): AttackCard[] {
@@ -126,6 +131,11 @@ export class Player {
 
   removeOrgan(id: number): Organ {
     const index = this.#organCards.findIndex((card) => card.getID() === id);
+
+    if (index === -1) {
+      throw new Error(`Player ${this.#id} does not hold organ ${id}`);
+    }
+
     return this.#organCards.splice(index, 1)[0];
   }
 
