@@ -79,6 +79,17 @@ const displayOpponentHand = (opponentID, opponentIDs) => {
 
     highlight(attackCards);
 
+    // Clinical Audit's own card text is "see all opponents' hands and *may*
+    // discard one attack card from each" — discarding is optional per
+    // opponent, so skipping one and moving to the next must be possible too.
+    const advanceToNextOpponent = async () => {
+      if (opponentIDs.length === 0) resolve();
+      else {
+        await displayOpponentHand(opponentIDs.shift(), opponentIDs);
+        resolve();
+      }
+    };
+
     const nextBtn = popup.querySelector(".next-btn");
     nextBtn.onclick = async () => {
       if (!selectedAttackCardID) return;
@@ -90,11 +101,13 @@ const displayOpponentHand = (opponentID, opponentIDs) => {
         opponentID,
       });
 
-      if (opponentIDs.length === 0) resolve();
-      else {
-        await displayOpponentHand(opponentIDs.shift(), opponentIDs);
-        resolve();
-      }
+      await advanceToNextOpponent();
+    };
+
+    const skipBtn = popup.querySelector(".skip-btn");
+    skipBtn.onclick = async () => {
+      clearPopup();
+      await advanceToNextOpponent();
     };
   });
 };
