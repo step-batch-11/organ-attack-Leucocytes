@@ -6,6 +6,7 @@ import {
 } from "../utils/utils.js";
 
 import { createAttackCardElement } from "../utils/utils.js";
+import { decideFlashScreenAction } from "./response_timer.js";
 
 const renderDiscardPile = () => {
   const discardTop = document.querySelector(".discard-top");
@@ -231,6 +232,41 @@ const setTextContent = (container, selector, content) => {
   container.querySelector(selector).textContent = content;
 };
 
+// Tracks the flash-screen/response-timer currently on screen so a
+// game-state broadcast unrelated to this event (e.g. another player's
+// discard) doesn't tear it down and restart its countdown from full
+// duration — see decideFlashScreenAction's doc comment.
+let activeEventID = null;
+let countdownIntervalID = null;
+
+const clearCountdown = () => {
+  if (countdownIntervalID !== null) {
+    clearInterval(countdownIntervalID);
+    countdownIntervalID = null;
+  }
+};
+
+/** Drives the numeric "N.Ns" readout off a fixed deadline (not the CSS animation, which only handles the visual bar-drain). */
+const startCountdown = (flashScreen, deadline) => {
+  const secondsSpan = flashScreen.querySelector(".bar-seconds");
+
+  const tick = () => {
+    const remainingMs = Math.max(0, deadline - Date.now());
+    if (secondsSpan) {
+      secondsSpan.textContent = `${(remainingMs / 1000).toFixed(1)}s`;
+    }
+
+    if (remainingMs <= 0) {
+      clearCountdown();
+      flashScreen.remove();
+      activeEventID = null;
+    }
+  };
+
+  tick();
+  countdownIntervalID = setInterval(tick, 100);
+};
+
 const scaffoldFlashScreen = ({ actor, target, card, timeRemaining }) => {
   const flashScreen = cloneFromTemplate("#flash-screen-used-on-template");
 
@@ -251,10 +287,10 @@ const scaffoldFlashScreen = ({ actor, target, card, timeRemaining }) => {
 
   attackCard.setAttribute("data-type", card.type);
 
-  bar.style.animationDuration = (timeRemaining ?? 5000) + "ms";
-  setTimeout(() => {
-    flashScreen.remove();
-  }, timeRemaining ?? 5000);
+  const duration = timeRemaining ?? 5000;
+  bar.style.animationDuration = duration + "ms";
+  startCountdown(flashScreen, Date.now() + duration);
+
   return { targetOrgan, flashScreen };
 };
 
@@ -320,14 +356,27 @@ const FLASH_SCREENS = {
   "medical-miracle": flashScreenForUsedEvent,
 };
 
-const renderFlashScreen = ({ name, ...eventData } = {}) => {
-  document.querySelector(".flash-screen-container > div ")?.remove();
+const renderFlashScreen = (event = {}) => {
+  const action = decideFlashScreenAction(
+    event,
+    activeEventID,
+    Object.keys(FLASH_SCREENS),
+  );
 
-  if (!(name in FLASH_SCREENS)) {
+  if (action === "skip") return;
+
+  if (action === "clear") {
+    document.querySelector(".flash-screen-container > div")?.remove();
+    clearCountdown();
+    activeEventID = null;
     return;
   }
 
-  const flashScreen = FLASH_SCREENS[name](eventData);
+  document.querySelector(".flash-screen-container > div")?.remove();
+  clearCountdown();
+  activeEventID = event.id;
+
+  const flashScreen = FLASH_SCREENS[event.name](event);
   if (flashScreen instanceof HTMLElement) {
     document.querySelector(".flash-screen-container").appendChild(flashScreen);
   }

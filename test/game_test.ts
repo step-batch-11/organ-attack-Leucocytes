@@ -101,6 +101,31 @@ describe("Game#getPlayer / #findPlayer", () => {
   });
 });
 
+describe("Game#registerEvent", () => {
+  it("assigns a fresh id per registered event, left stable by updateEventStatus (regression: clients need a stable identity to avoid restarting a still-open response-timer countdown on unrelated broadcasts)", () => {
+    const player = new Player("attacker", 1);
+    const attackCards = new Deck<AttackCard>([], shuffle);
+    const game = buildGame([player], attackCards);
+
+    game.registerEvent({
+      name: "affliction",
+      card: buildAttackCard({ id: 1, action: "affliction" }),
+    });
+    const firstID = game.getGameState().event.id;
+    assertEquals(typeof firstID, "number");
+
+    // Simulating an unrelated broadcast mid-window mutating resolved/timeRemaining.
+    game.updateEventStatus(3000);
+    assertEquals(game.getGameState().event.id, firstID);
+
+    game.registerEvent({
+      name: "contagious",
+      card: buildAttackCard({ id: 2, action: "contagious" }),
+    });
+    assertEquals(game.getGameState().event.id !== firstID, true);
+  });
+});
+
 describe("Game#passTurn (dead player's hand)", () => {
   it("returns a dead player's discarded hand to the attack deck's discard pile instead of dropping it (regression: TurnManager used to discard cards into nothing)", () => {
     const alive1 = new Player("alive1", 1);

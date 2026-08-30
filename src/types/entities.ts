@@ -61,6 +61,15 @@ export interface Room {
  * Event describing the currently-resolving card, surfaced to clients.
  */
 export interface GameEvent {
+  /**
+   * Stable identity for this specific card-play instance, assigned once by
+   * `Game.registerEvent()` and left untouched by `updateEventStatus()` for
+   * the rest of the response window. Lets clients tell "the same event,
+   * re-broadcast for an unrelated reason" apart from "a genuinely new card
+   * was played" without re-deriving identity from name/actor/card, which
+   * exist before the id was introduced but aren't guaranteed unique.
+   */
+  id?: number;
   /** Event/card action name, or "idle" when nothing is resolving. */
   name: string;
   /** Player who initiated the event. */

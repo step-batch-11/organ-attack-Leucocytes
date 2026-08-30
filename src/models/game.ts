@@ -13,6 +13,12 @@ import type {
 } from "../types/entities.ts";
 import type { GameState } from "../types/game.ts";
 
+/** Fresh per-Game monotonic id source for `GameEvent.id`, matching the `turnManager` default-collaborator pattern below. */
+const makeEventIDGenerator = (): () => number => {
+  let id = 0;
+  return () => ++id;
+};
+
 export class Game {
   #players: Player[];
   #attackDeck: Deck<AttackCard>;
@@ -25,6 +31,7 @@ export class Game {
   #discardCounts: Map<number, number>;
   currentPlayedCard: boolean;
   #skipNextSleepDecrement: boolean;
+  #nextEventID: () => number;
 
   constructor(
     players: Player[],
@@ -33,6 +40,7 @@ export class Game {
     dealer: Dealer,
     afflictionHandler: AfflictionHandler,
     turnManager: TurnManager = new TurnManager(),
+    eventIDGenerator: () => number = makeEventIDGenerator(),
   ) {
     this.#players = players;
     this.#attackDeck = attackCards;
@@ -44,6 +52,7 @@ export class Game {
     this.#discardCounts = new Map();
     this.currentPlayedCard = false;
     this.#skipNextSleepDecrement = false;
+    this.#nextEventID = eventIDGenerator;
   }
 
   passTurn(): void {
@@ -313,7 +322,7 @@ export class Game {
   }
 
   registerEvent(event: GameEvent): void {
-    this.#event = event;
+    this.#event = { ...event, id: this.#nextEventID() };
   }
 
   itsAlive(attackerID: number, organCardID: number): Organ | -1 {

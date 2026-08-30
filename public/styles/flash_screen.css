@@ -120,6 +120,18 @@
   animation: drain linear forwards;
 }
 
+.bar-seconds {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  translate: -50% 0;
+  margin-bottom: 4px;
+  font-size: 0.85em;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1px 2px black;
+}
+
 @keyframes drain {
   from {
     width: 100%;
