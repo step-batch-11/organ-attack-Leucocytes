@@ -5,11 +5,19 @@ import ActionStack from "../src/models/action_stack.ts";
 import type { ActionInput } from "../src/types/entities.ts";
 import type { AttackCard } from "../src/types/cards.ts";
 
-const buildAttackCard = (action: string): AttackCard => ({
+// Matches real card data: IMMUNITY_BOOST/METASTASIS/CONTAGIOUS are always
+// isInstant — that's what lets them join an already-open stack at all.
+const REACTIVE_CARD_NAMES = new Set([
+  "IMMUNITY_BOOST",
+  "METASTASIS",
+  "CONTAGIOUS",
+]);
+
+const buildAttackCard = (action: string, isInstant?: boolean): AttackCard => ({
   id: 0,
   name: action,
   type: action,
-  isInstant: false,
+  isInstant: isInstant ?? REACTIVE_CARD_NAMES.has(action),
   afflictableOrgans: [],
   removableOrgans: [],
   isWild: false,
@@ -19,9 +27,13 @@ const buildAttackCard = (action: string): AttackCard => ({
   isBlockable: true,
 });
 
-const buildAction = (name: string, overrides: Partial<ActionInput> = {}) => ({
+const buildAction = (
+  name: string,
+  overrides: Partial<ActionInput> = {},
+  isInstant?: boolean,
+) => ({
   name,
-  card: buildAttackCard(name),
+  card: buildAttackCard(name, isInstant),
   ...overrides,
 } as ActionInput);
 
@@ -76,6 +88,31 @@ describe("ActionController#add", () => {
       );
     },
   );
+
+  it(
+    "allows an instant card that isn't in the reactive-only set (e.g. Cryopreservation) to join an already-open stack " +
+      "(regression: a live game froze because Cryopreservation — isInstant but not one of IMMUNITY_BOOST/METASTASIS/CONTAGIOUS " +
+      "— was wrongly rejected by an earlier fix's hardcoded action-name allowlist instead of checking card.isInstant)",
+    () => {
+      const controller = buildController();
+      controller.add(buildAction("AFFLICTION"));
+
+      const result = controller.add(
+        buildAction("CRYOPRESERVATION", {}, true),
+      );
+
+      assertEquals(result.success, true);
+    },
+  );
+
+  it("still rejects a second, non-instant unrelated action even though the isInstant check replaced the old allowlist", () => {
+    const controller = buildController();
+    controller.add(buildAction("AFFLICTION"));
+
+    const result = controller.add(buildAction("BY_THE_BOOK", {}, false));
+
+    assertEquals(result.success, false);
+  });
 
   it("still allows a legitimate response (IMMUNITY_BOOST played by the affliction's own target) to join the stack while a response window is open", () => {
     const controller = buildController();

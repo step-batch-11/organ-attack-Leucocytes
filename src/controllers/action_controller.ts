@@ -9,8 +9,11 @@ export default class ActionController {
   }
 
   add(action: ActionInput): ActionResult {
-    const responseActions = new Set([
-      // i think these are for the defense or replying for the attack
+    // Reactive-only cards — they have no standalone meaning as an opening
+    // move, only as a response to something already on the stack (unlike
+    // e.g. Cryopreservation/Situs Inversus, which are also instant but are
+    // legitimate first plays too).
+    const reactiveOnlyActions = new Set([
       "IMMUNITY_BOOST",
       "METASTASIS",
       "CONTAGIOUS",
@@ -21,19 +24,27 @@ export default class ActionController {
 
     const itemCount = this.#stack.length();
 
-    if (itemCount === 0 && responseActions.has(action.name)) {
+    if (itemCount === 0 && reactiveOnlyActions.has(action.name)) {
       return { success: false, message: "response cannot be the first action" };
     }
 
     // A response window is already open (something is on the stack awaiting
-    // resolution) — only a legitimate response to it may join the stack. A
-    // second, unrelated non-response action must be rejected outright rather
-    // than silently merged into the same resolution pass: Timer.start() would
-    // otherwise restart the window and GameController#applyActions would run
-    // both exchanges' effects together with passTurn() firing once instead of
-    // twice, and immunity-boost's stack-adjacency cancellation could pair
-    // across the two unrelated actions.
-    if (itemCount > 0 && !responseActions.has(action.name)) {
+    // resolution) — only an instant card may join it: isInstant is exactly
+    // the game's own "playable out-of-turn/reactively" flag, covering not
+    // just Immunity Boost/Metastasis/Contagious but also e.g.
+    // Cryopreservation and Situs Inversus (regression: an earlier fix here
+    // hardcoded a 3-name allowlist instead of using isInstant, so a
+    // Cryopreservation played reactively during someone else's pending
+    // affliction was wrongly rejected — the client never surfaces that
+    // rejection either, so it looked like the game had frozen). A second
+    // non-instant action is a genuinely unrelated new exchange and must
+    // still be rejected outright rather than silently merged into the same
+    // resolution pass: Timer.start() would otherwise restart the window and
+    // GameController#applyActions would run both exchanges' effects together
+    // with passTurn() firing once instead of twice, and immunity-boost's
+    // stack-adjacency cancellation could pair across the two unrelated
+    // actions.
+    if (itemCount > 0 && !action.card.isInstant) {
       return {
         success: false,
         message: "another action is still awaiting resolution",

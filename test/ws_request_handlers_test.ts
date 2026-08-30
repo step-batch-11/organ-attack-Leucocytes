@@ -160,7 +160,44 @@ describe("createRequestHandlers", () => {
   });
 
   describe("action — concurrent double-action race (regression)", () => {
-    it("rejects a second, unrelated action while the first's response window is still open, instead of merging both into one resolution pass", () => {
+    it("rejects a second, unrelated non-instant action while the first's response window is still open, instead of merging both into one resolution pass", () => {
+      const { game, gameController, attacker } = buildRoomGame();
+      attacker.fillHandWithAttacks([
+        buildAttackCard({ id: 80, action: "medicine", isBlockable: true }),
+        // Non-instant (matches real card data), so this second attempt must
+        // be rejected on the ActionController.add() check this test targets
+        // — not the ws_request_handlers "it is not your turn" check, since
+        // it's still the attacker's own turn.
+        buildAttackCard({ id: 82, action: "by-the-book", isBlockable: false }),
+      ]);
+      const games: Record<string, RoomGame> = { 101: { game, gameController } };
+      const handlers = createRequestHandlers(games, () => {});
+
+      // Attacker plays a blockable card — opens a response window that won't
+      // resolve on its own (buildRoomGame's Timer duration is 999999ms).
+      handlers.action("101", attacker.getID(), { attackCardID: 80 });
+
+      // A second, unrelated non-instant card must be rejected outright
+      // rather than silently joining the same still-open window.
+      let error: Error | undefined;
+      try {
+        handlers.action("101", attacker.getID(), { attackCardID: 82 });
+      } catch (e) {
+        error = e as Error;
+      }
+
+      assertEquals(
+        error?.message,
+        "another action is still awaiting resolution",
+      );
+      // Rejected before ever being removed from the attacker's hand.
+      assertEquals(
+        attacker.getPlayerDetails().attackCards.some((c) => c.id === 82),
+        true,
+      );
+    });
+
+    it("allows an instant card that isn't a reactive-only type (e.g. Cryopreservation) to join an already-open window (regression: a live game froze because Cryopreservation was wrongly rejected by an earlier fix's hardcoded action-name allowlist instead of checking card.isInstant)", () => {
       const { game, gameController, attacker, opponent } = buildRoomGame();
       attacker.fillHandWithAttacks([
         buildAttackCard({ id: 80, action: "medicine", isBlockable: true }),
@@ -170,18 +207,14 @@ describe("createRequestHandlers", () => {
           id: 81,
           action: "cryopreservation",
           isInstant: true,
-          isBlockable: false,
+          isBlockable: true,
         }),
       ]);
       const games: Record<string, RoomGame> = { 101: { game, gameController } };
       const handlers = createRequestHandlers(games, () => {});
 
-      // Attacker plays a blockable card — opens a response window that won't
-      // resolve on its own (buildRoomGame's Timer duration is 999999ms).
       handlers.action("101", attacker.getID(), { attackCardID: 80 });
 
-      // A second, unrelated instant card from the opponent must be rejected
-      // outright rather than silently joining the same still-open window.
       let error: Error | undefined;
       try {
         handlers.action("101", opponent.getID(), {
@@ -192,15 +225,7 @@ describe("createRequestHandlers", () => {
         error = e as Error;
       }
 
-      assertEquals(
-        error?.message,
-        "another action is still awaiting resolution",
-      );
-      // Rejected before ever being removed from the opponent's hand.
-      assertEquals(
-        opponent.getPlayerDetails().attackCards.some((c) => c.id === 81),
-        true,
-      );
+      assertEquals(error, undefined);
     });
 
     it("still allows a legitimate response (e.g. Immunity Boost) to join the same still-open window", () => {

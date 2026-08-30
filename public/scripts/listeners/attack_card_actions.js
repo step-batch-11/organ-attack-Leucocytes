@@ -224,7 +224,10 @@ export const immunityBoost = (card) => {
     isInstant: gameState.isInstant(cardID),
   };
 
-  sendAction(body);
+  // Returned (not fire-and-forget) so attachEventListener's try/catch can
+  // see a server rejection and restore the card instead of leaving it stuck
+  // disabled with an unhandled promise rejection nobody sees.
+  return sendAction(body);
 };
 
 // chart-mixup
@@ -239,7 +242,7 @@ export const chartMixupOrByTheBook = (card) => {
     attackCardID: cardID,
   };
 
-  sendAction(body);
+  return sendAction(body);
 };
 
 // situsInversus
@@ -257,7 +260,7 @@ export const situsInversusOrCryo = (card) => {
     attackCardID: cardID,
   };
 
-  sendAction(body);
+  return sendAction(body);
 };
 
 // vaccine
