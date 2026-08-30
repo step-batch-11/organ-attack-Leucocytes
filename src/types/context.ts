@@ -10,6 +10,7 @@ import type { Game } from "../models/game.ts";
 import type { Room } from "./entities.ts";
 import type { RealtimeHub } from "../realtime.ts";
 import type GameController from "../controllers/game_controller.ts";
+import type PoisonForcer from "../models/poison_forcer.ts";
 
 /**
  * Shuffles an array, returning a new (or reordered) array of the same type.
@@ -25,6 +26,8 @@ export type Shuffle = <T>(items: T[]) => T[];
 export interface RoomGame {
   game: Game;
   gameController: GameController;
+  /** Optional so tests exercising other collaborators don't need to construct one. */
+  poisonForcer?: PoisonForcer;
 }
 
 /**

@@ -2,6 +2,7 @@ import { assertEquals } from "@std/assert";
 import { describe, it } from "@std/testing/bdd";
 import { createUpdateGameState } from "../src/app.ts";
 import { RealtimeHub } from "../src/realtime.ts";
+import PoisonForcer from "../src/models/poison_forcer.ts";
 import { Game } from "../src/models/game.ts";
 import type GameController from "../src/controllers/game_controller.ts";
 import { Player } from "../src/models/player.ts";
@@ -149,5 +150,36 @@ describe("createUpdateGameState (per-player game-state personalization)", () => 
 
     assertEquals(tabOne.sent.length, 1);
     assertEquals(tabTwo.sent.length, 1);
+  });
+
+  it("re-checks the room's PoisonForcer on every broadcast, when one is present (regression: every state-changing action must keep its stall-timer up to date)", () => {
+    const game = buildGame();
+    let checkCalls = 0;
+    class CountingPoisonForcer extends PoisonForcer {
+      override check(): void {
+        checkCalls++;
+        super.check();
+      }
+    }
+    const poisonForcer = new CountingPoisonForcer(game, () => {}, 999999);
+    const games = {
+      101: { game, gameController: {} as GameController, poisonForcer },
+    };
+    const hub = new RealtimeHub();
+    hub.registerClient("101", { playerID: 1, socket: makeFakeSocket() });
+
+    createUpdateGameState(hub, games)("101");
+    createUpdateGameState(hub, games)("101");
+
+    assertEquals(checkCalls, 2);
+  });
+
+  it("does not throw when a room has no PoisonForcer at all (e.g. older test call sites)", () => {
+    const game = buildGame();
+    const games = { 101: { game, gameController: {} as GameController } };
+    const hub = new RealtimeHub();
+    hub.registerClient("101", { playerID: 1, socket: makeFakeSocket() });
+
+    createUpdateGameState(hub, games)("101");
   });
 });

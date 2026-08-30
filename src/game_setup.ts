@@ -12,12 +12,21 @@ import ActionStack from "./models/action_stack.ts";
 import ActionController from "./controllers/action_controller.ts";
 import Timer from "./models/timer.ts";
 import GameController from "./controllers/game_controller.ts";
+import PoisonForcer from "./models/poison_forcer.ts";
 import type { Context } from "hono";
 import type { AppBindings } from "./types/context.ts";
 import type { AttackCard } from "./types/cards.ts";
 
 /** Duration (ms) of the response window for blockable cards, per room. */
 export const RESPONSE_WINDOW_MS = 5000;
+
+/**
+ * Grace period before a stalled Poison holder's turn is auto-resolved.
+ * Deliberately much longer than RESPONSE_WINDOW_MS — that window is for
+ * instant reactive plays across everyone; this one is for a single player
+ * to actually read their hand and decide which organ to sacrifice.
+ */
+export const POISON_FORCE_TIMEOUT_MS = 20_000;
 
 export const gameSetup = async (ctx: Context<AppBindings>) => {
   const games = ctx.get("games");
@@ -67,7 +76,19 @@ export const gameSetup = async (ctx: Context<AppBindings>) => {
   const timer = new Timer(RESPONSE_WINDOW_MS);
   const gameController = new GameController(actionController, timer);
 
-  games[roomID] = { game, gameController };
+  const updateGameState = ctx.get("updateGameState");
+  const poisonForcer = new PoisonForcer(
+    game,
+    () => updateGameState(roomID),
+    POISON_FORCE_TIMEOUT_MS,
+  );
+
+  games[roomID] = { game, gameController, poisonForcer };
+
+  // Covers Poison being dealt straight into a hand at the initial deal —
+  // every later state change already runs through updateGameState, which
+  // re-checks this itself.
+  poisonForcer.check();
 
   return ctx.json(game.getAllPlayersDetails(), 201);
 };

@@ -40,6 +40,11 @@ const buildGameStateSnapshot =
 export const createUpdateGameState =
   (realtimeHub: RealtimeHub, games: Record<string, RoomGame>) =>
   (roomID: string): void => {
+    // Every state-changing action broadcasts through here, making this the
+    // one place a stalled Poison holder's forcing-timer needs to be
+    // (re)checked — see PoisonForcer's own doc comment.
+    games[roomID]?.poisonForcer?.check();
+
     const buildSnapshot = buildGameStateSnapshot(games);
     const seen = new Set<number>();
 

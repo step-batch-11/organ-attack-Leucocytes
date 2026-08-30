@@ -340,6 +340,78 @@ describe("Game#removeOrgan (poison)", () => {
   });
 });
 
+describe("Game#getPoisonHolderID", () => {
+  it("returns the id of whichever player holds an unplayed Poison card", () => {
+    const p1 = new Player("p1", 1);
+    const p2 = new Player("p2", 2);
+    p2.fillHandWithAttacks([buildAttackCard({ id: 1, action: "poison" })]);
+    const attackCards = new Deck<AttackCard>([], shuffle);
+    const game = buildGame([p1, p2], attackCards);
+
+    assertEquals(game.getPoisonHolderID(), p2.getID());
+  });
+
+  it("returns null when nobody holds Poison", () => {
+    const p1 = new Player("p1", 1);
+    const attackCards = new Deck<AttackCard>([], shuffle);
+    const game = buildGame([p1], attackCards);
+
+    assertEquals(game.getPoisonHolderID(), null);
+  });
+});
+
+describe("Game#forceResolvePoison", () => {
+  it("discards the Poison card and removes the holder's first-held organ", () => {
+    const player = new Player("player", 1);
+    player.fillHandWithAttacks([
+      buildAttackCard({ id: 1, action: "poison" }),
+    ]);
+    player.fillHandWithOrgans([
+      new Organ("Heart", 7, 2),
+      new Organ("Kidneys", 1, 2),
+    ]);
+    // discardAttackCard always refills — needs at least one card available
+    // to draw, or Deck#getCard pops undefined off an empty pile.
+    const attackCards = new Deck<AttackCard>(
+      [buildAttackCard({ id: 99, action: "medicine" })],
+      shuffle,
+    );
+    const { game, organCards } = buildGameWithOrganDeck(
+      [player],
+      attackCards,
+    );
+
+    game.forceResolvePoison(player.getID());
+
+    assertEquals(
+      player.getPlayerDetails().attackCards.some((c) => c.action === "poison"),
+      false,
+    );
+    assertEquals(
+      player.getPlayerDetails().organCards.map((o) => o.id),
+      [1],
+    );
+    assertEquals(
+      organCards.getDiscardPile().map((o) => o.getID()),
+      [7],
+    );
+  });
+
+  it("is a no-op when the player no longer actually holds Poison", () => {
+    const player = new Player("player", 1);
+    player.fillHandWithOrgans([new Organ("Heart", 7, 2)]);
+    const attackCards = new Deck<AttackCard>([], shuffle);
+    const game = buildGame([player], attackCards);
+
+    game.forceResolvePoison(player.getID());
+
+    assertEquals(
+      player.getPlayerDetails().organCards.map((o) => o.id),
+      [7],
+    );
+  });
+});
+
 describe("Game#itsAlive", () => {
   it("revives a discarded organ back into the player's hand, fully healed", () => {
     const player = new Player("player", 1);

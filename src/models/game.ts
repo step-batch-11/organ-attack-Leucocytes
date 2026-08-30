@@ -293,10 +293,37 @@ export class Game {
   }
 
   #doesAnyoneHoldPoison(): boolean {
-    const allAttackCardsInGame = this.#players
-      .flatMap((player) => player.getPlayerDetails().attackCards);
+    return this.getPoisonHolderID() !== null;
+  }
 
-    return allAttackCardsInGame.some(({ action }) => action === "poison");
+  /** At most one Poison card exists in the deck, so at most one player ever holds it at a time. */
+  getPoisonHolderID(): number | null {
+    const holder = this.#players.find((player) =>
+      player.getPlayerDetails().attackCards.some(({ action }) =>
+        action === "poison"
+      )
+    );
+    return holder?.getID() ?? null;
+  }
+
+  /**
+   * Auto-resolves a stalled Poison holder's turn against their own
+   * first-held organ, mirroring what `GameController#handlePoison` does for
+   * a manually-chosen one — discards the Poison card (drawing a
+   * replacement, same as any other discard) and removes the default organ.
+   * A no-op if the holder no longer actually holds Poison (e.g. it was
+   * resolved normally right before this was scheduled to fire) or has no
+   * organs left to remove.
+   */
+  forceResolvePoison(playerID: number): void {
+    const player = this.#findPlayer(playerID);
+    const { attackCards, organCards } = player.getPlayerDetails();
+    const poisonCard = attackCards.find(({ action }) => action === "poison");
+
+    if (poisonCard === undefined || organCards.length === 0) return;
+
+    this.discardAttackCard(playerID, poisonCard.id);
+    this.removeOrgan(playerID, organCards[0].id);
   }
 
   updateEventStatus(timeRemaining: number): void {
