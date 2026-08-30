@@ -113,6 +113,111 @@ describe("Player#removeOrgan", () => {
   });
 });
 
+describe("Player#removeAttackCardIfOrganDead", () => {
+  const buildTargetedCard = (
+    id: number,
+    overrides: Partial<AttackCard>,
+  ): AttackCard => ({ ...buildAttackCard(id), ...overrides });
+
+  it("discards a card whose only possible target was the organ that just died", () => {
+    const player = new Player("attacker", 1);
+    const onlyTargetsHeart = buildTargetedCard(10, {
+      afflictableOrgans: [7],
+    });
+    player.fillHandWithAttacks([onlyTargetsHeart]);
+    const heart = new Organ("Heart", 7, 0);
+
+    const discarded = player.removeAttackCardIfOrganDead(heart);
+
+    assertEquals(discarded.map((c) => c.id), [10]);
+    assertEquals(player.getPlayerDetails().attackCards, []);
+  });
+
+  it("keeps a card that can still target other organs, even if it listed the dead one too", () => {
+    const player = new Player("attacker", 1);
+    const targetsHeartAndKidneys = buildTargetedCard(10, {
+      afflictableOrgans: [7, 1],
+    });
+    player.fillHandWithAttacks([targetsHeartAndKidneys]);
+    const heart = new Organ("Heart", 7, 0);
+
+    const discarded = player.removeAttackCardIfOrganDead(heart);
+
+    assertEquals(discarded, []);
+    assertEquals(
+      player.getPlayerDetails().attackCards.map((c) => c.id),
+      [10],
+    );
+  });
+
+  it("discards a removableOrgans-only card the same way", () => {
+    const player = new Player("attacker", 1);
+    const onlyRemovesHeart = buildTargetedCard(10, { removableOrgans: [7] });
+    player.fillHandWithAttacks([onlyRemovesHeart]);
+    const heart = new Organ("Heart", 7, 0);
+
+    const discarded = player.removeAttackCardIfOrganDead(heart);
+
+    assertEquals(discarded.map((c) => c.id), [10]);
+  });
+
+  it("leaves an unrelated card untouched", () => {
+    const player = new Player("attacker", 1);
+    const unrelated = buildTargetedCard(10, { afflictableOrgans: [1] });
+    player.fillHandWithAttacks([unrelated]);
+    const heart = new Organ("Heart", 7, 0);
+
+    const discarded = player.removeAttackCardIfOrganDead(heart);
+
+    assertEquals(discarded, []);
+    assertEquals(
+      player.getPlayerDetails().attackCards.map((c) => c.id),
+      [10],
+    );
+  });
+});
+
+describe("Player#applyVaccine", () => {
+  it("grants 2 vaccine points, consumed one at a time by afflictOrgan", () => {
+    const player = new Player("attacker", 1);
+    player.fillHandWithOrgans([new Organ("Heart", 7, 2)]);
+
+    player.applyVaccine();
+    const first = player.afflictOrgan(7);
+    assertEquals(first.isDead, false);
+    assertEquals(player.getPlayerDetails().organCards[0].health, 2);
+    assertEquals(player.getPlayerDetails().vaccinePoints, 1);
+
+    const second = player.afflictOrgan(7);
+    assertEquals(second.isDead, false);
+    assertEquals(player.getPlayerDetails().vaccinePoints, 0);
+
+    // Vaccine exhausted — the next affliction actually lands.
+    player.afflictOrgan(7);
+    assertEquals(player.getPlayerDetails().organCards[0].health, 1);
+  });
+});
+
+describe("Player#hasOrgan", () => {
+  it("matches case-insensitively by organ name", () => {
+    const player = new Player("attacker", 1);
+    player.fillHandWithOrgans([new Organ("Heart", 7, 2)]);
+
+    assertEquals(player.hasOrgan("heart"), true);
+    assertEquals(player.hasOrgan("lungs"), false);
+  });
+});
+
+describe("Player#decreaseSleep", () => {
+  it("decrements but never goes below 0", () => {
+    const player = new Player("attacker", 1);
+    player.applySleep(1);
+
+    assertEquals(player.decreaseSleep(), 0);
+    assertEquals(player.decreaseSleep(), 0);
+  });
+});
+
 describe("Player#healOrgan", () => {
   it("does not throw and does nothing when the id doesn't match any held organ (regression: unguarded find+cast used to crash)", () => {
     const player = new Player("attacker", 1);

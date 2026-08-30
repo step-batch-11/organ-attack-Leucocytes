@@ -393,8 +393,16 @@ export class Game {
   ): void {
     const attacker = this.#findPlayer(attackerID);
     const opponent = this.#findPlayer(opponentID);
+    const opponentHandSize = opponent.getPlayerDetails().attackCards.length;
 
-    const randomCardId = Math.floor(Math.random() * 5);
+    // Nothing to exchange for — leave the attacker's card in their hand
+    // rather than removing it for no return.
+    if (opponentHandSize === 0) return;
+
+    // Was hardcoded to `* 5`, out of bounds (and throwing, since
+    // Player#removeAttackCard now guards its index) for any opponent
+    // holding fewer than 5 cards — routine well before a real game ends.
+    const randomCardId = Math.floor(Math.random() * opponentHandSize);
 
     const commonColdCard = attacker.removeAttackCard(attackCardID);
     const opponentCard = opponent.removeAttackCard(null, randomCardId);
